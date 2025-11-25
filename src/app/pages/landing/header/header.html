@@ -1,0 +1,55 @@
+<header class="header">
+  <div class="wrapper header-wrapper">
+    <!-- Left: Logo + Name -->
+    <div class="brand">
+      <div class="logo">
+        <mat-icon class="lightning">flash_on</mat-icon>
+      </div>
+      <h2 class="brand-name">CreerForge AI</h2>
+    </div>
+
+    <!-- Center: Navigation -->
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right: Auth -->
+    @if (user != null) {
+    <div class="auth-btn">Account</div>
+    } @else {
+    <div class="auth-group">
+      <button mat-stroked-button class="auth-link">Login</button>
+      <button mat-flat-button class="auth-btn primary">Sign Up</button>
+    </div>
+    }
+    <button #burgerBtn id="burger-btn" class="burger-show" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="burger" #burgerMenu>
+    <div class="wrapper">
+      <div class="mobile-menu" id="mobile-menu">
+        <nav class="nav-burger">
+          <ul class="nav-list nav-list-burger">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="auth-group-burger">
+          <button mat-stroked-button class="auth-link mobile-btn">Log In</button>
+          <button mat-flat-button class="primary mobile-btn">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

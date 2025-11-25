@@ -1,0 +1,17 @@
+<section class="features" #featuresRef>
+    <div class="wrapper">
+        <div class="head">
+            <h2 class="title">Everything You Need to Get Hired</h2>
+            <p class="sub-title">Powerful AI tools to accelerate your career</p>
+        </div>
+        <div class="features-cards" #features_list>
+            @for (feature of features; track feature.id) {
+                <div class="card">
+                    <mat-icon class="card-icon">{{ feature.icon }}</mat-icon>
+                    <h4 class="card-title">{{ feature.title }}</h4>
+                    <p class="card-description">{{ feature.description }}</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

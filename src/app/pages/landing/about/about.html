@@ -1,0 +1,32 @@
+<section class="about" #about>
+  <div class="wrapper">
+    <div class="head">
+      <h2 class="title">About CareerForge AI</h2>
+      <p class="sub-title">Empowering job seekers with AI-powered career tools</p>
+    </div>
+
+    <!-- Big mission card -->
+    <div class="mission-card">
+      <h3 class="mission-title">Our Mission</h3>
+      <p class="mission-text">
+        CareerForge AI was founded in 2024 with a simple mission: make job searching faster, easier,
+        and more successful using artificial intelligence.
+      </p>
+      <p class="mission-text">
+        We believe everyone deserves access to powerful career tools that help them present their
+        best selves to potential employers.
+      </p>
+    </div>
+
+    <!-- 3 feature cards -->
+    <div class="features">
+      @for (mission of missions; track $index) {
+      <div class="feature-card">
+        <mat-icon class="feature-icon">{{ mission.icon }}</mat-icon>
+        <h4 class="feature-title">{{ mission.title }}</h4>
+        <p class="feature-description">{{ mission.description }}</p>
+      </div>
+      }
+    </div>
+  </div>
+</section>

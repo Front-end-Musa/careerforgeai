@@ -1,0 +1,34 @@
+.features {
+  background-color: #fff;
+
+  .wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+
+    .features-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .card {
+      flex: 1 1 260px; /* grows, shrinks, base size WITHOUT being fixed */
+      max-width: 320px; /* prevents ultra-wide stretching */
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 18px;
+      padding: 1.8rem;
+      transition: 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+  }
+}

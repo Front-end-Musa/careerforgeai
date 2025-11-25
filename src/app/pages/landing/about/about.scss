@@ -1,0 +1,120 @@
+.about {
+  .wrapper {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+  }
+
+  /* Header area */
+  .head {
+    text-align: center;
+    margin-bottom: 0.75rem;
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .sub-title {
+      font-size: 1.05rem;
+      color: var(--sub-text-color);
+      margin: 0;
+    }
+  }
+
+  /* Mission card */
+  .mission-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    padding: 2rem;
+    border-radius: 12px;
+    margin: 2rem auto 3rem;
+    max-width: 900px;
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.03);
+  }
+
+  .mission-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+  }
+  .mission-text {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* Feature cards grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 960px;
+    margin: 1.5rem auto 0 auto;
+    justify-items: center;
+  }
+
+  .feature-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-height: 160px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #eef4ff;
+    color: var(--mat-sys-primary, #2f6aff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feature-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #0f172a;
+  }
+  .feature-description {
+    font-size: 0.93rem;
+    color: var(--sub-text-color);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  @media (max-width: 960px) {
+    .features {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .features {
+      grid-template-columns: 1fr;
+    }
+    .mission-card {
+      padding: 1.5rem;
+    }
+  }
+}
