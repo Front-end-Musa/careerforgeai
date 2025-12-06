@@ -1,0 +1,14 @@
+.questions-section {
+    .wrapper {
+        .qas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            .qa {
+                width: 100%;
+            }
+        }
+    }
+}

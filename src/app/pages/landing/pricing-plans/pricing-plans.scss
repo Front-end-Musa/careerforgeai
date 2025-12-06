@@ -1,0 +1,27 @@
+.pricing {
+  background-color: #fff;
+
+  .wrapper {
+    .pricing-cards {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: stretch;
+    }
+  }
+}
+.pricing-card {
+  width: 30%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .pricing-cards {
+    flex-direction: column;
+    gap: 50px;
+
+    .pricing-card {
+      width: 100%;
+    }
+  }
+}

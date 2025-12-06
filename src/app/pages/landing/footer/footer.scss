@@ -1,0 +1,27 @@
+.footer {
+  background-color: #1e293b;
+  padding: 40px 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.footer a {
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+* {
+  box-sizing: border-box;
+  color: #ffffff;
+}

@@ -1,0 +1,69 @@
+<div class="login">
+  <div class="wrapper">
+    <div class="content">
+      <app-logo></app-logo>
+
+      <div class="head">
+        <h2 class="title">Welcome Back</h2>
+        <p class="sub-title">Login to accelerate your career</p>
+      </div>
+
+      <mat-card class="card login-card">
+        <form class="login-form form-group" [formGroup]="loginForm">
+          <div class="form-field full-width">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              required
+              formControlName="email"
+              [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+              placeholder="you@example.com"
+            />
+            <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+              Email is required
+            </mat-error>
+          </div>
+
+          <div class="form-field full-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              required
+              formControlName="password"
+              [class.invalid]="
+                loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+              "
+              placeholder="••••••"
+            />
+            <mat-error
+              *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            >
+              Password is required
+            </mat-error>
+          </div>
+
+          <!-- <button mat-button class="full-width submit-btn" (click)="onSubmit()">Login</button> -->
+          <button mat-button color="primary" class="send-btn" (click)="onSubmit()">Login</button>
+        </form>
+
+        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+
+        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+          <button mat-anchor class="social-btn google-btn">
+            <span class="material-symbols-outlined">mail_outline</span>
+            Google
+          </button>
+          <button mat-anchor class="social-btn github-btn">
+            <span class="material-symbols-outlined">code</span> Github
+          </button>
+        </div>
+
+        <p class="signup" style="text-align: center; margin-top: 14px">
+          Don't have an account? <a href="/signup">Sign up</a>
+        </p>
+      </mat-card>
+    </div>
+  </div>
+</div>

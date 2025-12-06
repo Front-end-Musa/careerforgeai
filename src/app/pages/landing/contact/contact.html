@@ -1,0 +1,52 @@
+<section id="contact" class="contact-section">
+  <div class="wrapper">
+    <div class="head">
+      <h2 class="title">Get in Touch</h2>
+      <p class="sub-title">Have questions? We'd love to hear from you.</p>
+    </div>
+    <mat-card class="contact-us">
+      <form class="contact-form" [formGroup]="contactForm">
+        <div class="form-group">
+          <div class="form-field">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required />
+            <mat-error *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+              Name is required.
+            </mat-error>
+          </div>
+          <div class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required />
+            <mat-error
+              *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched"
+            >
+              Valid email is required.
+            </mat-error>
+          </div>
+          <div class="form-field">
+            <mat-label>Message</mat-label>
+            <textarea
+              matInput
+              id="message"
+              name="message"
+              rows="5"
+              required
+              formControlName="message"
+            ></textarea>
+            <mat-error
+              *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"
+            >
+              Message is required.
+            </mat-error>
+          </div>
+          <button class="send-btn" type="submit">Send Message</button>
+
+          <div class="support-text">
+            Or reach us at: <br />
+            <a href="mailto:support@careerforge.ai">support@careerforge.ai</a>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</section>

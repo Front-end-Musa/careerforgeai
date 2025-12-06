@@ -1,0 +1,12 @@
+<section class="questions-section" id="FAQ">
+    <div class="wrapper">
+        <div class="head">
+            <h2 class="title">Frequently Asked Questions</h2>
+        </div>
+        <div class="qas">
+            @for (question of qa; track $index) {
+                <app-qa-item [qa]="question" class="qa"></app-qa-item>
+            }
+        </div>
+    </div>
+</section>

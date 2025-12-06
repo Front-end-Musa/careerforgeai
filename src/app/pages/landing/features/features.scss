@@ -17,8 +17,6 @@
     }
 
     .card {
-      flex: 1 1 260px; /* grows, shrinks, base size WITHOUT being fixed */
-      max-width: 320px; /* prevents ultra-wide stretching */
       background: #ffffff;
       border: 1px solid rgba(0, 0, 0, 0.12);
       border-radius: 18px;

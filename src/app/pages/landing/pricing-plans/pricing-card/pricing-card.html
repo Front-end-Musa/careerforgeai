@@ -1,0 +1,19 @@
+<div class="pricing" [class.popular]="popular">
+  @if (popular) {
+  <div class="badge">Most Popular</div>
+  }
+
+  <h3 class="plan-name">{{ plan.name }}</h3>
+
+  <p class="price">${{ plan.price }}<span>/month</span></p>
+
+  <ul class="features">
+    @for (feature of plan.features; track feature) {
+    <li>{{ feature }}</li>
+    }
+  </ul>
+
+  <button [class.btn-filled]="popular" [class.btn-outline]="!popular">
+    {{ plan.button }}
+  </button>
+</div>

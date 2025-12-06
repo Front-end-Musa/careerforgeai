@@ -1,0 +1,60 @@
+.sidebar {
+  width: 300px;
+  background-color: #f8f9fa;
+  height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  .logo {
+    padding: 20px 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .logo,
+  .navigation {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .navigation {
+    flex: 1;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  li {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 17px;
+    * {
+      color: #495057;
+      -webkit-touch-callout: none; 
+      -webkit-user-select: none; 
+      -khtml-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+
+    &:hover {
+      background-color: #e9f2ff;
+      * {
+        color: var(--mat-sys-primary) !important;
+      }
+    }
+  }
+}
+
+.active {
+  background-color: #d1e7fd;
+
+  * {
+    color: var(--mat-sys-primary) !important;
+  }
+}

@@ -1,0 +1,18 @@
+<div class="sidebar">
+  <div class="logo"><app-logo></app-logo></div>
+  <ul class="navigation">
+    @for (link of links; track link.route) {
+    <li
+      class="navigation-item"
+      [routerLink]="link.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="liActive(link.id)"
+      [attr.id]="link.id"
+    >
+      <span class="material-symbols-outlined">{{ link.icon }}</span>
+      <a class="navigation-link">{{ link.label }}</a>
+    </li>
+    }
+  </ul>
+</div>

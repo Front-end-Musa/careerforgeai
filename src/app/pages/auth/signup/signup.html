@@ -1,0 +1,86 @@
+<div class="signup">
+  <div class="wrapper">
+    <div class="content">
+      <app-logo></app-logo>
+
+      <div class="head">
+        <h2 class="title">Start Your Journey</h2>
+        <p class="sub-title">Step 1 of 2</p>
+      </div>
+
+      <mat-card class="card login-card">
+        <form class="login-form form-group" [formGroup]="signupForm">
+          <div class="form-field full-width">
+            <mat-label>Full Name</mat-label>
+            <input
+              matInput
+              type="text"
+              required
+              formControlName="fullName"
+              [class.invalid]="
+                signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched
+              "
+              placeholder="John Doe"
+            />
+            <mat-error
+              *ngIf="signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched"
+            >
+              Full Name is required
+            </mat-error>
+          </div>
+          <div class="form-field full-width">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              required
+              formControlName="email"
+              [class.invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+              placeholder="you@example.com"
+            />
+            <mat-error *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
+              Email is required
+            </mat-error>
+          </div>
+
+          <div class="form-field full-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              required
+              formControlName="password"
+              [class.invalid]="
+                signupForm.get('password')?.invalid && signupForm.get('password')?.touched
+              "
+              placeholder="••••••"
+            />
+            <mat-error
+              *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+            >
+              Password is required
+            </mat-error>
+          </div>
+
+          <button mat-button color="primary" class="send-btn" (click)="onSubmit()">Sign Up</button>
+        </form>
+
+        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+
+        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+          <button mat-anchor class="social-btn google-btn">
+            <span class="material-symbols-outlined">mail_outline</span>
+            Google
+          </button>
+          <button mat-anchor class="social-btn github-btn">
+            <span class="material-symbols-outlined">code</span> Github
+          </button>
+        </div>
+
+        <p class="signup" style="text-align: center; margin-top: 14px">
+          Already have an account? <a href="/login">Log in</a>
+        </p>
+      </mat-card>
+    </div>
+  </div>
+</div>
