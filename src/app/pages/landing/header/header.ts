@@ -3,9 +3,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ScrollService } from '../../../lib/scroll.service';
-import { Logo } from '../../logo/logo';
-import { RouterLink } from "@angular/router";
+import { ScrollService } from '../../../core/services/scroll.service';
+import { Logo } from '../../logos/logo/logo';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',

@@ -1,1 +1,57 @@
-<p>cover-letter works!</p>
+<div class="cover-letter container">
+  <app-dir-name title="AI Cover Letter Generator"></app-dir-name>
+  <div class="wrapper">
+    <div class="app-section">
+      <h2 class="title">Job Details</h2>
+      <form class="details-form" [formGroup]="coverLetterForm">
+        <div class="form-field company-name-field">
+          <mat-label>Company Name</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Enter your company name"
+            class="company-name"
+            formControlName="companyName"
+          />
+        </div>
+
+        <div class="form-field position-field">
+          <mat-label>Position</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Enter the position you are applying for"
+            class="position"
+            formControlName="position"
+          />
+        </div>
+
+        <div class="form-field job-description-field">
+          <mat-label>Job Description</mat-label>
+          <textarea
+            matInput
+            placeholder="Enter the job description"
+            class="job-description"
+            formControlName="jobDescription"
+          ></textarea>
+        </div>
+        <div class="form-field tone-field">
+          <mat-label>Tone</mat-label>
+          <div class="tone-container">
+            @for (t of tones; track t) {
+            <button
+              class="tone-btn"
+              [class.active]="selectedTone == t"
+              (click)="selectTone(t)"
+              type="button"
+            >
+              {{ t }}
+            </button>
+            }
+          </div>
+          <button class="generate" (click)="onSubmit()">Generate Cover Letter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

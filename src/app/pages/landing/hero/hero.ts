@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ScrollService } from '../../../lib/scroll.service';
-import { RouterLink } from "@angular/router";
+import { ScrollService } from '../../../core/services/scroll.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-hero',

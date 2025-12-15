@@ -1,0 +1,9 @@
+<div class="dir-name-container">
+  <div class="app-section">
+    <div class="dir-name">{{ title }}</div>
+
+    @if (additionalElems != null) {
+    <div class="additionalElems" [innerHTML]="additionalElems" #additionalElemsContainer></div>
+    }
+  </div>
+</div>

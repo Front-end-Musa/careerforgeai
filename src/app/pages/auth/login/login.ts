@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Logo } from '../../logo/logo';
+import { Logo } from '../../logos/logo/logo';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import {

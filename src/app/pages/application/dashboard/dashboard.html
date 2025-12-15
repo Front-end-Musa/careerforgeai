@@ -1,1 +1,64 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+  <div class="app-section">
+    <header class="head">
+      <h1 class="title">Welcome back, {{ user.name }}!</h1>
+      <p class="sub-title">Here's your career progress.</p>
+    </header>
+    <div class="stats">
+      <div class="resume stat">
+        <div class="stat-head">
+          <h4 class="stat-title">Resumes</h4>
+          <span class="material-symbols-outlined resume-mat icon-blue">description</span>
+        </div>
+        <div class="stat-value">
+          <div class="stat-value-number">{{ user.resumes.length }}</div>
+          <p class="stat-value-text">Total resumes</p>
+        </div>
+      </div>
+      <div class="applications stat">
+        <div class="stat-head">
+          <h4 class="stat-title">Applications</h4>
+          <span class="material-symbols-outlined applications-mat">work</span>
+        </div>
+        <div class="stat-value">
+          <div class="stat-value-number">{{ user.applications.length }}</div>
+          <p class="stat-value-text">In progress</p>
+        </div>
+      </div>
+      <div class="interviews stat">
+        <div class="stat-head">
+          <h4 class="stat-title">Interviews</h4>
+          <span class="material-symbols-outlined interviews-mat">event</span>
+        </div>
+        <div class="stat-value">
+          <div class="stat-value-number">{{ user.interviews.length }}</div>
+          <p class="stat-value-text">Scheduled</p>
+        </div>
+      </div>
+      <div class="profile-views stat">
+        <div class="stat-head">
+          <h4 class="stat-title">Profile Views</h4>
+          <span class="material-symbols-outlined profile-mat">analytics</span>
+        </div>
+        <div class="stat-value">
+          <div class="stat-value-number">{{ user.profileViews }}</div>
+          <p class="stat-value-text">This month</p>
+        </div>
+      </div>
+    </div>
+    <div class="quick-actions-container">
+      <h3 class="quick-actions-title">Quick Actions</h3>
+      <div class="quick-actions">
+        <div class="action">
+          <span class="material-symbols-outlined icon-blue">description</span>
+          Generate Resume
+        </div>
+        <div class="action">
+          <div class="material-symbols-outlined cover-letter">mail_outline</div>
+        </div>
+        <div class="action"></div>
+        <div class="action"></div>
+      </div>
+    </div>
+  </div>
+</div>

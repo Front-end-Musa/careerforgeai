@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Logo } from '../../logo/logo';
+import { Logo } from '../../logos/logo/logo';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { LogoShort } from '../../logos/logo-short/logo-short';
 
 interface NavLink {
   label: string;
@@ -11,11 +12,13 @@ interface NavLink {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [Logo, RouterLink, RouterLinkActive],
+  imports: [Logo, RouterLink, RouterLinkActive, LogoShort],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  isSidebarOpen = false;
+
   links: NavLink[] = [
     { label: 'Dashboard', route: 'dashboard', icon: 'grid_view', id: 'dashboard' },
     { label: 'Resumes', route: 'resumes', icon: 'description', id: 'resumes' },
@@ -41,5 +44,9 @@ export class Sidebar {
       document.querySelectorAll('a').forEach((link) => link.classList.remove('active'));
       document.getElementById(id)?.classList.add('active');
     }
+  }
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 }

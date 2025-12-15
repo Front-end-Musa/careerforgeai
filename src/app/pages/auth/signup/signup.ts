@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
-import { Logo } from '../../logo/logo';
+import { Logo } from '../../logos/logo/logo';
 import { Router } from '@angular/router';
 
 @Component({

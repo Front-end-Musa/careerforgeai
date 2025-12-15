@@ -1,5 +1,5 @@
-<div class="sidebar">
-  <div class="logo"><app-logo></app-logo></div>
+<div class="sidebar" [class.open]="isSidebarOpen">
+  <div class="logo-container"><app-logo class="app-logo"></app-logo> <app-logo-short class="app-logo-short"></app-logo-short></div>
   <ul class="navigation">
     @for (link of links; track link.route) {
     <li
@@ -7,7 +7,7 @@
       [routerLink]="link.route"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      (click)="liActive(link.id)"
+      (click)="liActive(link.id); isSidebarOpen = false"
       [attr.id]="link.id"
     >
       <span class="material-symbols-outlined">{{ link.icon }}</span>

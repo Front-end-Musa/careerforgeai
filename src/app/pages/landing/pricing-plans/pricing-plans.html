@@ -1,9 +1,9 @@
 <section class="pricing" id="pricing" #pricing_plans>
   <div class="wrapper">
-    <div class="head">
+    <header class="head">
       <h2 class="title">Complete Pricing Plans</h2>
       <p class="sub-title">Everything you need to accelerate your career</p>
-    </div>
+    </header>
     <div class="pricing-cards">
       @for (plan of plans; track plan.name) {
       <app-pricing-card [plan]="plan" [popular]="plan.popular" class="pricing-card"> </app-pricing-card>
