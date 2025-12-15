@@ -20,7 +20,8 @@
   .stats {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
+    flex-wrap: wrap;
     .stat {
       display: flex;
       flex-direction: column;
@@ -84,4 +85,52 @@
 .icon-blue {
   color: var(--mat-sys-primary);
   background-color: var(--mat-sys-primary-container);
+}
+@media (max-width: 1024px) {
+  .dashboard {
+    .stats {
+      .stat {
+        width: 48%;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    .stats {
+      flex-direction: column;
+      .stat {
+        width: 100%;
+      }
+    }
+
+    .head {
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    .head {
+      .title {
+        font-size: 1.2rem;
+      }
+
+      .sub-title {
+        font-size: 14px;
+      }
+    }
+
+    .stats {
+      .stat {
+        padding: 20px;
+        gap: 1vh;
+      }
+    }
+  }
 }
