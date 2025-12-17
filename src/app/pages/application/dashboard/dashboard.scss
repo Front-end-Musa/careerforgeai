@@ -1,81 +1,120 @@
 .dashboard {
-  .head {
-    margin-bottom: 20px;
-    text-align: left;
-
-    .title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 0;
-      letter-spacing: normal;
-    }
-
-    .sub-title {
-      font-size: 16px;
-      color: #666;
-      margin: 5px 0 0 0;
-    }
-  }
-
-  .stats {
+  .app-section {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 2vh;
-      width: 24%;
-      padding: 30px;
-      background-color: #fff;
-      border-radius: 8px;
-      border: 1px solid #e4e4e4;
+    flex-direction: column;
+    gap: 30px;
+    .head {
+      text-align: left;
 
-      .stat-head {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        .stat-title {
-          font-size: 1.2rem;
-          font-weight: 500;
-        }
-
-        span {
-          border-radius: 8px;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .applications-mat {
-          color: #22c55e;
-          background-color: #dcfce7;
-        }
-
-        .interviews-mat {
-          color: #8b5cf6;
-          background-color: #ede9fe;
-        }
-
-        .profile-mat {
-          color: #f97316;
-          background-color: #ffedd5;
-        }
+      .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0;
+        letter-spacing: normal;
       }
 
-      .stat-value {
+      .sub-title {
+        font-size: 16px;
+        color: #666;
+        margin: 5px 0 0 0;
+      }
+    }
+
+    .stats {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      .stat {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 2vh;
+        width: 24%;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 8px;
+        border: 1px solid #e4e4e4;
 
-        .stat-value-number {
-          font-size: 2rem;
-          font-weight: bold;
+        .stat-head {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+
+          .stat-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+          }
+
+          span {
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+        }
+        
+        .stat-value {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          
+          .stat-value-number {
+            font-size: 2rem;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+    
+    .quick-actions-container {
+      background-color: #fff;
+      border: 2px solid #e4e4e4;
+      border-radius: 8px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      
+      .quick-actions-title {
+        font-size: 1.3rem;
+      }
+      
+      .quick-actions {
+        display: flex;
+        justify-content: space-between;
+        
+        .action {
+          border: 2px solid #e4e4e4;
+          width: 24%;
+          padding: 25px 30px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all ease 0.2s;
+          
+          &:hover {
+            border: 2px solid var(--mat-sys-primary);
+          }
+          
+          .action-title {
+            font-size: 1rem;
+            margin-top: 20px;
+            font-weight: 500;
+          }
+          
+          span {
+            width: 50px;
+            height: 50px;
+            font-size: 1.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            user-select: none;
+          }
         }
       }
     }
@@ -86,6 +125,22 @@
   color: var(--mat-sys-primary);
   background-color: var(--mat-sys-primary-container);
 }
+
+.green-icon {
+  color: #22c55e;
+  background-color: #dcfce7;
+}
+
+.purple-icon {
+  color: #8b5cf6;
+  background-color: #ede9fe;
+}
+
+.orange-icon {
+  color: #f97316;
+  background-color: #ffedd5;
+}
+
 @media (max-width: 1024px) {
   .dashboard {
     .stats {
