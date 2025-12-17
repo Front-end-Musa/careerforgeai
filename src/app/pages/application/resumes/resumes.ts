@@ -1,14 +1,22 @@
 import { Component } from '@angular/core';
 import { StorageService } from '../../../core/services/storage.service';
 import { Resume } from '../../../core/interfaces/resumes.interface';
+import { DirName } from '../dir-name/dir-name';
+import { MatButton } from '@angular/material/button';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { GenerateBtn } from '../../generate-btn/generate-btn';
 
 @Component({
   selector: 'app-resumes',
-  imports: [],
+  imports: [DirName, MatButton, ReactiveFormsModule, MatLabel, MatInput, GenerateBtn],
   templateUrl: './resumes.html',
   styleUrl: './resumes.scss',
 })
 export class Resumes {
+  resumeGroup: FormGroup;
+  resumeGenerated: boolean = false;
   resumes: Resume[] = [
     {
       id: 'res-001',
@@ -83,7 +91,15 @@ export class Resumes {
       },
     },
   ];
-  constructor(private storage: StorageService) {}
+  constructor(private storage: StorageService) {
+    this.resumeGroup = new FormGroup({
+      fullName: new FormControl('', Validators.required),
+      jobTitle: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      experience: new FormControl('', Validators.required),
+      skills: new FormControl('', Validators.required),
+    });
+  }
 
   ngOnInit() {
     this.storage.set('resumes', JSON.stringify(this.resumes));

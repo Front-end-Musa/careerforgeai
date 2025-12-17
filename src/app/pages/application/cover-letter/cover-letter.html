@@ -36,21 +36,9 @@
           ></textarea>
         </div>
         <div class="form-field tone-field">
-          <mat-label>Tone</mat-label>
-          <div class="tone-container">
-            @for (t of tones; track t) {
-            <button
-              class="tone-btn"
-              [class.active]="selectedTone == t"
-              (click)="selectTone(t)"
-              type="button"
-            >
-              {{ t }}
-            </button>
-            }
-          </div>
-          <button class="generate" (click)="onSubmit()">Generate Cover Letter</button>
+          <app-tone-choose [tones]="tones"></app-tone-choose>
         </div>
+        <app-generate-btn [submitForm]="coverLetterForm"></app-generate-btn>
       </form>
     </div>
   </div>

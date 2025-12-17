@@ -3,10 +3,12 @@ import { MatLabel } from '@angular/material/form-field';
 import { DirName } from '../dir-name/dir-name';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { GenerateBtn } from '../../generate-btn/generate-btn';
+import { ToneChoose } from '../../tone-choose/tone-choose';
 
 @Component({
   selector: 'app-cover-letter',
-  imports: [MatLabel, DirName, CommonModule, ReactiveFormsModule],
+  imports: [MatLabel, DirName, CommonModule, ReactiveFormsModule, GenerateBtn, ToneChoose],
   templateUrl: './cover-letter.html',
   styleUrl: './cover-letter.scss',
 })

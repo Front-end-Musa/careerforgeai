@@ -1,1 +1,79 @@
-<p>resumes works!</p>
+<div class="resumes">
+  <app-dir-name title="AI Resume Generator"></app-dir-name>
+  <div class="app-section">
+    <div class="resume-details">
+      <form [formGroup]="resumeGroup">
+        <h2 class="section-title">Resume Details</h2>
+        <div class="form-field full-name-field">
+          <mat-label>Full Name</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="John Doe"
+            class="full-name"
+            formControlName="fullName"
+          />
+        </div>
+        <div class="form-field job-title-field">
+          <mat-label>Job Title</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Software Engineer"
+            class="job-title"
+            formControlName="jobTitle"
+          />
+        </div>
+        <div class="form-field email-field">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="john@example.com"
+            class="email"
+            formControlName="email"
+          />
+        </div>
+        <!-- <div class="form-field experience-field">
+          <mat-label>Experience</mat-label>
+          <textarea
+            placeholder="Describe your work experience..."
+            class="experience"
+            formControlName="experience"
+          >
+          </textarea>
+        </div> -->
+        <div class="form-field skills-field">
+          <mat-label>Skills</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="React, Node.js, Python"
+            class="skills"
+            formControlName="skills"
+          />
+        </div>
+      </form>
+      <form [formGroup]="resumeGroup">
+
+      </form>
+    </div>
+    <div class="preview-wrapper">
+      <div class="preview">
+        <div class="preview-header">
+          <h2 class="section-title">Preview</h2>
+          <div class="export-btns">
+            <button mat-button matButton="filled" class="export-btn pdf-btn">Export PDF</button>
+            <button mat-button matButton="filled" class="export-btn docx-btn">Export DOCX</button>
+          </div>
+          @if (resumeGenerated === false) {
+          <div class="preview-placeholder">
+            <span class="material-symbols-outlined">description</span>
+            <p class="preview-sub-text">Your AI-generated resume will appear here</p>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

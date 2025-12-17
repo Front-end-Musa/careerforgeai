@@ -1,0 +1,8 @@
+<mat-label>Tone</mat-label>
+<div class="tone-container">
+  @for (t of tones; track t) {
+  <button class="tone-btn" [class.active]="selectedTone == t" (click)="selectTone(t)" type="button">
+    {{ t }}
+  </button>
+  }
+</div>
