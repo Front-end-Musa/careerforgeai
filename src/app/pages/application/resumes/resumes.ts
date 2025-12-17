@@ -7,16 +7,18 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { GenerateBtn } from '../../generate-btn/generate-btn';
+import { ToneChoose } from '../../tone-choose/tone-choose';
 
 @Component({
   selector: 'app-resumes',
-  imports: [DirName, MatButton, ReactiveFormsModule, MatLabel, MatInput, GenerateBtn],
+  imports: [DirName, MatButton, ReactiveFormsModule, MatLabel, MatInput, GenerateBtn, ToneChoose],
   templateUrl: './resumes.html',
   styleUrl: './resumes.scss',
 })
 export class Resumes {
   resumeGroup: FormGroup;
   resumeGenerated: boolean = false;
+  tones: string[] = ['Modern', 'Minimal', 'Creative']
   resumes: Resume[] = [
     {
       id: 'res-001',

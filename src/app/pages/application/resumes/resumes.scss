@@ -1,3 +1,68 @@
 button {
-    border-radius: 8px;
+  border-radius: 8px;
+}
+
+.resumes {
+  .app-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .flex-item {
+      width: 49%;
+    }
+
+    .resume-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+
+      .resume-details-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+      }
+    }
+
+    .flex-item-content {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fff;
+      padding: 30px;
+    }
+
+    .preview-wrapper {
+        .preview {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            .preview-header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                .export-btns {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                }
+            }
+
+            .preview-placeholder {
+                border: 2px dashed #e0e0e0 !important;
+                border-radius: 8px;
+                padding: 50px 0;
+                text-align: center;
+                color: #868686;
+
+                span {
+                    font-size: 2.5rem;
+                }
+            }
+        }
+    }
+  }
 }

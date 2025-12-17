@@ -1,8 +1,8 @@
 <div class="resumes">
   <app-dir-name title="AI Resume Generator"></app-dir-name>
   <div class="app-section">
-    <div class="resume-details">
-      <form [formGroup]="resumeGroup">
+    <div class="resume-details flex-item">
+      <form [formGroup]="resumeGroup" class="resume-details-form flex-item-content">
         <h2 class="section-title">Resume Details</h2>
         <div class="form-field full-name-field">
           <mat-label>Full Name</mat-label>
@@ -54,11 +54,14 @@
           />
         </div>
       </form>
-      <form [formGroup]="resumeGroup">
-
+      <form [formGroup]="resumeGroup" class="resume-details-form flex-item-content">
+        <div class="form-field tone-field">
+          <app-tone-choose [tones]="tones"></app-tone-choose>
+        </div>
       </form>
+      <app-generate-btn [submitForm]="resumeGroup"></app-generate-btn>
     </div>
-    <div class="preview-wrapper">
+    <div class="preview-wrapper flex-item flex-item-content">
       <div class="preview">
         <div class="preview-header">
           <h2 class="section-title">Preview</h2>
@@ -66,13 +69,13 @@
             <button mat-button matButton="filled" class="export-btn pdf-btn">Export PDF</button>
             <button mat-button matButton="filled" class="export-btn docx-btn">Export DOCX</button>
           </div>
-          @if (resumeGenerated === false) {
-          <div class="preview-placeholder">
-            <span class="material-symbols-outlined">description</span>
-            <p class="preview-sub-text">Your AI-generated resume will appear here</p>
-          </div>
-          }
         </div>
+        @if (resumeGenerated === false) {
+        <div class="preview-placeholder">
+          <span class="material-symbols-outlined">description</span>
+          <p class="preview-sub-text">Your AI-generated resume will appear here</p>
+        </div>
+        }
       </div>
     </div>
   </div>
