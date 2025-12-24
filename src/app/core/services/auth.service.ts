@@ -1,16 +1,8 @@
 import { Injectable } from '@angular/core';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  UserCredential,
-} from 'firebase/auth';
-import { Auth } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, async, catchError, from, of, switchMap, tap } from 'rxjs';
-import { inject } from '@angular/core';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
 import { User } from '../interfaces/user.interface';
+import { doc, Firestore, setDoc } from '@angular/fire/firestore';
 
 export interface LoginCredentials {
   email: string;

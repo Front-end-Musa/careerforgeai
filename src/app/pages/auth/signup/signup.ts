@@ -5,7 +5,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { Logo } from '../../logos/logo/logo';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
 import { AuthFacade } from '../data/auth.facade';
 import { User } from '../../../core/interfaces/user.interface';
 
