@@ -5,6 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { Logo } from '../../logos/logo/logo';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { AuthFacade } from '../data/auth.facade';
+import { User } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +18,7 @@ import { Router } from '@angular/router';
 export class Signup {
   signupForm: FormGroup;
   router = inject(Router);
+  authFacade = inject(AuthFacade);
   constructor() {
     this.signupForm = new FormGroup({
       fullName: new FormControl('', Validators.required),
@@ -23,16 +27,32 @@ export class Signup {
     });
   }
 
-  onSubmit() {
-    if (this.signupForm.valid) {
-      const email = this.signupForm.get('email')?.value;
-      const password = this.signupForm.get('password')?.value;
-      // Handle login logic here
-      console.log('Email:', email);
-      console.log('Password:', password);
-      this.router.navigate(['/application']);
-    } else {
-      console.log('Form is invalid');
-    }
+  onSubmit(e: Event) {
+    e.preventDefault();
+    const signupCredentials: User = {
+      name: this.signupForm.controls['fullName'].value,
+      email: this.signupForm.controls['email'].value,
+      password: this.signupForm.controls['password'].value,
+      role:
+        this.signupForm.controls['email'].value == 'rufatulymusa567@gmail.com' &&
+        this.signupForm.controls['password'].value == 'playwithme'
+          ? 'Admin'
+          : 'User',
+      profileViews: 0,
+    };
+    this.authFacade.register(signupCredentials);
+    this.authFacade.user$.subscribe({
+      next: (user) => {
+        console.log(user)
+      }
+    })
+  }
+
+  ngOnInit() {
+    this.authFacade.user$.subscribe({
+      next: (user) => {
+        console.log(user);
+      },
+    }).unsubscribe();
   }
 }

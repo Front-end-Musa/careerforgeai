@@ -11,12 +11,14 @@ import { Resume } from '../../../core/interfaces/resumes.interface';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
+  resumes: Resume[] = [];
+  applications: Job[] = [];
+  interviews: Job[] = [];
   user: User = {
     name: 'John Doe',
+    email: 'john@example.com',
+    password: 'johndoe',
     role: 'User',
-    resumes: [],
-    applications: [],
-    interviews: [],
     profileViews: 120,
   };
 
@@ -26,11 +28,11 @@ export class Dashboard {
     const storedApplications: Job[] = JSON.parse(this.storageService.get('jobs-track') || '{}');
     const storedResumes: Resume[] = JSON.parse(this.storageService.get('resumes') || '{}');
     if (storedApplications) {
-      this.user.applications = storedApplications.filter((job) => job.status === 'applied');
-      this.user.interviews = storedApplications.filter((job) => job.status === 'interviewing');
+      this.applications = storedApplications.filter((job) => job.status === 'applied');
+      this.interviews = storedApplications.filter((job) => job.status === 'interviewing');
     }
     if (storedResumes) {
-      this.user.resumes = storedResumes
+      this.resumes = storedResumes;
     }
   }
 }

@@ -5,10 +5,11 @@ import { DatePipe } from '@angular/common';
 import { StorageService } from '../../../core/services/storage.service';
 import { AddJobModal } from '../add-job-modal/add-job-modal';
 import { Job } from '../../../core/interfaces/job.interface';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-job-tracker',
-  imports: [DirName, DatePipe, AddJobModal],
+  imports: [DirName, DatePipe, AddJobModal, DragDropModule],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
 })
@@ -48,6 +49,29 @@ export class JobTracker implements OnInit {
       this.storage.set('jobs-track', JSON.stringify(this.jobs));
     } catch (err) {
       console.warn('Failed to persist jobs:', err);
+    }
+  }
+
+  getJobsByStatus(status: string) {
+    return this.jobs.filter((job) => job.status === status);
+  }
+
+  drop(event: CdkDragDrop<any[]>, newStatus: string) {
+    const prevJob = event.previousContainer.data[event.previousIndex];
+
+    if (event.previousContainer === event.container) {
+      // reorder inside same column
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // move between columns
+      prevJob.status = newStatus;
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     }
   }
 

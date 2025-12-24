@@ -5,48 +5,80 @@
     (addJobClicked)="openAddJobModal()"
   ></app-dir-name>
   <div class="app-section">
-    <div class="job-lists">
-      <div class="applied job-list">
-        <h4 class="job-list-name">Applied</h4>
-        @for (job of jobs; track $index) { @if (job.status == "applied") {
-        <div class="job-card">
-          <h5 class="job-title">{{ job.title }}</h5>
-          <p class="company-name">{{ job.company }}</p>
-          <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-        </div>
-        } }
-      </div>
-      <div class="interviewing job-list">
-        <h4 class="job-list-name">Interviewing</h4>
-        @for (job of jobs; track $index) { @if (job.status == "interviewing") {
-        <div class="job-card">
-          <h5 class="job-title">{{ job.title }}</h5>
-          <p class="company-name">{{ job.company }}</p>
-          <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-        </div>
-        } }
-      </div>
-      <div class="offers job-list">
-        <h4 class="job-list-name">Offers</h4>
-        @for (job of jobs; track $index) { @if (job.status == "offered") {
-        <div class="job-card">
-          <h5 class="job-title">{{ job.title }}</h5>
-          <p class="company-name">{{ job.company }}</p>
-          <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-        </div>
-        } }
-      </div>
-      <div class="rejected job-list">
-        <h4 class="job-list-name">Rejected</h4>
-        @for (job of jobs; track $index) { @if (job.status == "rejected") {
-        <div class="job-card">
-          <h5 class="job-title">{{ job.title }}</h5>
-          <p class="company-name">{{ job.company }}</p>
-          <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-        </div>
-        } }
-      </div>
-    </div>
+    <table class="kanban-table">
+      <thead>
+        <tr>
+          <th>Applied</th>
+          <th>Interviewing</th>
+          <th>Offers</th>
+          <th>Rejected</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <!-- Applied -->
+          <td
+            cdkDropList
+            [cdkDropListData]="getJobsByStatus('applied')"
+            (cdkDropListDropped)="drop($event, 'applied')"
+          >
+            @for (job of getJobsByStatus('applied'); track job) {
+            <div class="job-card" cdkDrag>
+              <h5 class="job-title">{{ job.title }}</h5>
+              <p class="company-name">{{ job.company }}</p>
+              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
+            </div>
+            }
+          </td>
+
+          <!-- Interviewing -->
+          <td
+            cdkDropList
+            [cdkDropListData]="getJobsByStatus('interviewing')"
+            (cdkDropListDropped)="drop($event, 'interviewing')"
+          >
+            @for (job of getJobsByStatus('interviewing'); track job) {
+            <div class="job-card" cdkDrag>
+              <h5 class="job-title">{{ job.title }}</h5>
+              <p class="company-name">{{ job.company }}</p>
+              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
+            </div>
+            }
+          </td>
+
+          <!-- Offers -->
+          <td
+            cdkDropList
+            [cdkDropListData]="getJobsByStatus('offered')"
+            (cdkDropListDropped)="drop($event, 'offered')"
+          >
+            @for (job of getJobsByStatus('offered'); track job) {
+            <div class="job-card" cdkDrag>
+              <h5 class="job-title">{{ job.title }}</h5>
+              <p class="company-name">{{ job.company }}</p>
+              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
+            </div>
+            }
+          </td>
+
+          <!-- Rejected -->
+          <td
+            cdkDropList
+            [cdkDropListData]="getJobsByStatus('rejected')"
+            (cdkDropListDropped)="drop($event, 'rejected')"
+          >
+            @for (job of getJobsByStatus('rejected'); track job) {
+            <div class="job-card" cdkDrag>
+              <h5 class="job-title">{{ job.title }}</h5>
+              <p class="company-name">{{ job.company }}</p>
+              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
+            </div>
+            }
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <!-- Add job modal instance (hidden until opened) -->
   <app-add-job-modal #addJobModal (jobAdded)="handleJobAdded($event)"></app-add-job-modal>
