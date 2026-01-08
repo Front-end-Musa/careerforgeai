@@ -1,5 +1,5 @@
 import { Footer } from './footer/footer';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Header } from './header/header';
 import { Hero } from './hero/hero';
 import { Features } from './features/features';
@@ -7,22 +7,16 @@ import { About } from './about/about';
 import { PricingPlans } from './pricing-plans/pricing-plans';
 import { Faq } from './faq/faq';
 import { Contact } from './contact/contact';
+import { AuthFacade } from '../auth/data/auth.facade';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-landing',
-  imports: [
-    Header,
-    Hero,
-    Features,
-    About,
-    PricingPlans,
-    Faq,
-    Contact,
-    Footer
-  ],
+  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer, AsyncPipe],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
 export class Landing {
-
+  private authFacade = inject(AuthFacade);
+  user$ = this.authFacade.user$;
 }

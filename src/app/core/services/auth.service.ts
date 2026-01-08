@@ -1,38 +1,44 @@
-import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, async, catchError, from, of, switchMap, tap } from 'rxjs';
-import { User } from '../interfaces/user.interface';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
+import { inject, Injectable } from '@angular/core';
+import {
+  Auth,
+  authState,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+} from '@angular/fire/auth';
+import { Observable, from, of, switchMap, tap, map, catchError } from 'rxjs';
+import { AppUser, LoginUser } from '../interfaces/user.interface';
+import { doc, docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private auth = inject(Auth);
 
-  constructor(private firestore: Firestore, private auth: Auth) {}
+  constructor(private firestore: Firestore) {}
 
-  async login(credentials: LoginCredentials): Promise<void> {
-    try {
-      await signInWithEmailAndPassword(this.auth, credentials.email, credentials.password);
-    } catch (error) {
-      throw error;
-    }
+  login(credentials: LoginUser): Observable<any> {
+    return from(
+      signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
+    ).pipe(
+      tap((cred) => console.log('Firebase login successful, UID:', cred.user.uid)),
+      switchMap((cred) => this.getUser$(cred.user.uid)),
+      tap((user) => console.log('Fetched user data:', user)),
+      catchError((err) => {
+        console.error('Firebase login error:', err.code, err.message);
+        return of(null);
+      })
+    );
   }
 
-  registerUser(user: User): Observable<any> {
+  registerUser(user: AppUser): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, user.email, user.password)).pipe(
       switchMap((userCredential) => {
         const uid = userCredential.user.uid;
         const userRef = doc(this.firestore, 'users', uid);
-        const refreshToken = userCredential.user.refreshToken;
-        localStorage.setItem('accessToken', JSON.stringify(refreshToken));
+
         return from(
           setDoc(userRef, {
             name: user.name,
@@ -40,7 +46,7 @@ export class AuthService {
             createdAt: new Date(),
             role: user.role,
           })
-        );
+        ).pipe(switchMap(() => this.getUser$(uid).pipe(map((user) => user))));
       }),
       catchError((err) => {
         console.error('Firebase error:', err.code, err.message);
@@ -48,19 +54,32 @@ export class AuthService {
       })
     );
   }
+
+  initAuth(): Observable<AppUser | null> {
+    return authState(this.auth).pipe(
+      switchMap((firebaseUser) => {
+        if (!firebaseUser) {
+          return of(null);
+        }
+        return this.getUser$(firebaseUser.uid);
+      }),
+      catchError((err) => {
+        console.error('Auth init error:', err);
+        return of(null);
+      })
+    );
+  }
+
+  getUser$(uid: string): Observable<AppUser> {
+    const userRef = doc(this.firestore, 'users', uid);
+    return docData(userRef, { idField: 'uid' }) as Observable<AppUser>;
+  }
+
   async logout(): Promise<void> {
     try {
       await signOut(this.auth);
     } catch (error) {
       throw error;
     }
-  }
-
-  isAuthenticated(): boolean {
-    return this.currentUserSubject.value !== null;
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
   }
 }

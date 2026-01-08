@@ -23,18 +23,6 @@ export class Sidebar {
     { label: 'Dashboard', route: 'dashboard', icon: 'grid_view', id: 'dashboard' },
     { label: 'Resumes', route: 'resumes', icon: 'description', id: 'resumes' },
     { label: 'Cover Letters', route: 'cover-letter', icon: 'mail_outline', id: 'cover-letter' },
-    {
-      label: 'LinkedIn Optimizer',
-      route: 'linkedin-optimizer',
-      icon: 'badge',
-      id: 'linkedin-optimizer',
-    },
-    {
-      label: 'Interview Coach',
-      route: 'interview-coach',
-      icon: 'chat_bubble',
-      id: 'interview-coach',
-    },
     { label: 'Job Tracker', route: 'job-tracker', icon: 'work', id: 'job-tracker' },
     { label: 'Settings', route: 'settings', icon: 'settings' },
   ];

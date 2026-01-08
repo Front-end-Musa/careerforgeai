@@ -45,8 +45,8 @@
           </div>
 
           <!-- <button mat-button class="full-width submit-btn" (click)="onSubmit()">Login</button> -->
-          <button mat-button color="primary" class="send-btn" (click)="onSubmit()">Login</button>
         </form>
+        <button mat-button color="primary" class="send-btn" (click)="onSubmit()" routerLink="/application/dashboard">Login</button>
 
         <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
 
@@ -61,7 +61,7 @@
         </div>
 
         <p class="signup" style="text-align: center; margin-top: 14px">
-          Don't have an account? <a href="/signup">Sign up</a>
+          Don't have an account? <a href="/auth/signup">Sign up</a>
         </p>
       </mat-card>
     </div>

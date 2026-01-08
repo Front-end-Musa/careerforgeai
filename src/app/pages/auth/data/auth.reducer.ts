@@ -1,18 +1,32 @@
-import { User } from '../../../core/interfaces/user.interface';
+import { AppUser } from '../../../core/interfaces/user.interface';
 import { createReducer, on } from '@ngrx/store';
-import { registerUser, registerUserFailure, registerUserSuccess } from './auth.actions';
+import {
+  initUserFailure,
+  initUserSuccess,
+  loginUser,
+  loginUserFailure,
+  loginUserSuccess,
+  registerUser,
+  registerUserFailure,
+  registerUserSuccess,
+} from './auth.actions';
 
-type authStatus = 'init' | 'loading' | 'loaded' | 'error';
+export enum AuthStatus {
+  Init = 'init',
+  Loading = 'loading',
+  Loaded = 'loaded',
+  Error = 'error',
+}
 
 export interface AuthState {
-  user: User | null;
-  status: authStatus;
+  user: AppUser | null;
+  status: AuthStatus;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  status: 'init',
+  status: AuthStatus.Init,
   error: null,
 };
 
@@ -21,19 +35,51 @@ export const authReducer = createReducer(
 
   on(registerUser, (state) => ({
     ...state,
-    status: 'loading',
+    status: AuthStatus.Loading,
     error: null,
   })),
   on(registerUserSuccess, (state, { user }) => ({
     ...state,
     user,
-    status: 'loaded',
+    status: AuthStatus.Loaded,
     error: null,
   })),
   on(registerUserFailure, (state, { error }) => ({
     ...state,
     user: null,
-    status: 'error',
+    status: AuthStatus.Error,
     error: error,
-  }))
+  })),
+  on(loginUser, (state) => ({
+    ...state,
+    user: null,
+    status: AuthStatus.Loading,
+    error: null,
+  })),
+  on(loginUserSuccess, (state, { user }) => ({
+    ...state,
+    user,
+    status: AuthStatus.Loaded,
+    error: null,
+  })),
+  on(loginUserFailure, (state, { error }) => ({
+    ...state,
+    user: null,
+    status: AuthStatus.Error,
+    error,
+  })),
+  on(initUserSuccess, (state, { user }) => ({
+    ...state,
+    user,
+    status: AuthStatus.Loaded,
+    error: null,
+  })),
+  on(initUserFailure, (state, { error }) => ({
+    ...state,
+    user: null,
+    status: AuthStatus.Error,
+    error,
+  })),
 );
+
+export const reducerName = 'auth';

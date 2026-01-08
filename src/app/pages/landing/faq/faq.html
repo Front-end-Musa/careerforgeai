@@ -4,8 +4,8 @@
             <h2 class="title">Frequently Asked Questions</h2>
         </header>
         <div class="qas">
-            @for (question of qa; track $index) {
-                <app-qa-item [qa]="question" class="qa"></app-qa-item>
+            @for (question of qa; track $index; let even = $even; let odd = $odd) {
+                <app-qa-item [qa]="question" class="qa" [isEven]="even" [isOdd]="odd"></app-qa-item>
             }
         </div>
     </div>

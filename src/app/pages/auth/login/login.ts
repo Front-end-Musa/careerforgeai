@@ -12,7 +12,8 @@ import {
 import { MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthFacade } from '../data/auth.facade';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     MatError,
     CommonModule,
+    RouterLink,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -33,6 +35,7 @@ import { Router } from '@angular/router';
 export class Login {
   loginForm: FormGroup;
   router = inject(Router);
+  authFacade = inject(AuthFacade);
 
   constructor() {
     this.loginForm = new FormGroup({
@@ -41,16 +44,21 @@ export class Login {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.loginForm.valid) {
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-      // Handle login logic here
-      console.log('Email:', email);
-      console.log('Password:', password);
-      this.router.navigate(['/application']);
+      await this.authFacade.login({ email, password });
     } else {
       console.log('Form is invalid');
     }
+    this.authFacade.user$.subscribe({
+      next: (user) => {
+        if (user) {
+          console.log('Login successful, navigating to dashboard');
+          this.router.navigate(['/application/dashboard']);
+        }
+      },
+    });
   }
 }

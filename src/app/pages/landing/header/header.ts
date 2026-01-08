@@ -1,11 +1,12 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ScrollService } from '../../../core/services/scroll.service';
 import { Logo } from '../../logos/logo/logo';
 import { RouterLink } from '@angular/router';
+import { AppUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-header',
@@ -14,9 +15,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.scss',
 })
 export class Header {
-  user: any | null = null;
   @ViewChild('burgerBtn') burgerBtn!: ElementRef<HTMLButtonElement>;
   @ViewChild('burgerMenu') burgerMenu!: ElementRef<HTMLDivElement>;
+  @Input() user: AppUser | null = null;
 
   constructor(public scrollService: ScrollService) {}
 

@@ -6,7 +6,7 @@ import { MatError, MatLabel } from '@angular/material/form-field';
 import { Logo } from '../../logos/logo/logo';
 import { Router } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
-import { User } from '../../../core/interfaces/user.interface';
+import { AppUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-signup',
@@ -26,9 +26,9 @@ export class Signup {
     });
   }
 
-  onSubmit(e: Event) {
+  async onSubmit(e: Event) {
     e.preventDefault();
-    const signupCredentials: User = {
+    const signupCredentials: AppUser = {
       name: this.signupForm.controls['fullName'].value,
       email: this.signupForm.controls['email'].value,
       password: this.signupForm.controls['password'].value,
@@ -39,19 +39,24 @@ export class Signup {
           : 'User',
       profileViews: 0,
     };
-    this.authFacade.register(signupCredentials);
-    this.authFacade.user$.subscribe({
-      next: (user) => {
-        console.log(user)
-      }
-    })
-  }
-
-  ngOnInit() {
+    await this.authFacade.register(signupCredentials);
     this.authFacade.user$.subscribe({
       next: (user) => {
         console.log(user);
       },
-    }).unsubscribe();
+    });
+    setTimeout(() => {
+      this.router.navigate(['/application/dashboard']);
+    }, 0);
+  }
+
+  ngOnInit() {
+    this.authFacade.user$
+      .subscribe({
+        next: (user) => {
+          console.log(user);
+        },
+      })
+      .unsubscribe();
   }
 }

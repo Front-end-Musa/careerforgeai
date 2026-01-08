@@ -4,7 +4,7 @@ import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-tone-choose',
-  imports: [MatLabel, MatButton],
+  imports: [MatLabel],
   templateUrl: './tone-choose.html',
   styleUrl: './tone-choose.scss',
 })
@@ -17,7 +17,7 @@ export class ToneChoose {
     console.log('Selected tone:', this.selectedTone)
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.selectedTone = this.tones[0]
   }
 }

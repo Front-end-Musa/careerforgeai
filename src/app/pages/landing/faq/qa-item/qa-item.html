@@ -1,5 +1,5 @@
 <mat-accordion class="faq-accordion">
-  <mat-expansion-panel>
+  <mat-expansion-panel [class.even]="isEven" [class.odd]="isOdd">
     <mat-expansion-panel-header>
       <mat-panel-title>{{ qa.question }}</mat-panel-title>
     </mat-expansion-panel-header>

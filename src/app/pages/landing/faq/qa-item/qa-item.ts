@@ -10,4 +10,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class QaItem {
   @Input() qa!: QA;
+  @Input() isEven: boolean = false;
+  @Input() isOdd: boolean = false;
 }

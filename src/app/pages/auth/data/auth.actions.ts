@@ -1,12 +1,20 @@
 import { createAction, props } from '@ngrx/store';
-import { User } from '../../../core/interfaces/user.interface';
+import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
 
-export const registerUser = createAction('[Users] Register User', props<{ user: User }>());
+export const registerUser = createAction('[Users] Register User', props<{ user: AppUser }>());
 export const registerUserSuccess = createAction(
   '[Users] Register User Success',
-  props<{ user: any }>()
+  props<{ user: AppUser }>()
 );
 export const registerUserFailure = createAction(
   '[Users] Register User Failure',
-  props<{ error: any }>()
+  props<{ error: string }>()
 );
+
+export const loginUser = createAction('[Users] Login User', props<{ user: LoginUser }>());
+export const loginUserSuccess = createAction('[Users] Login User Success', props<{ user: AppUser }>());
+export const loginUserFailure = createAction('[Users] Login User Failure', props<{ error: string }>());
+
+export const initUser = createAction('[Users] Init User');
+export const initUserSuccess = createAction('[Users] Init User Success', props<{ user: AppUser }>());
+export const initUserFailure = createAction('[Users] Init User Failure', props<{ error: string }>());

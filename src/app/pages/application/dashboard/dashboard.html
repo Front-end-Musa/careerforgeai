@@ -1,7 +1,7 @@
 <div class="dashboard">
   <div class="app-section">
     <header class="head">
-      <h1 class="title">Welcome back, {{ user.name }}!</h1>
+      <h1 class="title">Welcome back, {{ user()?.name }}!</h1>
       <p class="sub-title">Here's your career progress.</p>
     </header>
     <div class="stats">
@@ -41,7 +41,7 @@
           <span class="material-symbols-outlined profile-mat orange-icon">analytics</span>
         </div>
         <div class="stat-value">
-          <div class="stat-value-number">{{ user.profileViews }}</div>
+          <div class="stat-value-number">{{ user()?.profileViews }}</div>
           <p class="stat-value-text">This month</p>
         </div>
       </div>

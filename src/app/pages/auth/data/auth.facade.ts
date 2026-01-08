@@ -1,18 +1,27 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectUser } from './auth.selectors';
+import { selectAuthError, selectAuthStatus, selectUser } from './auth.selectors';
 import { Observable } from 'rxjs';
-import { User } from '../../../core/interfaces/user.interface';
-import { registerUser } from './auth.actions';
+import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
+import { initUser, loginUser, registerUser } from './auth.actions';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthFacade {
-  store = inject(Store);
-  user$: Observable<User | null> = this.store.select(selectUser);
+  private store = inject(Store);
 
-  register(credentials: User) {
-    this.store.dispatch(registerUser({ user: credentials }));
+  user$ = this.store.select(selectUser);
+  status$ = this.store.select(selectAuthStatus);
+  error$ = this.store.select(selectAuthError);
+
+  register(user: AppUser) {
+    this.store.dispatch(registerUser({ user }));
+  }
+
+  login(user: LoginUser) {
+    this.store.dispatch(loginUser({ user }));
+  }
+
+  initAuth(): void {
+    this.store.dispatch(initUser())
   }
 }

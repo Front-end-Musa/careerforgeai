@@ -16,11 +16,11 @@
 
     <!-- Right: Auth -->
     @if (user != null) {
-    <div class="auth-btn">Account</div>
+    <div class="auth-btn primary" routerLink="application/dashboard">Account</div>
     } @else {
     <div class="auth-group">
-      <button mat-stroked-button class="auth-link" routerLink="login">Login</button>
-      <button mat-flat-button class="auth-btn primary" routerLink="signup">Sign Up</button>
+      <button mat-stroked-button class="auth-link" routerLink="auth/login">Login</button>
+      <button mat-flat-button class="auth-btn primary" routerLink="auth/signup">Sign Up</button>
     </div>
     }
     <button #burgerBtn id="burger-btn" class="burger-show" (click)="toggleMenu()">
@@ -42,8 +42,8 @@
         </nav>
 
         <div class="auth-group-burger">
-          <button mat-stroked-button class="auth-link mobile-btn">Log In</button>
-          <button mat-flat-button class="primary mobile-btn">Sign Up</button>
+          <button mat-stroked-button class="auth-link mobile-btn" routerLink="auth/login">Log In</button>
+          <button mat-flat-button class="primary mobile-btn" routerLink="auth/signup">Sign Up</button>
         </div>
       </div>
     </div>
