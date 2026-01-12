@@ -3,8 +3,8 @@ import { MatLabel } from '@angular/material/form-field';
 import { DirName } from '../dir-name/dir-name';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GenerateBtn } from '../../generate-btn/generate-btn';
-import { ToneChoose } from '../../tone-choose/tone-choose';
+import { GenerateBtn } from '../../buttons/generate-btn/generate-btn';
+import { ToneChoose } from '../../buttons/tone-choose/tone-choose';
 
 @Component({
   selector: 'app-cover-letter',
@@ -28,7 +28,7 @@ export class CoverLetter implements OnInit {
       console.log('Selected tone:', value);
     });
   }
-  
+
   ngOnInit() {
     this.coverLetterForm.controls['tone'].setValue(this.selectedTone);
   }

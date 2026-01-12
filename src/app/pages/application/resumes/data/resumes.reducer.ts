@@ -6,6 +6,7 @@ import * as ResumesActions from '../data/resumes.actions';
 type stateStatus = 'init' | 'loading' | 'loaded' | 'error';
 
 export interface ResumesState extends EntityState<Resume> {
+  resumes: Resume[];
   status: stateStatus;
   error: string | null;
   // UI / AI
@@ -19,6 +20,7 @@ export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>
 });
 
 export const initialState: ResumesState = resumesAdapter.getInitialState({
+  resumes: [],
   status: 'init',
   error: null,
   formValue: null,

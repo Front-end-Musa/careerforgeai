@@ -1,0 +1,22 @@
+<div class="view-switch">
+  <button
+    class="switch-btn"
+    [class.active]="active === 'list'"
+    (click)="select('list')"
+  >
+    List
+  </button>
+
+  <button
+    class="switch-btn"
+    [class.active]="active === 'create'"
+    (click)="select('create')"
+  >
+    Create
+  </button>
+
+  <div
+    class="switch-indicator"
+    [class.right]="active === 'create'"
+  ></div>
+</div>

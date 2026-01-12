@@ -2,8 +2,8 @@
   <div class="app-section">
     <div class="dir-name">{{ title }}</div>
 
-    @if (additionalElems != null) {
-    <div class="additionalElems" [innerHTML]="additionalElems" #additionalElemsContainer></div>
-    }
+    <div class="additional-items">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

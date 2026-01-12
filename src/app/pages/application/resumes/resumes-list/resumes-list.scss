@@ -1,0 +1,12 @@
+.resumes-list-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    flex-direction: row;
+    justify-content: space-around;
+
+    .resume-card {
+        flex: content;
+        box-sizing: border-box;
+    }
+}
