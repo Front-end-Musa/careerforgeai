@@ -17,7 +17,7 @@ import { ResumesList } from './resumes-list/resumes-list';
 export class Resumes {
   tones: string[] = ['Modern', 'Minimal', 'Creative'];
   resumes: Resume[] = [];
-  viewMode: string = 'list';
+  viewMode: string = 'create';
   createSwitchHtml: SafeHtml;
   constructor(private storage: StorageService) {
     this.createSwitchHtml = `

@@ -17,6 +17,8 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authReducer } from './pages/auth/data/auth.reducer';
 import { AuthEffects } from './pages/auth/data/auth.effects';
+import { resumesReducer } from './pages/application/resumes/data/resumes.reducer';
+import { ResumeEffects } from './pages/application/resumes/data/resumes.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
@@ -37,8 +39,8 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // NgRx
-    provideStore({ auth: authReducer }),
-    provideEffects([AuthEffects]),
+    provideStore({ auth: authReducer, resumes: resumesReducer }),
+    provideEffects([AuthEffects, ResumeEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,

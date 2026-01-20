@@ -1,22 +1,28 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ResumesState } from './resumes.reducer';
+import { resumesAdapter, ResumesState } from './resumes.reducer';
 
-export const selectResumesState = createFeatureSelector<ResumesState>('resumes');
+export const selectResumesFeature = createFeatureSelector<ResumesState>('resumes');
 
-export const selectAllResumes = createSelector(
-    selectResumesState,
-    (state) => state.resumes
+export const { selectIds, selectEntities, selectAll, selectTotal } = resumesAdapter.getSelectors();
+
+export const selectResumesStatus = createSelector(
+    selectResumesFeature,
+    (state: ResumesState) => state.status
 );
-
-export const selectResumesLoading = createSelector(selectResumesState, (state) => state.status === 'loading');
 
 export const selectResumesError = createSelector(
-    selectResumesState,
-    (state) => state.error
+    selectResumesFeature,
+    (state: ResumesState) => state.error
 );
 
-export const selectResumeById = (id: string) =>
-    createSelector(
-        selectAllResumes,
-        (resumes) => resumes?.find((resume: any) => resume.id === id)
-    );
+export const selectResumesFormValue = createSelector(
+    selectResumesFeature,
+    (state: ResumesState) => state.formValue
+);
+
+export const selectResumesGenerating = createSelector(
+    selectResumesFeature,
+    (state: ResumesState) => state.generating
+);
+
+export const selectResumeById = (id: string) => createSelector(selectEntities, (entities) => entities[id]);

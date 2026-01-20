@@ -1,5 +1,5 @@
 <div class="resumes-list-wrapper">
-    @for (resume of (resumes | async); track $index) {
+    @for (resume of resumes(); track $index) {
         <app-resume-card [resume]="resume" class="resume-card"></app-resume-card>
     }
 </div>

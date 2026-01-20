@@ -6,30 +6,37 @@ import {
   query,
   where,
   orderBy,
-  addDoc,
-  doc,
-  updateDoc,
+  docData,
 } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
+import { Auth, user } from '@angular/fire/auth';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResumeService {
-  private readonly collectionName = 'resumes';
 
   constructor(private firestore: Firestore, private auth: Auth) {}
 
-  getResumesForUser() {
-    const uid = this.auth.currentUser?.uid;
-    if (!uid) throw new Error('User not authenticated');
-
-    const resumesRef = collection(this.firestore, this.collectionName);
-
-    const q = query(resumesRef, where('userId', '==', uid), orderBy('createdAt', 'desc'));
-
-    return collectionData(q, { idField: 'id' }) as Observable<Resume[]>;
+  getResumesForUser(): Observable<Resume[]> {
+    const resumesRef = collection(this.firestore, 'resumes');
+    return user(this.auth).pipe(
+      switchMap((currentUser) => {
+        if (!currentUser) {
+          throw new Error('User not authenticated');
+        }
+        const q = query(
+          resumesRef,
+          where('userId', '==', currentUser.uid),
+          orderBy('userId')
+        );
+        return collectionData(q, { idField: 'id' }) as Observable<Resume[]>;
+      }),
+      catchError((err) => {
+        console.error('Error fetching resumes:', err);
+        return of(err);
+      })
+    );
   }
 }

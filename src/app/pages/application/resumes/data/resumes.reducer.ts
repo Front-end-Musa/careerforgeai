@@ -14,10 +14,14 @@ export interface ResumesState extends EntityState<Resume> {
   generating: boolean;
 }
 
-export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
-  selectId: (resume) => resume.id,
-  sortComparer: false,
-});
+export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>(
+  {
+    selectId: (resume: Resume) => resume.id,
+    sortComparer: (a: Resume, b: Resume) => a.personalInfo.fullName.localeCompare(b.personalInfo.fullName),
+  }
+);
+
+export const { selectIds, selectEntities, selectAll, selectTotal } = resumesAdapter.getSelectors();
 
 export const initialState: ResumesState = resumesAdapter.getInitialState({
   resumes: [],
@@ -49,6 +53,6 @@ export const resumesReducer = createReducer(
   on(ResumesActions.loadResumesFailure, (state, { error }) => ({
     ...state,
     status: 'error',
-    error: error
+    error: error,
   }))
 );

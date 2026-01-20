@@ -4,10 +4,11 @@ import { AppUser } from '../../../core/interfaces/user.interface';
 import { Job } from '../../../core/interfaces/job.interface';
 import { Resume } from '../../../core/interfaces/resumes.interface';
 import { AuthFacade } from '../../auth/data/auth.facade';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

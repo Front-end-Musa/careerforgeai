@@ -10,8 +10,8 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): Observable<boolean | UrlTree> {
     return combineLatest([this.authFacade.user$, this.authFacade.status$]).pipe(
-      // 1. Only allow the stream to continue if status is Loaded/Success
-      filter(([user, status]) => status === AuthStatus.Loaded),
+      // 1. Only allow the stream to continue if status is Loaded or Error (auth check complete)
+      filter(([user, status]) => status === AuthStatus.Loaded || status === AuthStatus.Error),
 
       // 2. Take the first value that passes the filter and complete
       take(1),

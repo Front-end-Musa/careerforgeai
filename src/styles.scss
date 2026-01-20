@@ -493,3 +493,8 @@ mat-error {
   font-size: 16px;
   border: none;
 }
+
+.icon-blue {
+  color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-primary-container);
+}

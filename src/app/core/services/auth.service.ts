@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import {
   Auth,
   authState,
@@ -16,6 +17,7 @@ import { doc, docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore
 })
 export class AuthService {
   private auth = inject(Auth);
+  private platformId = inject(PLATFORM_ID);
 
   constructor(private firestore: Firestore) {}
 
@@ -56,6 +58,9 @@ export class AuthService {
   }
 
   initAuth(): Observable<AppUser | null> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of(null);
+    }
     return authState(this.auth).pipe(
       switchMap((firebaseUser) => {
         if (!firebaseUser) {

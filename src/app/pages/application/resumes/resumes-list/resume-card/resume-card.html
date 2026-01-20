@@ -1,14 +1,19 @@
 <div class="resume-card">
-  <div class="resume-image up"><img src="" alt="" /></div>
   <div class="resume-info-wrapper">
-    <div class="resume-title">{{ resume.jobTitle }}</div>
-    <div class="resume-info">{{ resume.tone }}  •  {{ resume.updatedAt | date : 'shortDate' }}</div>
-    <div class="resume-btns">
-      <button class="edit-btn">Edit</button>
-      <button class="download-btn"><span class="material-symbols-outlined resume-mat">Download</span></button>
-      <button class="delete-btn">
-        <span class="material-symbols-outlined resume-mat delete-btn">Delete</span>
-      </button>
+    <span class="material-symbols-outlined icon-blue">description</span>
+    <div class="resume-info-text">
+      <div class="resume-title">{{ resume.personalInfo.title }}</div>
+      <div class="resume-info">{{ resume.tone }}</div>
     </div>
+  </div>
+  <div class="updatedat">Updated at {{ resume.updatedAt | date : 'dd.MM.yyyy' }}</div>
+  <div class="resume-btns">
+    <button class="edit-btn">Edit</button>
+    <button class="download-btn">
+      <span class="material-symbols-outlined resume-mat">Download</span>
+    </button>
+    <button class="delete-btn">
+      <span class="material-symbols-outlined resume-mat delete-btn">Delete</span>
+    </button>
   </div>
 </div>

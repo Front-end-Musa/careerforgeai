@@ -11,6 +11,9 @@
           class="full-name"
           formControlName="fullName"
         />
+        @if (resumeGroup.get('fullName')?.invalid && resumeGroup.get('fullName')?.touched) {
+        <p class="error-message">Full name is required</p>
+        }
       </div>
       <div class="form-field job-title-field">
         <mat-label>Job Title</mat-label>
@@ -21,6 +24,9 @@
           class="job-title"
           formControlName="jobTitle"
         />
+        @if (resumeGroup.get('jobTitle')?.invalid && resumeGroup.get('jobTitle')?.touched) {
+        <p class="error-message">Job title is required</p>
+        }
       </div>
       <div class="form-field email-field">
         <mat-label>Email</mat-label>
@@ -31,16 +37,22 @@
           class="email"
           formControlName="email"
         />
+        @if (resumeGroup.get('email')?.invalid && resumeGroup.get('email')?.touched) {
+        <p class="error-message">Valid email is required</p>
+        }
       </div>
-      <!-- <div class="form-field experience-field">
-          <mat-label>Experience</mat-label>
-          <textarea
-            placeholder="Describe your work experience..."
-            class="experience"
-            formControlName="experience"
-          >
-          </textarea>
-        </div> -->
+      <div class="form-field experience-field">
+        <mat-label>Experience</mat-label>
+        <textarea
+          placeholder="Describe your work experience..."
+          class="experience"
+          formControlName="experience"
+        >
+        </textarea>
+        @if (resumeGroup.get('experience')?.invalid && resumeGroup.get('experience')?.touched) {
+        <p class="error-message">Experience is required</p>
+        }
+      </div>
       <div class="form-field skills-field">
         <mat-label>Skills</mat-label>
         <input
@@ -50,25 +62,67 @@
           class="skills"
           formControlName="skills"
         />
+        @if (resumeGroup.get('skills')?.invalid && resumeGroup.get('skills')?.touched) {
+        <p class="error-message">Skills are required</p>
+        }
       </div>
     </form>
     <form [formGroup]="resumeGroup" class="resume-details-form flex-item-content">
       <div class="form-field tone-field">
-        <app-tone-choose [tones]="tones"></app-tone-choose>
+        <app-tone-choose [tones]="tones" (toneSelected)="onToneSelected($event)"></app-tone-choose>
       </div>
     </form>
-    <app-generate-btn [submitForm]="resumeGroup"></app-generate-btn>
+    <div class="form-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="generateResume()"
+        [disabled]="isGenerating"
+        class="generate-btn"
+      >
+        @if (isGenerating) {
+        <mat-spinner diameter="20"></mat-spinner>
+        <span>Generating...</span>
+        } @else {
+        <span class="material-symbols-outlined">auto_awesome</span>
+        <span>Generate Resume</span>
+        }
+      </button>
+      @if (resumeGenerated) {
+      <button mat-stroked-button (click)="resetForm()" class="reset-btn">Reset</button>
+      }
+    </div>
   </div>
   <div class="preview-wrapper flex-item flex-item-content">
     <div class="preview">
       <div class="preview-header">
         <h2 class="section-title">Preview</h2>
+        @if (resumeGenerated) {
         <div class="export-btns">
-          <button mat-button matButton="filled" class="export-btn pdf-btn">Export PDF</button>
-          <button mat-button matButton="filled" class="export-btn docx-btn">Export DOCX</button>
+          <button mat-raised-button color="accent" (click)="exportPDF()" class="export-btn pdf-btn">
+            <span class="material-symbols-outlined">picture_as_pdf</span>
+            PDF
+          </button>
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="exportDOCX()"
+            class="export-btn docx-btn"
+          >
+            <span class="material-symbols-outlined">description</span>
+            DOCX
+          </button>
         </div>
+        }
       </div>
-      @if (resumeGenerated === false) {
+      @if (isGenerating) {
+      <div class="preview-loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Generating your resume...</p>
+      </div>
+      } @else if (resumeGenerated && generatedResume) {
+      <div class="resume-preview-content" [innerHTML]="generatedResume.content"></div>
+      } @else {
       <div class="preview-placeholder">
         <span class="material-symbols-outlined">description</span>
         <p class="preview-sub-text">Your AI-generated resume will appear here</p>
