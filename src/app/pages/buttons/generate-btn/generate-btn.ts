@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class GenerateBtn {
   @Input() submitForm!: FormGroup;
+  @Input() disabled: boolean = false;
 
   onSubmit() {
     if (this.submitForm.valid) {

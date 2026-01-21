@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
+import { AppUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-login',
@@ -53,7 +54,7 @@ export class Login {
       console.log('Form is invalid');
     }
     this.authFacade.user$.subscribe({
-      next: (user) => {
+      next: (user: AppUser | null) => {
         if (user) {
           console.log('Login successful, navigating to dashboard');
           this.router.navigate(['/application/dashboard']);

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { CreateListResumeSwitch } from '../../../buttons/create-list-resume-switch/create-list-resume-switch';
 import { ToneChoose } from '../../../buttons/tone-choose/tone-choose';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
-import { DirName } from '../../dir-name/dir-name';
 import { CommonModule } from '@angular/common';
 import { AIAgentService } from '../../../../core/services/ai-agent.service';
 import { ResumeService } from '../../../../core/services/resume.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import OpenAi from 'openai';
+import { environment } from '../../../../../environments/environment';
 
 type ResumeEditorMode = 'create' | 'edit';
 
@@ -46,7 +46,10 @@ export class ResumesCreate implements OnInit {
   isGenerating: boolean = false;
   generatedResume: GeneratedResume | null = null;
 
-  constructor(private aiAgentService: AIAgentService, private resumeService: ResumeService) {
+  constructor(
+    private aiAgentService: AIAgentService,
+    private resumeService: ResumeService,
+  ) {
     this.resumeGroup = new FormGroup({
       fullName: new FormControl('', Validators.required),
       jobTitle: new FormControl('', Validators.required),
@@ -115,7 +118,7 @@ export class ResumesCreate implements OnInit {
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
       printWindow.document.write(
-        '<html><head><title>' + this.generatedResume.fullName + ' Resume</title></head><body>'
+        '<html><head><title>' + this.generatedResume.fullName + ' Resume</title></head><body>',
       );
       printWindow.document.write(this.generatedResume.content);
       printWindow.document.write('</body></html>');

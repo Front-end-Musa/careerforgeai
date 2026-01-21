@@ -4,7 +4,7 @@ import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-tone-choose',
-  imports: [MatLabel, MatButton],
+  imports: [MatLabel],
   templateUrl: './tone-choose.html',
   styleUrl: './tone-choose.scss',
 })

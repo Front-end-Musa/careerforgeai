@@ -21,7 +21,7 @@ export class Dashboard {
 
   ngOnInit() {
     this.authFacade.user$.subscribe({
-      next: (user) => {
+      next: (user: AppUser | null) => {
         console.log(user);
         this.user.set(user);
       },

@@ -73,7 +73,7 @@
       </div>
     </form>
     <div class="form-actions">
-      <button
+      <app-generate-btn
         mat-raised-button
         color="primary"
         (click)="generateResume()"
@@ -83,11 +83,8 @@
         @if (isGenerating) {
         <mat-spinner diameter="20"></mat-spinner>
         <span>Generating...</span>
-        } @else {
-        <span class="material-symbols-outlined">auto_awesome</span>
-        <span>Generate Resume</span>
         }
-      </button>
+      </app-generate-btn>
       @if (resumeGenerated) {
       <button mat-stroked-button (click)="resetForm()" class="reset-btn">Reset</button>
       }

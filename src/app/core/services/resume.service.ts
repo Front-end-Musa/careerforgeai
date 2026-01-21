@@ -11,12 +11,12 @@ import {
 import { Auth, user } from '@angular/fire/auth';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
+import OpenAi from 'openai';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResumeService {
-
   constructor(private firestore: Firestore, private auth: Auth) {}
 
   getResumesForUser(): Observable<Resume[]> {

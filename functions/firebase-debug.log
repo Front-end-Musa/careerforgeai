@@ -1,0 +1,659 @@
+[debug] [2026-01-21T13:40:31.918Z] ----------------------------------------------------------------------
+[debug] [2026-01-21T13:40:31.919Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --only functions
+[debug] [2026-01-21T13:40:31.920Z] CLI Version:   13.35.1
+[debug] [2026-01-21T13:40:31.920Z] Platform:      win32
+[debug] [2026-01-21T13:40:31.920Z] Node Version:  v18.20.8
+[debug] [2026-01-21T13:40:31.921Z] Time:          Wed Jan 21 2026 18:40:31 GMT+0500 (West Kazakhstan Time)
+[debug] [2026-01-21T13:40:31.921Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-01-21T13:40:32.088Z] Field "/functions" in "firebase.json" is possibly invalid: must be object
+[debug] [2026-01-21T13:40:32.088Z] Object "/functions/0" in "firebase.json" has unknown property: {"additionalProperty":"disallowLegacyRuntimeConfig"}
+[debug] [2026-01-21T13:40:32.088Z] Field "/functions" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-01-21T13:40:32.092Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-01-21T13:40:32.092Z] > authorizing via signed-in user (rufatulymusa567@gmail.com)
+[info] i  emulators: Starting emulators: functions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions"}}
+[debug] [2026-01-21T13:40:32.098Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-01-21T13:40:32.098Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2026-01-21T13:40:32.102Z] [hub] writing locator at C:\Users\FRONTE~1\AppData\Local\Temp\hub-ai-job-seeker-ed1d3.json
+[debug] [2026-01-21T13:40:32.115Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-01-21T13:40:32.115Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-01-21T13:40:32.115Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-01-21T13:40:32.115Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, auth, firestore, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2026-01-21T13:40:32.223Z] defaultcredentials: writing to file C:\Users\frontend_coder\AppData\Roaming\firebase\rufatulymusa567_gmail_com_application_default_credentials.json
+[debug] [2026-01-21T13:40:32.226Z] Setting GAC to C:\Users\frontend_coder\AppData\Roaming\firebase\rufatulymusa567_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\frontend_coder\\AppData\\Roaming\\firebase\\rufatulymusa567_gmail_com_application_default_credentials.json"}}
+[debug] [2026-01-21T13:40:32.227Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:40:32.227Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:40:32.228Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ai-job-seeker-ed1d3/adminSdkConfig [none]
+[debug] [2026-01-21T13:40:32.817Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ai-job-seeker-ed1d3/adminSdkConfig 200
+[debug] [2026-01-21T13:40:32.817Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ai-job-seeker-ed1d3/adminSdkConfig {"projectId":"ai-job-seeker-ed1d3","storageBucket":"ai-job-seeker-ed1d3.firebasestorage.app"}
+[info] i  ui: downloading ui-v1.14.0.zip... {"metadata":{"emulator":{"name":"ui"},"message":"downloading ui-v1.14.0.zip..."}}
+[debug] [2026-01-21T13:40:32.844Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.14.0.zip 
+[debug] [2026-01-21T13:40:33.236Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.14.0.zip 200
+[debug] [2026-01-21T13:40:33.236Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/ui-v1.14.0.zip [stream]
+[debug] [2026-01-21T13:40:34.566Z] Data is 3615311
+[debug] [2026-01-21T13:40:34.566Z] [unzip] Entry: client/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.567Z] [unzip] Processing entry: client\
+[debug] [2026-01-21T13:40:34.567Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\
+[debug] [2026-01-21T13:40:34.567Z] [unzip] Entry: client/favicon-16x16.png (compressed_size=293 bytes, uncompressed_size=293 bytes)
+[debug] [2026-01-21T13:40:34.568Z] [unzip] Processing entry: client\favicon-16x16.png
+[debug] [2026-01-21T13:40:34.568Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.568Z] [unzip] Writing file: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\favicon-16x16.png
+[debug] [2026-01-21T13:40:34.569Z] [unzip] Entry: client/safari-pinned-tab.svg (compressed_size=1433 bytes, uncompressed_size=2611 bytes)
+[debug] [2026-01-21T13:40:34.569Z] [unzip] Processing entry: client\safari-pinned-tab.svg
+[debug] [2026-01-21T13:40:34.569Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.569Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\safari-pinned-tab.svg
+[debug] [2026-01-21T13:40:34.572Z] [unzip] Entry: client/favicon.ico (compressed_size=2933 bytes, uncompressed_size=13294 bytes)
+[debug] [2026-01-21T13:40:34.572Z] [unzip] Processing entry: client\favicon.ico
+[debug] [2026-01-21T13:40:34.572Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.572Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\favicon.ico
+[debug] [2026-01-21T13:40:34.573Z] [unzip] Entry: client/index.html (compressed_size=1363 bytes, uncompressed_size=3071 bytes)
+[debug] [2026-01-21T13:40:34.573Z] [unzip] Processing entry: client\index.html
+[debug] [2026-01-21T13:40:34.573Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.573Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\index.html
+[debug] [2026-01-21T13:40:34.575Z] [unzip] Entry: client/android-chrome-192x192.png (compressed_size=2684 bytes, uncompressed_size=2684 bytes)
+[debug] [2026-01-21T13:40:34.575Z] [unzip] Processing entry: client\android-chrome-192x192.png
+[debug] [2026-01-21T13:40:34.575Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.575Z] [unzip] Writing file: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\android-chrome-192x192.png
+[debug] [2026-01-21T13:40:34.576Z] [unzip] Entry: client/apple-touch-icon.png (compressed_size=2123 bytes, uncompressed_size=2152 bytes)
+[debug] [2026-01-21T13:40:34.576Z] [unzip] Processing entry: client\apple-touch-icon.png
+[debug] [2026-01-21T13:40:34.576Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.576Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\apple-touch-icon.png
+[debug] [2026-01-21T13:40:34.577Z] [unzip] Entry: client/android-chrome-512x512.png (compressed_size=5369 bytes, uncompressed_size=5411 bytes)
+[debug] [2026-01-21T13:40:34.577Z] [unzip] Processing entry: client\android-chrome-512x512.png
+[debug] [2026-01-21T13:40:34.577Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.578Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\android-chrome-512x512.png
+[debug] [2026-01-21T13:40:34.578Z] [unzip] Entry: client/manifest.json (compressed_size=245 bytes, uncompressed_size=551 bytes)
+[debug] [2026-01-21T13:40:34.579Z] [unzip] Processing entry: client\manifest.json
+[debug] [2026-01-21T13:40:34.579Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.579Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\manifest.json
+[debug] [2026-01-21T13:40:34.580Z] [unzip] Entry: client/robots.txt (compressed_size=26 bytes, uncompressed_size=26 bytes)
+[debug] [2026-01-21T13:40:34.580Z] [unzip] Processing entry: client\robots.txt
+[debug] [2026-01-21T13:40:34.580Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.580Z] [unzip] Writing file: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\robots.txt
+[debug] [2026-01-21T13:40:34.581Z] [unzip] Entry: client/mstile-150x150.png (compressed_size=2034 bytes, uncompressed_size=2034 bytes)
+[debug] [2026-01-21T13:40:34.581Z] [unzip] Processing entry: client\mstile-150x150.png
+[debug] [2026-01-21T13:40:34.581Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.581Z] [unzip] Writing file: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\mstile-150x150.png
+[debug] [2026-01-21T13:40:34.582Z] [unzip] Entry: client/assets/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.582Z] [unzip] Processing entry: client\assets\
+[debug] [2026-01-21T13:40:34.582Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\
+[debug] [2026-01-21T13:40:34.583Z] [unzip] Entry: client/assets/index-ClZTY_JS.js.map (compressed_size=2328270 bytes, uncompressed_size=9947004 bytes)
+[debug] [2026-01-21T13:40:34.583Z] [unzip] Processing entry: client\assets\index-ClZTY_JS.js.map
+[debug] [2026-01-21T13:40:34.583Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets
+[debug] [2026-01-21T13:40:34.583Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\index-ClZTY_JS.js.map
+[debug] [2026-01-21T13:40:34.613Z] [unzip] Entry: client/assets/index-ClZTY_JS.js (compressed_size=567195 bytes, uncompressed_size=2035940 bytes)
+[debug] [2026-01-21T13:40:34.613Z] [unzip] Processing entry: client\assets\index-ClZTY_JS.js
+[debug] [2026-01-21T13:40:34.613Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets
+[debug] [2026-01-21T13:40:34.613Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\index-ClZTY_JS.js
+[debug] [2026-01-21T13:40:34.620Z] [unzip] Entry: client/assets/index-BdgySamB.css (compressed_size=35979 bytes, uncompressed_size=298654 bytes)
+[debug] [2026-01-21T13:40:34.620Z] [unzip] Processing entry: client\assets\index-BdgySamB.css
+[debug] [2026-01-21T13:40:34.620Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets
+[debug] [2026-01-21T13:40:34.620Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\index-BdgySamB.css
+[debug] [2026-01-21T13:40:34.625Z] [unzip] Entry: client/assets/extensions/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.625Z] [unzip] Processing entry: client\assets\extensions\
+[debug] [2026-01-21T13:40:34.625Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\extensions\
+[debug] [2026-01-21T13:40:34.626Z] [unzip] Entry: client/assets/extensions/default-extension.png (compressed_size=1646 bytes, uncompressed_size=1657 bytes)
+[debug] [2026-01-21T13:40:34.626Z] [unzip] Processing entry: client\assets\extensions\default-extension.png
+[debug] [2026-01-21T13:40:34.626Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\extensions
+[debug] [2026-01-21T13:40:34.626Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\extensions\default-extension.png
+[debug] [2026-01-21T13:40:34.627Z] [unzip] Entry: client/assets/img/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.627Z] [unzip] Processing entry: client\assets\img\
+[debug] [2026-01-21T13:40:34.627Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\img\
+[debug] [2026-01-21T13:40:34.627Z] [unzip] Entry: client/assets/img/database.png (compressed_size=29449 bytes, uncompressed_size=29988 bytes)
+[debug] [2026-01-21T13:40:34.627Z] [unzip] Processing entry: client\assets\img\database.png
+[debug] [2026-01-21T13:40:34.628Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\img
+[debug] [2026-01-21T13:40:34.628Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\img\database.png
+[debug] [2026-01-21T13:40:34.629Z] [unzip] Entry: client/assets/provider-icons/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.629Z] [unzip] Processing entry: client\assets\provider-icons\
+[debug] [2026-01-21T13:40:34.629Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\
+[debug] [2026-01-21T13:40:34.629Z] [unzip] Entry: client/assets/provider-icons/auth_service_saml.svg (compressed_size=575 bytes, uncompressed_size=1226 bytes)
+[debug] [2026-01-21T13:40:34.629Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_saml.svg
+[debug] [2026-01-21T13:40:34.629Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.629Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_saml.svg
+[debug] [2026-01-21T13:40:34.630Z] [unzip] Entry: client/assets/provider-icons/auth_service_phone.svg (compressed_size=261 bytes, uncompressed_size=414 bytes)
+[debug] [2026-01-21T13:40:34.630Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_phone.svg
+[debug] [2026-01-21T13:40:34.630Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.630Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_phone.svg
+[debug] [2026-01-21T13:40:34.631Z] [unzip] Entry: client/assets/provider-icons/auth_service_facebook.svg (compressed_size=289 bytes, uncompressed_size=457 bytes)
+[debug] [2026-01-21T13:40:34.631Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_facebook.svg
+[debug] [2026-01-21T13:40:34.631Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.631Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_facebook.svg
+[debug] [2026-01-21T13:40:34.633Z] [unzip] Entry: client/assets/provider-icons/auth_service_game_center.svg (compressed_size=991 bytes, uncompressed_size=3921 bytes)
+[debug] [2026-01-21T13:40:34.633Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_game_center.svg
+[debug] [2026-01-21T13:40:34.633Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.633Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_game_center.svg
+[debug] [2026-01-21T13:40:34.635Z] [unzip] Entry: client/assets/provider-icons/auth_service_apple.svg (compressed_size=230 bytes, uncompressed_size=334 bytes)
+[debug] [2026-01-21T13:40:34.635Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_apple.svg
+[debug] [2026-01-21T13:40:34.635Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.635Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_apple.svg
+[debug] [2026-01-21T13:40:34.636Z] [unzip] Entry: client/assets/provider-icons/auth_service_github.svg (compressed_size=466 bytes, uncompressed_size=838 bytes)
+[debug] [2026-01-21T13:40:34.636Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_github.svg
+[debug] [2026-01-21T13:40:34.636Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.636Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_github.svg
+[debug] [2026-01-21T13:40:34.637Z] [unzip] Entry: client/assets/provider-icons/auth_service_mslive.svg (compressed_size=203 bytes, uncompressed_size=378 bytes)
+[debug] [2026-01-21T13:40:34.637Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_mslive.svg
+[debug] [2026-01-21T13:40:34.637Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.637Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_mslive.svg
+[debug] [2026-01-21T13:40:34.638Z] [unzip] Entry: client/assets/provider-icons/auth_service_yahoo.svg (compressed_size=577 bytes, uncompressed_size=1182 bytes)
+[debug] [2026-01-21T13:40:34.638Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_yahoo.svg
+[debug] [2026-01-21T13:40:34.639Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.639Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_yahoo.svg
+[debug] [2026-01-21T13:40:34.640Z] [unzip] Entry: client/assets/provider-icons/auth_service_twitter.svg (compressed_size=444 bytes, uncompressed_size=751 bytes)
+[debug] [2026-01-21T13:40:34.640Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_twitter.svg
+[debug] [2026-01-21T13:40:34.640Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.640Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_twitter.svg
+[debug] [2026-01-21T13:40:34.641Z] [unzip] Entry: client/assets/provider-icons/auth_service_play_games.svg (compressed_size=565 bytes, uncompressed_size=1173 bytes)
+[debug] [2026-01-21T13:40:34.641Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_play_games.svg
+[debug] [2026-01-21T13:40:34.641Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.642Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_play_games.svg
+[debug] [2026-01-21T13:40:34.643Z] [unzip] Entry: client/assets/provider-icons/auth_service_email.svg (compressed_size=228 bytes, uncompressed_size=326 bytes)
+[debug] [2026-01-21T13:40:34.643Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_email.svg
+[debug] [2026-01-21T13:40:34.643Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.643Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_email.svg
+[debug] [2026-01-21T13:40:34.644Z] [unzip] Entry: client/assets/provider-icons/auth_service_google.svg (compressed_size=409 bytes, uncompressed_size=720 bytes)
+[debug] [2026-01-21T13:40:34.644Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_google.svg
+[debug] [2026-01-21T13:40:34.644Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.644Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_google.svg
+[debug] [2026-01-21T13:40:34.645Z] [unzip] Entry: client/assets/provider-icons/auth_service_oidc.svg (compressed_size=414 bytes, uncompressed_size=858 bytes)
+[debug] [2026-01-21T13:40:34.645Z] [unzip] Processing entry: client\assets\provider-icons\auth_service_oidc.svg
+[debug] [2026-01-21T13:40:34.645Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons
+[debug] [2026-01-21T13:40:34.646Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\assets\provider-icons\auth_service_oidc.svg
+[debug] [2026-01-21T13:40:34.647Z] [unzip] Entry: client/browserconfig.xml (compressed_size=491 bytes, uncompressed_size=822 bytes)
+[debug] [2026-01-21T13:40:34.647Z] [unzip] Processing entry: client\browserconfig.xml
+[debug] [2026-01-21T13:40:34.647Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.647Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\browserconfig.xml
+[debug] [2026-01-21T13:40:34.648Z] [unzip] Entry: client/favicon-32x32.png (compressed_size=475 bytes, uncompressed_size=475 bytes)
+[debug] [2026-01-21T13:40:34.648Z] [unzip] Processing entry: client\favicon-32x32.png
+[debug] [2026-01-21T13:40:34.648Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client
+[debug] [2026-01-21T13:40:34.648Z] [unzip] Writing file: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\client\favicon-32x32.png
+[debug] [2026-01-21T13:40:34.649Z] [unzip] Entry: server/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.649Z] [unzip] Processing entry: server\
+[debug] [2026-01-21T13:40:34.649Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\
+[debug] [2026-01-21T13:40:34.649Z] [unzip] Entry: server/server.mjs.map (compressed_size=296496 bytes, uncompressed_size=1355667 bytes)
+[debug] [2026-01-21T13:40:34.649Z] [unzip] Processing entry: server\server.mjs.map
+[debug] [2026-01-21T13:40:34.649Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server
+[debug] [2026-01-21T13:40:34.650Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\server.mjs.map
+[debug] [2026-01-21T13:40:34.656Z] [unzip] Entry: server/server.mjs (compressed_size=315701 bytes, uncompressed_size=1172682 bytes)
+[debug] [2026-01-21T13:40:34.656Z] [unzip] Processing entry: server\server.mjs
+[debug] [2026-01-21T13:40:34.656Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server
+[debug] [2026-01-21T13:40:34.656Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\server.mjs
+[debug] [2026-01-21T13:40:34.661Z] [unzip] Entry: server/assets/ (compressed_size=0 bytes, uncompressed_size=0 bytes)
+[debug] [2026-01-21T13:40:34.661Z] [unzip] Processing entry: server\assets\
+[debug] [2026-01-21T13:40:34.661Z] [unzip] mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\assets\
+[debug] [2026-01-21T13:40:34.661Z] [unzip] Entry: server/assets/multipart-parser-DGCUZdXu.mjs.map (compressed_size=4791 bytes, uncompressed_size=17918 bytes)
+[debug] [2026-01-21T13:40:34.661Z] [unzip] Processing entry: server\assets\multipart-parser-DGCUZdXu.mjs.map
+[debug] [2026-01-21T13:40:34.661Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\assets
+[debug] [2026-01-21T13:40:34.661Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\assets\multipart-parser-DGCUZdXu.mjs.map
+[debug] [2026-01-21T13:40:34.662Z] [unzip] Entry: server/assets/multipart-parser-DGCUZdXu.mjs (compressed_size=2621 bytes, uncompressed_size=10390 bytes)
+[debug] [2026-01-21T13:40:34.662Z] [unzip] Processing entry: server\assets\multipart-parser-DGCUZdXu.mjs
+[debug] [2026-01-21T13:40:34.662Z] [unzip] else mkdir: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\assets
+[debug] [2026-01-21T13:40:34.662Z] [unzip] deflating: C:\Users\frontend_coder\.cache\firebase\emulators\ui-v1.14.0\server\assets\multipart-parser-DGCUZdXu.mjs
+[info] i  functions: Watching "C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\" for Cloud Functions..."}}
+[debug] [2026-01-21T13:40:34.673Z] Validating nodejs source
+[debug] [2026-01-21T13:40:36.113Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2026-01-21T13:40:36.114Z] Building nodejs source
+[debug] [2026-01-21T13:40:36.114Z] Failed to find version of module node: reached end of search path C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules
+[warn] !  functions: Your requested "node" version "22" doesn't match your global version "18". Using node@18 from host. 
+[debug] [2026-01-21T13:40:36.116Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-01-21T13:40:36.121Z] Found firebase-functions binary at 'C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8806
+
+[debug] [2026-01-21T13:40:36.527Z] Got response from /__/functions.yaml {"endpoints":{"generateResume":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","secretEnvironmentVariables":[{"key":"OPENAI_API_KEY"}],"labels":{},"httpsTrigger":{},"entryPoint":"generateResume"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{},"params":[{"type":"secret","name":"OPENAI_API_KEY"}]}
+[info] +  functions: Loaded functions definitions from source: generateResume. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: generateResume."}}
+[info] +  functions[us-central1-generateResume]: http function initialized (http://127.0.0.1:5001/ai-job-seeker-ed1d3/us-central1/generateResume). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/ai-job-seeker-ed1d3/us-central1/generateResume)."}}
+[debug] [2026-01-21T13:40:36.550Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: connect ECONNREFUSED ::1:40001. If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2026-01-21T13:42:49.279Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume'-2026-01-21T13:42:49.279Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2026-01-21T13:42:49.279Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume'-2026-01-21T13:42:49.279Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:42:49.280Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2026-01-21T13:42:49.307Z] Functions emulator received unknown request at path /favicon.ico
+[debug] [2026-01-21T13:42:55.443Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2026-01-21T13:42:55.443Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:42:55.443Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:42:55.446Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:42:55.447Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:42:55.449Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:42:55.449Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:42:55.450Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:42:56.253Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:42:56.253Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:42:56.263Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:42:56.264Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:42:57.216Z] [runtime-status] [8864] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8864] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:42:57.217Z] [runtime-status] [8864] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8864] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:42:57.218Z] [runtime-status] [8864] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8864] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:42:57.218Z] [runtime-status] [8864] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8864] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:42:59.274Z] [worker-us-central1-generateResume-8ca2ba59-6626-4919-ac2e-ab847084b91b]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-8ca2ba59-6626-4919-ac2e-ab847084b91b]: exited"}}
+[debug] [2026-01-21T13:42:59.274Z] [worker-us-central1-generateResume-8ca2ba59-6626-4919-ac2e-ab847084b91b]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-8ca2ba59-6626-4919-ac2e-ab847084b91b]: FINISHED"}}
+[debug] [2026-01-21T13:43:06.710Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central/generateResume-2026-01-21T13:43:06.710Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:06.710Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z","/ai-job-seeker-ed1d3/us-central/generateResume-2026-01-21T13:43:06.710Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:06.710Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:10.970Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central/generateResume-2026-01-21T13:43:10.970Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:10.970Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z","/ai-job-seeker-ed1d3/us-central/generateResume-2026-01-21T13:43:10.970Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:10.971Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:13.932Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:13.932Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:42:55.443Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:13.932Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:43:13.934Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:43:13.934Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:43:13.934Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:43:13.935Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:13.935Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:13.935Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:43:14.381Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:43:14.381Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:43:14.388Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:43:14.388Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:43:15.280Z] [runtime-status] [16240] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [16240] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:15.281Z] [runtime-status] [16240] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [16240] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:15.281Z] [runtime-status] [16240] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [16240] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:43:15.282Z] [runtime-status] [16240] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [16240] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:43:15.650Z] [worker-us-central1-generateResume-494132fa-9802-42ac-b97f-b99afa811c90]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-494132fa-9802-42ac-b97f-b99afa811c90]: exited"}}
+[debug] [2026-01-21T13:43:15.650Z] [worker-us-central1-generateResume-494132fa-9802-42ac-b97f-b99afa811c90]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-494132fa-9802-42ac-b97f-b99afa811c90]: FINISHED"}}
+[debug] [2026-01-21T13:43:22.376Z] Functions emulator received unknown request at path /ai-job-seeker-ed1d3/generateResume
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:43:26.345Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:26.427Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:43:26.427Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:26.427Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:43:26.429Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:43:26.429Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:43:26.429Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:43:26.430Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:26.430Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:26.430Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:43:27.183Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:43:27.184Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:43:27.191Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:43:27.191Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:43:28.137Z] [runtime-status] [4832] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [4832] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:28.139Z] [runtime-status] [4832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [4832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:28.139Z] [runtime-status] [4832] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [4832] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:43:28.140Z] [runtime-status] [4832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [4832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:43:28.498Z] [worker-us-central1-generateResume-80135a0a-2f86-43cd-b15a-52671e5f5153]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-80135a0a-2f86-43cd-b15a-52671e5f5153]: exited"}}
+[debug] [2026-01-21T13:43:28.498Z] [worker-us-central1-generateResume-80135a0a-2f86-43cd-b15a-52671e5f5153]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-80135a0a-2f86-43cd-b15a-52671e5f5153]: FINISHED"}}
+[debug] [2026-01-21T13:43:29.099Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:29.099Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z"],"workRunningCount":3}
+[debug] [2026-01-21T13:43:29.099Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:43:29.101Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:43:29.101Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:43:29.101Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:43:29.103Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:29.103Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:29.103Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:43:29.587Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:43:29.587Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:43:29.593Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:43:29.593Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:43:30.478Z] [runtime-status] [9940] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9940] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:30.479Z] [runtime-status] [9940] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9940] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:30.480Z] [runtime-status] [9940] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9940] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:43:30.480Z] [runtime-status] [9940] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9940] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:43:30.867Z] [worker-us-central1-generateResume-da4fe740-aaf0-4389-a6d0-9d045a7c94eb]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-da4fe740-aaf0-4389-a6d0-9d045a7c94eb]: exited"}}
+[debug] [2026-01-21T13:43:30.867Z] [worker-us-central1-generateResume-da4fe740-aaf0-4389-a6d0-9d045a7c94eb]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-da4fe740-aaf0-4389-a6d0-9d045a7c94eb]: FINISHED"}}
+[debug] [2026-01-21T13:43:30.918Z] Functions emulator received unknown request at path /.well-known/appspecific/com.chrome.devtools.json
+[debug] [2026-01-21T13:43:38.780Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z"],"workRunningCount":3}
+[debug] [2026-01-21T13:43:38.780Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:13.932Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":4}
+[debug] [2026-01-21T13:43:38.780Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:43:38.782Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:43:38.782Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:43:38.782Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:43:38.783Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:38.783Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:43:38.784Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:43:39.268Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:43:39.268Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:43:39.277Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:43:39.277Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:43:40.175Z] [runtime-status] [17176] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17176] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:40.176Z] [runtime-status] [17176] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17176] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:43:40.177Z] [runtime-status] [17176] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17176] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:43:40.177Z] [runtime-status] [17176] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17176] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:43:40.543Z] [worker-us-central1-generateResume-bc418e06-9b39-4cda-a9fb-83fbb37626c9]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-bc418e06-9b39-4cda-a9fb-83fbb37626c9]: exited"}}
+[debug] [2026-01-21T13:43:40.544Z] [worker-us-central1-generateResume-bc418e06-9b39-4cda-a9fb-83fbb37626c9]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-bc418e06-9b39-4cda-a9fb-83fbb37626c9]: FINISHED"}}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:43:44.486Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:26.427Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":3}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:43:57.213Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:58.816Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume'-2026-01-21T13:43:58.815Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:43:58.816Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z","/ai-job-seeker-ed1d3/us-central1/generateResume'-2026-01-21T13:43:58.815Z"],"workRunningCount":3}
+[debug] [2026-01-21T13:43:58.816Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:29.099Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":2}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:43:59.694Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:04.532Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:04.532Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z","/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:04.532Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume/ --> us-central1-generateResume
+[debug] [2026-01-21T13:44:04.534Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:44:04.534Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume/, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume/, mapping to path=/"}}
+[debug] [2026-01-21T13:44:04.534Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:44:04.535Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:04.535Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:04.535Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:44:04.998Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:44:04.998Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:44:05.009Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:44:05.009Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:44:05.919Z] [runtime-status] [17352] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17352] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:05.920Z] [runtime-status] [17352] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17352] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:05.920Z] [runtime-status] [17352] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17352] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:44:05.921Z] [runtime-status] [17352] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [17352] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:44:06.278Z] [worker-us-central1-generateResume-b5328460-2d0b-4cbe-8aa8-19bb3fcf428c]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-b5328460-2d0b-4cbe-8aa8-19bb3fcf428c]: exited"}}
+[debug] [2026-01-21T13:44:06.279Z] [worker-us-central1-generateResume-b5328460-2d0b-4cbe-8aa8-19bb3fcf428c]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-b5328460-2d0b-4cbe-8aa8-19bb3fcf428c]: FINISHED"}}
+[debug] [2026-01-21T13:44:07.077Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z","/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:07.077Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:43:38.780Z","/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z"],"workRunningCount":3}
+[debug] [2026-01-21T13:44:07.077Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:44:07.078Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:44:07.079Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:44:07.079Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:44:07.080Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:07.080Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:07.081Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:44:07.584Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:44:07.584Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:44:07.592Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:44:07.592Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:44:08.509Z] [runtime-status] [9536] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9536] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:08.510Z] [runtime-status] [9536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9536] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:08.510Z] [runtime-status] [9536] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9536] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:44:08.511Z] [runtime-status] [9536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [9536] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:44:08.862Z] [worker-us-central1-generateResume-210f535a-72af-4070-aeec-1431b84228ef]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-210f535a-72af-4070-aeec-1431b84228ef]: exited"}}
+[debug] [2026-01-21T13:44:08.862Z] [worker-us-central1-generateResume-210f535a-72af-4070-aeec-1431b84228ef]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-210f535a-72af-4070-aeec-1431b84228ef]: FINISHED"}}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:44:09.288Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:21.480Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:21.480Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume/-2026-01-21T13:44:04.532Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z"],"workRunningCount":3}
+[debug] [2026-01-21T13:44:21.480Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:44:21.482Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:44:21.482Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:44:21.482Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:44:21.483Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:21.483Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:21.483Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:44:21.914Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:44:21.914Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:44:21.920Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:44:21.920Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:44:22.860Z] [runtime-status] [8252] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8252] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:22.861Z] [runtime-status] [8252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:22.862Z] [runtime-status] [8252] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8252] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:44:22.862Z] [runtime-status] [8252] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [8252] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:44:23.244Z] [worker-us-central1-generateResume-eb4047dc-772f-47b7-8a51-a0173836e2e9]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-eb4047dc-772f-47b7-8a51-a0173836e2e9]: exited"}}
+[debug] [2026-01-21T13:44:23.244Z] [worker-us-central1-generateResume-eb4047dc-772f-47b7-8a51-a0173836e2e9]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-eb4047dc-772f-47b7-8a51-a0173836e2e9]: FINISHED"}}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:44:35.035Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:07.077Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z"],"workRunningCount":2}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:44:37.695Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:48.036Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:48.036Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:48.037Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:21.480Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:48.036Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:48.037Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:44:48.038Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:44:48.038Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:44:48.038Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:44:48.039Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:48.039Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:48.039Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:44:48.699Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:44:48.699Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:44:48.708Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:44:48.708Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:44:49.588Z] [runtime-status] [13064] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [13064] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:49.590Z] [runtime-status] [13064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [13064] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:49.590Z] [runtime-status] [13064] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [13064] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:44:49.591Z] [runtime-status] [13064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [13064] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:44:49.952Z] [worker-us-central1-generateResume-d62a2120-468b-484e-9b15-1467d53d08c0]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-d62a2120-468b-484e-9b15-1467d53d08c0]: exited"}}
+[debug] [2026-01-21T13:44:49.952Z] [worker-us-central1-generateResume-d62a2120-468b-484e-9b15-1467d53d08c0]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-d62a2120-468b-484e-9b15-1467d53d08c0]: FINISHED"}}
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:44:51.984Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:48.036Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:53.337Z] [work-queue] {"queuedWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:53.337Z"],"queueLength":1,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:48.036Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:44:53.337Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:48.036Z","/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:53.337Z"],"workRunningCount":2}
+[debug] [2026-01-21T13:44:53.337Z] Accepted request GET /ai-job-seeker-ed1d3/us-central1/generateResume --> us-central1-generateResume
+[debug] [2026-01-21T13:44:53.339Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-01-21T13:44:53.340Z] [functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/ai-job-seeker-ed1d3/us-central1/generateResume, mapping to path=/"}}
+[debug] [2026-01-21T13:44:53.340Z] [worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-generateResume: 1 --> 0"}}
+[info] i  functions: Trying to access secret OPENAI_API_KEY@latest {"metadata":{"emulator":{"name":"functions"},"message":"Trying to access secret OPENAI_API_KEY@latest"}}
+[debug] [2026-01-21T13:44:53.341Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:53.341Z] Checked if tokens are valid: true, expires at: 1769005713636
+[debug] [2026-01-21T13:44:53.341Z] >>> [apiv2][query] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access [none]
+[debug] [2026-01-21T13:44:53.768Z] <<< [apiv2][status] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access 200
+[debug] [2026-01-21T13:44:53.768Z] <<< [apiv2][body] GET https://secretmanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3/secrets/OPENAI_API_KEY/versions/latest:access {"name":"projects/987943610256/secrets/OPENAI_API_KEY/versions/1","payload":{"data":"c2stcHJvai10WFFFcVUweWhvd2ExdGZNXzZZMl9acmR2bXhMRjdvelpMS1ZJaTRuUW5teW41NVBKaEpkZ0ZDTnVBYkZySmxhclc4emNTT2Nnb1QzQmxia0ZKM2hfQ2VKNnpVMGgwcHc1NXd1S0dXbG1hU3FvdnVCYVdSS1U4OU9CLUN2dHVidm9GSDE3dWR1S3Q3dVROYk1zeWQ4djQtelR5OEE=","dataCrc32c":"2614004790"}}
+[debug] [2026-01-21T13:44:53.773Z] [worker-pool] addWorker(us-central1-generateResume) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-generateResume)"}}
+[debug] [2026-01-21T13:44:53.773Z] [worker-pool] Adding worker with key us-central1-generateResume, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-generateResume, total=1"}}
+[debug] [2026-01-21T13:44:54.707Z] [runtime-status] [15784] Resolved module firebase-admin {"declared":true,"installed":true,"version":"13.6.0","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-admin\\lib\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [15784] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"13.6.0\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-admin\\\\lib\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:54.708Z] [runtime-status] [15784] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [15784] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[debug] [2026-01-21T13:44:54.708Z] [runtime-status] [15784] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [15784] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-01-21T13:44:54.709Z] [runtime-status] [15784] Resolved module firebase-functions {"declared":true,"installed":true,"version":"7.0.3","resolution":"C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\node_modules\\firebase-functions\\lib\\v2\\index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[runtime-status] [15784] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"7.0.3\",\"resolution\":\"C:\\\\Users\\\\frontend_coder\\\\Documents\\\\projects\\\\ai-job-seek-helper\\\\application\\\\functions\\\\node_modules\\\\firebase-functions\\\\lib\\\\v2\\\\index.js\"}"}}
+[warn] !  functions: functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"functions.config() has been removed in firebase-functions v7. Migrate to environment parameters using the params module. Migration guide: https://firebase.google.com/docs/functions/config-env#migrate-config"}}
+[warn] !  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[debug] [2026-01-21T13:44:55.091Z] [worker-us-central1-generateResume-9c690c57-9fa7-4fa1-8648-075809052f4a]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-9c690c57-9fa7-4fa1-8648-075809052f4a]: exited"}}
+[debug] [2026-01-21T13:44:55.091Z] [worker-us-central1-generateResume-9c690c57-9fa7-4fa1-8648-075809052f4a]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-generateResume"},"extension":{},"message":"[worker-us-central1-generateResume-9c690c57-9fa7-4fa1-8648-075809052f4a]: FINISHED"}}
+[debug] [2026-01-21T13:45:14.654Z] Functions emulator received unknown request at path /ai-job-seeker-ed1d3/us-central1/
+[debug] [2026-01-21T13:45:18.206Z] Functions emulator received unknown request at path /ai-job-seeker-ed1d3/
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:45:18.779Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/ai-job-seeker-ed1d3/us-central1/generateResume-2026-01-21T13:44:53.337Z"],"workRunningCount":1}
+[debug] [2026-01-21T13:45:21.340Z] Functions emulator received unknown request at path /ai-job-seeker-ed1d3
+[error] !!  functions: Failed to handle request for function us-central1-generateResume {"metadata":{"emulator":{"name":"functions"},"message":"Failed to handle request for function us-central1-generateResume"}}
+[error] !!  functions: Failed to start functions in C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions: FirebaseError: Failed to load function. {"metadata":{"emulator":{"name":"functions"},"message":"Failed to start functions in C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions: FirebaseError: Failed to load function."}}
+[debug] [2026-01-21T13:45:23.862Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2026-01-21T13:45:26.431Z] Functions emulator received unknown request at path /
+[debug] [2026-01-21T13:46:18.243Z] Functions emulator received unknown request at path /
+[debug] [2026-01-21T13:46:18.271Z] Functions emulator received unknown request at path /favicon.ico
+[debug] [2026-01-21T13:46:54.886Z] File C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\src\index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\src\\index.ts changed, reloading triggers"}}
+[debug] [2026-01-21T13:46:55.896Z] Validating nodejs source
+[debug] [2026-01-21T13:46:57.427Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2026-01-21T13:46:57.427Z] Building nodejs source
+[debug] [2026-01-21T13:46:57.427Z] Failed to find version of module node: reached end of search path C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules
+[warn] !  functions: Your requested "node" version "22" doesn't match your global version "18". Using node@18 from host. 
+[debug] [2026-01-21T13:46:57.429Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-01-21T13:46:57.434Z] Found firebase-functions binary at 'C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8471
+
+[debug] [2026-01-21T13:46:57.843Z] Got response from /__/functions.yaml {"endpoints":{"generateResume":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","secretEnvironmentVariables":[{"key":"OPENAI_API_KEY"}],"labels":{},"httpsTrigger":{},"entryPoint":"generateResume"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{},"params":[{"type":"secret","name":"OPENAI_API_KEY"}]}
+[info] +  functions: Loaded functions definitions from source: generateResume. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: generateResume."}}
+[debug] [2026-01-21T13:47:47.397Z] File C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\src\index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\src\\index.ts changed, reloading triggers"}}
+[debug] [2026-01-21T13:47:48.403Z] Validating nodejs source
+[debug] [2026-01-21T13:47:49.919Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2026-01-21T13:47:49.919Z] Building nodejs source
+[debug] [2026-01-21T13:47:49.919Z] Failed to find version of module node: reached end of search path C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules
+[warn] !  functions: Your requested "node" version "22" doesn't match your global version "18". Using node@18 from host. 
+[debug] [2026-01-21T13:47:49.920Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-01-21T13:47:49.924Z] Found firebase-functions binary at 'C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8277
+
+[debug] [2026-01-21T13:47:50.342Z] Got response from /__/functions.yaml {"endpoints":{"generateResume":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","secretEnvironmentVariables":[{"key":"OPENAI_API_KEY"}],"labels":{},"httpsTrigger":{},"entryPoint":"generateResume"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{},"params":[{"type":"secret","name":"OPENAI_API_KEY"}]}
+[info] +  functions: Loaded functions definitions from source: generateResume. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: generateResume."}}
+[debug] [2026-01-21T13:47:52.532Z] File C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\src\index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File C:\\Users\\frontend_coder\\Documents\\projects\\ai-job-seek-helper\\application\\functions\\src\\index.ts changed, reloading triggers"}}
+[debug] [2026-01-21T13:47:53.540Z] Validating nodejs source
+[debug] [2026-01-21T13:47:55.616Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2026-01-21T13:47:55.616Z] Building nodejs source
+[debug] [2026-01-21T13:47:55.616Z] Failed to find version of module node: reached end of search path C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules
+[warn] !  functions: Your requested "node" version "22" doesn't match your global version "18". Using node@18 from host. 
+[debug] [2026-01-21T13:47:55.617Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-01-21T13:47:55.622Z] Found firebase-functions binary at 'C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\application\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8857
+
+[debug] [2026-01-21T13:47:56.059Z] Got response from /__/functions.yaml {"endpoints":{"generateResume":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","secretEnvironmentVariables":[{"key":"OPENAI_API_KEY"}],"labels":{},"httpsTrigger":{},"entryPoint":"generateResume"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{},"params":[{"type":"secret","name":"OPENAI_API_KEY"}]}
+[info] +  functions: Loaded functions definitions from source: generateResume. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: generateResume."}}
+[debug] [2026-01-21T13:48:35.825Z] Received signal SIGHUP 1
+[info]  
+[info] i  emulators: Received SIGHUP for the first time. Starting a clean shutdown. 
+[info] i  emulators: Please wait for a clean shutdown or send the SIGHUP signal again to stop right now. 
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  eventarc: Stopping Eventarc Emulator {"metadata":{"emulator":{"name":"eventarc"},"message":"Stopping Eventarc Emulator"}}
+[info] i  tasks: Stopping Cloud Tasks Emulator {"metadata":{"emulator":{"name":"tasks"},"message":"Stopping Cloud Tasks Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[info] i  logging: Stopping Logging Emulator {"metadata":{"emulator":{"name":"logging"},"message":"Stopping Logging Emulator"}}
+[debug] [2026-01-21T13:48:35.836Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: connect ECONNREFUSED ::1:40001. If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.

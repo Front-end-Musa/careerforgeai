@@ -41,7 +41,7 @@ export class Signup {
     };
     await this.authFacade.register(signupCredentials);
     this.authFacade.user$.subscribe({
-      next: (user) => {
+      next: (user: AppUser | null) => {
         console.log(user);
       },
     });
@@ -53,7 +53,7 @@ export class Signup {
   ngOnInit() {
     this.authFacade.user$
       .subscribe({
-        next: (user) => {
+        next: (user: AppUser | null) => {
           console.log(user);
         },
       })
