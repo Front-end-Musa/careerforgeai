@@ -34,7 +34,6 @@ export class AddJobModal {
     if (this.jobForm.invalid) return;
     // Emit the new job to the parent to handle persistence
     this.jobAdded.emit(this.jobForm.value);
-    console.log('Job added (emitted):', this.jobForm.value);
     this.closeModal();
     this.jobForm.reset();
   }

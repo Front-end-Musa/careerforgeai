@@ -20,6 +20,5 @@ export class ToneChoose implements OnInit {
   selectTone(tone: string) {
     this.selectedTone = tone;
     this.toneSelected.emit(tone);
-    console.log('Selected tone:', this.selectedTone);
   }
 }

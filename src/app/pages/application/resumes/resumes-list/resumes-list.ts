@@ -22,8 +22,6 @@ export class ResumesList implements OnInit {
     this.resumesFacade.loadResumes();
     this.resumesFacade.resumes$.subscribe((resumes: Resume[]) => {
       this.resumes.set(resumes ?? []);
-      console.log('Data arriving from Facade:', resumes); // Check if this is undefined
     });
-    console.log('Resumes Signal after subscription:', this.resumes()); // Check the signal value
   }
 }

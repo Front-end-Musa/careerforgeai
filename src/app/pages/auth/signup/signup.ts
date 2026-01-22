@@ -40,23 +40,8 @@ export class Signup {
       profileViews: 0,
     };
     await this.authFacade.register(signupCredentials);
-    this.authFacade.user$.subscribe({
-      next: (user: AppUser | null) => {
-        console.log(user);
-      },
-    });
     setTimeout(() => {
       this.router.navigate(['/application/dashboard']);
     }, 0);
-  }
-
-  ngOnInit() {
-    this.authFacade.user$
-      .subscribe({
-        next: (user: AppUser | null) => {
-          console.log(user);
-        },
-      })
-      .unsubscribe();
   }
 }

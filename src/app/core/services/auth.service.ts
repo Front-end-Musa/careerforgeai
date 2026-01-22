@@ -25,11 +25,8 @@ export class AuthService {
     return from(
       signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     ).pipe(
-      tap((cred) => console.log('Firebase login successful, UID:', cred.user.uid)),
       switchMap((cred) => this.getUser$(cred.user.uid)),
-      tap((user) => console.log('Fetched user data:', user)),
       catchError((err) => {
-        console.error('Firebase login error:', err.code, err.message);
         return of(null);
       })
     );

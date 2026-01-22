@@ -3,82 +3,82 @@
     title="Job Application Tracker"
     [additionalElems]="htmlContent"
     (additionalElemClicked)="openAddJobModal()"
-  ></app-dir-name>
+  >
+    <button class="add-job-btn" type="button" aria-label="Add Job" (click)="openAddJobModal()">
+      <span class="btn-icon">+</span>
+      Add Job
+    </button></app-dir-name
+  >
   <div class="app-section">
-    <table class="kanban-table">
-      <thead>
-        <tr>
-          <th>Applied</th>
-          <th>Interviewing</th>
-          <th>Offers</th>
-          <th>Rejected</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <!-- Applied -->
-          <td
-            cdkDropList
-            [cdkDropListData]="getJobsByStatus('applied')"
-            (cdkDropListDropped)="drop($event, 'applied')"
-          >
-            @for (job of getJobsByStatus('applied'); track job) {
-            <div class="job-card" cdkDrag>
-              <h5 class="job-title">{{ job.title }}</h5>
-              <p class="company-name">{{ job.company }}</p>
-              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-            </div>
-            }
-          </td>
-
-          <!-- Interviewing -->
-          <td
-            cdkDropList
-            [cdkDropListData]="getJobsByStatus('interviewing')"
-            (cdkDropListDropped)="drop($event, 'interviewing')"
-          >
-            @for (job of getJobsByStatus('interviewing'); track job) {
-            <div class="job-card" cdkDrag>
-              <h5 class="job-title">{{ job.title }}</h5>
-              <p class="company-name">{{ job.company }}</p>
-              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-            </div>
-            }
-          </td>
-
-          <!-- Offers -->
-          <td
-            cdkDropList
-            [cdkDropListData]="getJobsByStatus('offered')"
-            (cdkDropListDropped)="drop($event, 'offered')"
-          >
-            @for (job of getJobsByStatus('offered'); track job) {
-            <div class="job-card" cdkDrag>
-              <h5 class="job-title">{{ job.title }}</h5>
-              <p class="company-name">{{ job.company }}</p>
-              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-            </div>
-            }
-          </td>
-
-          <!-- Rejected -->
-          <td
-            cdkDropList
-            [cdkDropListData]="getJobsByStatus('rejected')"
-            (cdkDropListDropped)="drop($event, 'rejected')"
-          >
-            @for (job of getJobsByStatus('rejected'); track job) {
-            <div class="job-card" cdkDrag>
-              <h5 class="job-title">{{ job.title }}</h5>
-              <p class="company-name">{{ job.company }}</p>
-              <p class="application-date">Applied on: {{ job.dateApplied | date }}</p>
-            </div>
-            }
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="applied-list container">
+      <h2>Applied</h2>
+      <div
+        class="applied-items list"
+        cdkDropList
+        #appliedList="cdkDropList"
+        [cdkDropListData]="appliedJobs"
+        [cdkDropListConnectedTo]="[interviewingList, offerList, rejectedList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (job of appliedJobs; track $index) {
+          <div class="applied job-item" cdkDrag>
+            {{ job.title }}
+          </div>
+        }
+      </div>
+    </div>
+    <div class="interviewing-list container">
+      <h2>Interviewing</h2>
+      <div
+        class="interviewing-items list"
+        cdkDropList
+        #interviewingList="cdkDropList"
+        [cdkDropListData]="interviewingJobs"
+        [cdkDropListConnectedTo]="[appliedList, offerList, rejectedList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (job of interviewingJobs; track $index) {
+          <div class="interviewing job-item" cdkDrag>
+            {{ job.title }}
+          </div>
+        }
+      </div>
+    </div>
+    <div class="offer-list container">
+      <h2>Offer</h2>
+      <div
+        class="offer-items list"
+        cdkDropList
+        #offerList="cdkDropList"
+        [cdkDropListData]="offerJobs"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="[appliedList, interviewingList, rejectedList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (job of offerJobs; track $index) {
+          <div class="offer job-item" cdkDrag>
+            {{ job.title }}
+          </div>
+        }
+      </div>
+    </div>
+    <div class="rejected-list container">
+      <h2>Rejected</h2>
+      <div
+        class="rejected-items list"
+        cdkDropList
+        #rejectedList="cdkDropList"
+        [cdkDropListData]="rejectedJobs"
+        [cdkDropListConnectedTo]="[appliedList, interviewingList, offerList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (job of rejectedJobs; track $index) {
+          <div class="rejected job-item" cdkDrag>
+            {{ job.title }}
+          </div>
+        }
+      </div>
+    </div>
   </div>
   <!-- Add job modal instance (hidden until opened) -->
   <app-add-job-modal #addJobModal (jobAdded)="handleJobAdded($event)"></app-add-job-modal>

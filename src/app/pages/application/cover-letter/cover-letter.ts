@@ -25,7 +25,6 @@ export class CoverLetter implements OnInit {
       tone: new FormControl('', Validators.required),
     });
     this.coverLetterForm.controls['tone'].valueChanges.subscribe((value) => {
-      console.log('Selected tone:', value);
     });
   }
 
@@ -41,10 +40,7 @@ export class CoverLetter implements OnInit {
   onSubmit() {
     if (this.coverLetterForm.valid) {
       const formData = this.coverLetterForm.value;
-      console.log('Form Data:', formData);
-      // Handle form submission logic here
     } else {
-      console.log('Form is invalid');
     }
   }
 }

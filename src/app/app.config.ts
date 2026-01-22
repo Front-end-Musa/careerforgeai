@@ -20,6 +20,7 @@ import { AuthEffects } from './pages/auth/data/auth.effects';
 import { resumesReducer } from './pages/application/resumes/data/resumes.reducer';
 import { ResumeEffects } from './pages/application/resumes/data/resumes.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -45,5 +46,10 @@ export const appConfig: ApplicationConfig = {
       maxAge: 25,
       logOnly: environment.production,
     }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+      connectFunctionsEmulator(functions, 'localhost', 5001);
+      return functions;
+    })
   ],
 };
