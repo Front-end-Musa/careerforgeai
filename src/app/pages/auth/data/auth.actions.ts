@@ -4,17 +4,33 @@ import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
 export const registerUser = createAction('[Users] Register User', props<{ user: AppUser }>());
 export const registerUserSuccess = createAction(
   '[Users] Register User Success',
-  props<{ user: AppUser }>()
+  props<{ user: AppUser }>(),
 );
 export const registerUserFailure = createAction(
   '[Users] Register User Failure',
-  props<{ error: string }>()
+  props<{ error: string }>(),
 );
 
 export const loginUser = createAction('[Users] Login User', props<{ user: LoginUser }>());
-export const loginUserSuccess = createAction('[Users] Login User Success', props<{ user: AppUser }>());
-export const loginUserFailure = createAction('[Users] Login User Failure', props<{ error: string }>());
+export const loginUserSuccess = createAction(
+  '[Users] Login User Success',
+  props<{ user: AppUser }>(),
+);
+export const loginUserFailure = createAction(
+  '[Users] Login User Failure',
+  props<{ error: string }>(),
+);
 
 export const initUser = createAction('[Users] Init User');
-export const initUserSuccess = createAction('[Users] Init User Success', props<{ user: AppUser }>());
-export const initUserFailure = createAction('[Users] Init User Failure', props<{ error: string }>());
+export const initUserSuccess = createAction(
+  '[Users] Init User Success',
+  props<{ user: AppUser }>(),
+);
+export const initUserFailure = createAction(
+  '[Users] Init User Failure',
+  props<{ error: string }>(),
+);
+
+export const logout = createAction('[Users] Logout User');
+export const logoutSuccess = createAction('[Users] Logout User Success');
+export const logoutFailure = createAction('[Users] Logout User Failure', props<{ error: string }>());

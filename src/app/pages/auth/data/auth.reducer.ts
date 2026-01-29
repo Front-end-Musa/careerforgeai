@@ -6,6 +6,9 @@ import {
   loginUser,
   loginUserFailure,
   loginUserSuccess,
+  logout,
+  logoutFailure,
+  logoutSuccess,
   registerUser,
   registerUserFailure,
   registerUserSuccess,
@@ -79,6 +82,18 @@ export const authReducer = createReducer(
     user: null,
     status: AuthStatus.Error,
     error,
+  })),
+  on(logout, (state) => ({
+    ...state,
+    loading: true,
+  })),
+  on(logoutSuccess, () => ({
+    ...initialState, // Reset to initial state on success
+  })),
+  on(logoutFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
   })),
 );
 

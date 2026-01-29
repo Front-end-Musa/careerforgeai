@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Logo } from '../../logos/logo/logo';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LogoShort } from '../../logos/logo-short/logo-short';
+import { MatAnchor } from "@angular/material/button";
+import { AuthFacade } from '../../auth/data/auth.facade';
 
 interface NavLink {
   label: string;
@@ -12,12 +14,13 @@ interface NavLink {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [Logo, RouterLink, RouterLinkActive, LogoShort],
+  imports: [Logo, RouterLink, RouterLinkActive, LogoShort, MatAnchor],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
   isSidebarOpen = false;
+  authFacade = inject(AuthFacade)
 
   links: NavLink[] = [
     { label: 'Dashboard', route: 'dashboard', icon: 'grid_view', id: 'dashboard' },
@@ -36,5 +39,9 @@ export class Sidebar {
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  logout() {
+    this.authFacade.logout();
   }
 }

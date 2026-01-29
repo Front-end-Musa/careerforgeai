@@ -18,7 +18,7 @@ export class App implements OnInit {
   ngOnInit() {
     this.authFacade.initAuth();
     this.authFacade.status$.subscribe((status: AuthStatus) => {
-      this.ready.set(status !== AuthStatus.Init);
+      this.ready.set(status !== AuthStatus.Loading);
     });
   }
 }

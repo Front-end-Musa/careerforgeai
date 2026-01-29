@@ -1,18 +1,31 @@
 <div class="sidebar" [class.open]="isSidebarOpen">
-  <div class="logo-container"><app-logo class="app-logo"></app-logo> <app-logo-short class="app-logo-short"></app-logo-short></div>
-  <ul class="navigation">
-    @for (link of links; track link.route) {
-    <li
-      class="navigation-item"
-      [routerLink]="link.route"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      (click)="liActive(link.id); isSidebarOpen = false"
-      [attr.id]="link.id"
-    >
-      <span class="material-symbols-outlined">{{ link.icon }}</span>
-      <a class="navigation-link">{{ link.label }}</a>
-    </li>
-    }
-  </ul>
+  <div class="sidebar-list">
+    <div class="logo-container">
+      <app-logo class="app-logo"></app-logo>
+      <app-logo-short class="app-logo-short"></app-logo-short>
+    </div>
+    <ul class="navigation">
+      @for (link of links; track link.route) {
+        <li
+          class="navigation-item"
+          [routerLink]="link.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="liActive(link.id); isSidebarOpen = false"
+          [attr.id]="link.id"
+        >
+          <span class="material-symbols-outlined">{{ link.icon }}</span>
+          <a class="navigation-link">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+  </div>
+  <div class="sidebar-signout">
+    <button mat-button class="signout-btn" (click)="logout()">
+      <div class="signout-btn-content">
+        <span class="material-symbols-outlined logout"> logout </span>
+        <span class="logout-text">Sign Out</span>
+      </div>
+    </button>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, OnInit, Signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
@@ -17,14 +17,17 @@ import {
   imports: [DirName, DatePipe, AddJobModal, DragDropModule],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
   jobs: Job[] = [];
-  appliedJobs: Job[] = [];
-  interviewingJobs: Job[] = [];
-  offerJobs: Job[] = [];
-  rejectedJobs: Job[] = [];
+  appliedJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'applied'));
+  interviewingJobs: Signal<Job[]> = computed(() =>
+    this.jobs.filter((j) => j.status === 'interviewing'),
+  );
+  offerJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'offer'));
+  rejectedJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'rejected'));
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -68,27 +71,35 @@ export class JobTracker implements OnInit {
     return this.jobs.filter((job) => job.status === status);
   }
 
-  drop(event: CdkDragDrop<Job[]>) {
+  drop(event: CdkDragDrop<Signal<Job[]>>) {
+    // Move visually
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(event.container.data(), event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+        event.previousContainer.data(),
+        event.container.data(),
         event.previousIndex,
         event.currentIndex,
       );
 
-      // 1. Find the moved job (it's now at the currentIndex in the new container)
-      const movedJob = event.container.data[event.currentIndex];
-
-      // 2. Update its status based on the container it dropped into
-      // We use the #templateReference names you defined in HTML
+      // ✅ Update job status
+      const movedJob = event.container.data()[event.currentIndex];
       movedJob.status = this.getStatusFromId(event.container.id);
     }
 
-    // 3. Persist the entire master list to localStorage
+    // ✅ Rebuild from source of truth
+    this.rebuildColumns();
+
+    // ✅ Persist
     this.saveToStorage();
+  }
+
+  private rebuildColumns() {
+    // this.appliedJobs()
+    // this.interviewingJobs = this.getJobsByStatus('interviewing');
+    // this.offerJobs = this.getJobsByStatus('offer');
+    // this.rejectedJobs = this.getJobsByStatus('rejected');
   }
 
   private getStatusFromId(id: string): string {
@@ -99,17 +110,21 @@ export class JobTracker implements OnInit {
     if (id.includes('rejected')) return 'rejected';
     return 'applied';
   }
-
   private saveToStorage() {
-    // Replace 'this.allJobs' with whatever your main array variable is named
-    localStorage.setItem('jobs', JSON.stringify(this.jobs));
+    // If you use one big array 'this.jobs' as the source for all columns:
+    this.storage.set('jobs-track', JSON.stringify(this.jobs));
+
+    // NOTE: If your HTML uses separate arrays (e.g., [cdkDropListData]="appliedJobs"),
+    // you must make sure those changes reflect back into 'this.jobs'
+    // or save all individual arrays.
+    console.log('Saved to storage:', this.jobs); // Check your console to see if this triggers
   }
 
   ngOnInit() {
     this.jobs = JSON.parse(this.storage.get('jobs-track') || '[]');
-    this.appliedJobs = this.getJobsByStatus('applied');
-    this.interviewingJobs = this.getJobsByStatus('interviewing');
-    this.offerJobs = this.getJobsByStatus('offer');
-    this.rejectedJobs = this.getJobsByStatus('rejected');
+  }
+
+  ngOnDestroy() {
+    this.jobs = [];
   }
 }

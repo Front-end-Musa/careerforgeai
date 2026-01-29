@@ -1,7 +1,6 @@
 <div class="job-tracker container">
   <app-dir-name
     title="Job Application Tracker"
-    [additionalElems]="htmlContent"
     (additionalElemClicked)="openAddJobModal()"
   >
     <button class="add-job-btn" type="button" aria-label="Add Job" (click)="openAddJobModal()">
@@ -10,9 +9,10 @@
     </button></app-dir-name
   >
   <div class="app-section">
-    <div class="applied-list container">
+    <div class="applied-list jobs-list">
       <h2>Applied</h2>
       <div
+        id="applied"
         class="applied-items list"
         cdkDropList
         #appliedList="cdkDropList"
@@ -20,16 +20,39 @@
         [cdkDropListConnectedTo]="[interviewingList, offerList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of appliedJobs; track $index) {
+        @for (job of appliedJobs(); track $index) {
           <div class="applied job-item" cdkDrag>
-            {{ job.title }}
+            <h4 class="job-title">
+              {{ job.title }}
+            </h4>
+            <p class="job-company">
+              {{ job.company }}
+            </p>
+            <p class="job-date">
+              {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+            </p>
           </div>
+
+          <ng-template cdkDragPreview>
+            <div class="job-item preview">
+              <h4 class="job-title">
+                {{ job.title }}
+              </h4>
+              <p class="job-company">
+                {{ job.company }}
+              </p>
+              <p class="job-date">
+                {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+              </p>
+            </div>
+          </ng-template>
         }
       </div>
     </div>
-    <div class="interviewing-list container">
+    <div class="interviewing-list jobs-list">
       <h2>Interviewing</h2>
       <div
+        id="interviewing"
         class="interviewing-items list"
         cdkDropList
         #interviewingList="cdkDropList"
@@ -37,34 +60,79 @@
         [cdkDropListConnectedTo]="[appliedList, offerList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of interviewingJobs; track $index) {
+        @for (job of interviewingJobs(); track $index) {
           <div class="interviewing job-item" cdkDrag>
-            {{ job.title }}
+            <h4 class="job-title">
+              {{ job.title }}
+            </h4>
+            <p class="job-company">
+              {{ job.company }}
+            </p>
+            <p class="job-date">
+              {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+            </p>
           </div>
+
+          <ng-template cdkDragPreview>
+            <div class="job-item preview">
+              <h4 class="job-title">
+                {{ job.title }}
+              </h4>
+              <p class="job-company">
+                {{ job.company }}
+              </p>
+              <p class="job-date">
+                {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+              </p>
+            </div>
+          </ng-template>
         }
       </div>
     </div>
-    <div class="offer-list container">
+    <div class="offer-list jobs-list">
       <h2>Offer</h2>
       <div
+        id="offer"
         class="offer-items list"
         cdkDropList
         #offerList="cdkDropList"
         [cdkDropListData]="offerJobs"
-        (cdkDropListDropped)="drop($event)"
         [cdkDropListConnectedTo]="[appliedList, interviewingList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of offerJobs; track $index) {
+        @for (job of offerJobs(); track $index) {
           <div class="offer job-item" cdkDrag>
-            {{ job.title }}
+            <h4 class="job-title">
+              {{ job.title }}
+            </h4>
+            <p class="job-company">
+              {{ job.company }}
+            </p>
+            <p class="job-date">
+              {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+            </p>
           </div>
+
+          <ng-template cdkDragPreview>
+            <div class="job-item preview">
+              <h4 class="job-title">
+                {{ job.title }}
+              </h4>
+              <p class="job-company">
+                {{ job.company }}
+              </p>
+              <p class="job-date">
+                {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+              </p>
+            </div>
+          </ng-template>
         }
       </div>
     </div>
-    <div class="rejected-list container">
+    <div class="rejected-list jobs-list">
       <h2>Rejected</h2>
       <div
+        id="rejected"
         class="rejected-items list"
         cdkDropList
         #rejectedList="cdkDropList"
@@ -72,10 +140,32 @@
         [cdkDropListConnectedTo]="[appliedList, interviewingList, offerList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of rejectedJobs; track $index) {
+        @for (job of rejectedJobs(); track $index) {
           <div class="rejected job-item" cdkDrag>
-            {{ job.title }}
+            <h4 class="job-title">
+              {{ job.title }}
+            </h4>
+            <p class="job-company">
+              {{ job.company }}
+            </p>
+            <p class="job-date">
+              {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+            </p>
           </div>
+
+          <ng-template cdkDragPreview>
+            <div class="job-item preview">
+              <h4 class="job-title">
+                {{ job.title }}
+              </h4>
+              <p class="job-company">
+                {{ job.company }}
+              </p>
+              <p class="job-date">
+                {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+              </p>
+            </div>
+          </ng-template>
         }
       </div>
     </div>

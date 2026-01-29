@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAuthError, selectAuthStatus, selectUser } from './auth.selectors';
-import { Observable } from 'rxjs';
 import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
-import { initUser, loginUser, registerUser } from './auth.actions';
+import { initUser, loginUser, logout, registerUser } from './auth.actions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {
@@ -23,5 +22,9 @@ export class AuthFacade {
 
   initAuth(): void {
     this.store.dispatch(initUser())
+  }
+
+  logout() {
+    this.store.dispatch(logout())
   }
 }

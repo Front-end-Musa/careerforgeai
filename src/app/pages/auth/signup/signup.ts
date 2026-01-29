@@ -38,6 +38,10 @@ export class Signup {
           ? 'Admin'
           : 'User',
       profileViews: 0,
+      plan: {
+        name: 'Free',
+        price: 0,
+      },
     };
     await this.authFacade.register(signupCredentials);
     setTimeout(() => {

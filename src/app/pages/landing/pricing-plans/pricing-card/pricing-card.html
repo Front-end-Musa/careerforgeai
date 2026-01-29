@@ -1,17 +1,24 @@
 <div class="pricing" [class.popular]="popular">
-  @if (popular) {
-  <div class="badge">Most Popular</div>
-  }
+  <div class="card-content">
+    <div class="card-price">
+      @if (popular) {
+        <div class="badge">Most Popular</div>
+      }
 
-  <h3 class="plan-name">{{ plan.name }}</h3>
+      <h3 class="plan-name">{{ plan.name }}</h3>
 
-  <p class="price">${{ plan.price }}<span>/month</span></p>
+      <p class="price">
+        ${{ plan.price }}<span *ngIf="plan.name != 'Premium'">/month</span>
+        <span *ngIf="plan.name == 'Premium'">/year (2 months free)</span>
+      </p>
+    </div>
 
-  <ul class="features">
-    @for (feature of plan.features; track feature) {
-    <li>{{ feature }}</li>
-    }
-  </ul>
+    <ul class="features">
+      @for (feature of plan.features; track feature) {
+        <li>{{ feature }}</li>
+      }
+    </ul>
+  </div>
 
   <button [class.btn-filled]="popular" [class.btn-outline]="!popular">
     {{ plan.button }}

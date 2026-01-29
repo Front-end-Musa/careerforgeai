@@ -45,11 +45,11 @@ export class Login {
     });
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.loginForm.valid) {
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-      await this.authFacade.login({ email, password });
+      this.authFacade.login({ email, password });
     } else {
       console.log('Form is invalid');
     }
