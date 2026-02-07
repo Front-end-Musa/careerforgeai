@@ -14,19 +14,19 @@
 .profile-info,
 .subscription,
 .danger-zone {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 
-  .section-title {
+    .section-title {
     margin-top: 0;
     margin-bottom: 1.25rem;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #1e293b;
-  }
+      color: var(--text);
+    }
 }
 
 // Profile Form Specifics
@@ -44,19 +44,19 @@
     label {
       font-size: 0.85rem;
       font-weight: 500;
-      color: #1e293b;
+      color: var(--text);
     }
 
     .input {
       padding: 0.6rem 0.8rem;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
       border-radius: 6px;
       font-size: 0.9rem;
       transition: border-color 0.2s;
 
       &:focus {
         outline: none;
-        border-color: var(--mat-sys-primary);
+        border-color: var(--brand-500);
       }
     }
   }
@@ -76,7 +76,7 @@
     }
     .plan-cost {
       margin: 0;
-      color: #64748b;
+      color: var(--text-muted);
       font-size: 0.9rem;
     }
   }
@@ -84,7 +84,7 @@
 
 // Button Styling
 .primary-btn {
-  background-color: var(--mat-sys-primary) !important;
+  background-color: var(--brand-600) !important;
   color: white !important;
   border-radius: 6px;
   font-weight: 500;
@@ -92,7 +92,7 @@
 }
 
 .manage-btn {
-  background-color: var(--mat-sys-primary) !important;
+  background-color: var(--brand-600) !important;
   color: white !important;
   border-radius: 6px;
 }

@@ -1,13 +1,14 @@
 .pricing {
   padding: 32px;
   border-radius: 16px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  background: white;
-  transition: 0.25s ease;
+  background: var(--surface-card);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
   height: 100%;
 
   .card-content {
@@ -25,7 +26,7 @@
 
 .pricing:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px #0000000f;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
 }
 
 .plan-name {
@@ -59,8 +60,8 @@
 }
 
 .features li::before {
-  content: '✔';
-  color: #2ecc71;
+  content: '\\2713';
+  color: #16a34a;
 }
 
 .btn-outline,
@@ -72,13 +73,13 @@
   font-size: 1rem;
   cursor: pointer;
   transition: 0.2s;
-  border: 1px solid #ddd;
-  background: white;
+  border: 1px solid var(--border);
+  background: var(--surface-card);
 }
 
 .btn-filled {
-  background: var(--mat-sys-primary);
-  border-color: var(--mat-sys-primary);
+  background: var(--brand-600);
+  border-color: var(--brand-600);
   color: white;
 }
 
@@ -87,11 +88,11 @@
 }
 
 .btn-outline:hover {
-  background: #f8f8f8;
+  background: var(--surface-muted);
 }
 
 .popular {
-  border: 2px solid var(--mat-sys-primary);
+  border: 2px solid var(--brand-600);
 }
 
 .badge {
@@ -99,10 +100,11 @@
   top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--mat-sys-primary);
+  background: var(--brand-600);
   color: white;
   padding: 6px 18px;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
 }
+

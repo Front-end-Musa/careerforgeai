@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
@@ -10,7 +10,7 @@ import { AppUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-signup',
-  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, CommonModule, Logo],
+  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
@@ -18,7 +18,7 @@ export class Signup {
   signupForm: FormGroup;
   router = inject(Router);
   authFacade = inject(AuthFacade);
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.signupForm = new FormGroup({
       fullName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -38,10 +38,12 @@ export class Signup {
           ? 'Admin'
           : 'User',
       profileViews: 0,
-      plan: {
-        name: 'Free',
-        price: 0,
-      },
+      plan: 'free',
+      subscriptionStatus: 'none',
+      currentPeriodEnd: null,
+      providerCustomerId: '',
+      providerToken: '',
+      freeGenerationsUsed: 0,
     };
     await this.authFacade.register(signupCredentials);
     setTimeout(() => {

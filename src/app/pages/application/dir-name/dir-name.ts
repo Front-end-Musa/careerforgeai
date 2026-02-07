@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   Input,
@@ -12,7 +12,7 @@ import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dir-name',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './dir-name.html',
   styleUrl: './dir-name.scss',
 })

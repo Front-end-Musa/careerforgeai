@@ -21,65 +21,69 @@
                 signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched
               "
               placeholder="John Doe"
-            />
-            <mat-error
-              *ngIf="signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched"
-            >
-              Full Name is required
-            </mat-error>
-          </div>
-          <div class="form-field full-width">
-            <mat-label>Email</mat-label>
-            <input
-              matInput
-              type="email"
-              required
-              formControlName="email"
-              [class.invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
-              placeholder="you@example.com"
-            />
-            <mat-error *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
-              Email is required
-            </mat-error>
-          </div>
+              />
+              @if (signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched) {
+                <mat-error
+                  >
+                  Full Name is required
+                </mat-error>
+              }
+            </div>
+            <div class="form-field full-width">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                required
+                formControlName="email"
+                [class.invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+                placeholder="you@example.com"
+                />
+                @if (signupForm.get('email')?.invalid && signupForm.get('email')?.touched) {
+                  <mat-error>
+                    Email is required
+                  </mat-error>
+                }
+              </div>
 
-          <div class="form-field full-width">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              type="password"
-              required
-              formControlName="password"
+              <div class="form-field full-width">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  required
+                  formControlName="password"
               [class.invalid]="
                 signupForm.get('password')?.invalid && signupForm.get('password')?.touched
               "
-              placeholder="••••••"
-            />
-            <mat-error
-              *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
-            >
-              Password is required
-            </mat-error>
+                  placeholder="••••••"
+                  />
+                  @if (signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
+                    <mat-error
+                      >
+                      Password is required
+                    </mat-error>
+                  }
+                </div>
+                <button mat-button color="primary" class="send-btn" (click)="onSubmit($event)">Sign Up</button>
+              </form>
+
+              <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+
+              <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+                <button mat-anchor class="social-btn google-btn">
+                  <span class="material-symbols-outlined">mail_outline</span>
+                  Google
+                </button>
+                <button mat-anchor class="social-btn github-btn">
+                  <span class="material-symbols-outlined">code</span> Github
+                </button>
+              </div>
+
+              <p class="signup" style="text-align: center; margin-top: 14px">
+                Already have an account? <a href="/auth/login">Log in</a>
+              </p>
+            </mat-card>
           </div>
-          <button mat-button color="primary" class="send-btn" (click)="onSubmit($event)">Sign Up</button>
-        </form>
-
-        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
-
-        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
-          <button mat-anchor class="social-btn google-btn">
-            <span class="material-symbols-outlined">mail_outline</span>
-            Google
-          </button>
-          <button mat-anchor class="social-btn github-btn">
-            <span class="material-symbols-outlined">code</span> Github
-          </button>
         </div>
-
-        <p class="signup" style="text-align: center; margin-top: 14px">
-          Already have an account? <a href="/auth/login">Log in</a>
-        </p>
-      </mat-card>
-    </div>
-  </div>
-</div>
+      </div>

@@ -1,6 +1,7 @@
 import { AppUser } from '../../../core/interfaces/user.interface';
 import { createReducer, on } from '@ngrx/store';
 import {
+  authResolvedNoUser,
   initUserFailure,
   initUserSuccess,
   loginUser,
@@ -89,12 +90,17 @@ export const authReducer = createReducer(
   })),
   on(logoutSuccess, () => ({
     ...initialState, // Reset to initial state on success
+    status: AuthStatus.Init
   })),
   on(logoutFailure, (state, { error }) => ({
     ...state,
     error,
     loading: false,
   })),
+  on(authResolvedNoUser, (state) => ({
+    ...state,
+    user: null,
+  }))
 );
 
 export const reducerName = 'auth';

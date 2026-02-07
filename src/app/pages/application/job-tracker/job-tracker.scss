@@ -32,7 +32,7 @@
       .job-item {
         padding: 20px;
         font-weight: 300;
-        color: rgba(0, 0, 0, 0.87);
+        color: var(--text);
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -40,10 +40,11 @@
         box-sizing: border-box;
         cursor: move;
         font-size: 14px;
-        font-family: sans-serif;
-        background-color: #fff;
-        border: 2px solid #cacaca;
-        border-radius: 8px;
+        font-family: inherit;
+        background-color: var(--surface-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 
         .job-title {
           font-size: 1.5em;
@@ -56,9 +57,9 @@
         }
 
         &.preview {
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+          background: var(--surface-card);
+          border-radius: 12px;
+          box-shadow: 0 16px 30px rgba(15, 23, 42, 0.2);
         }
       }
     }

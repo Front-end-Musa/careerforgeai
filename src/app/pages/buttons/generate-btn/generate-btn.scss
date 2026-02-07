@@ -1,0 +1,55 @@
+.generate {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #dbe4ff;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: #e0e7ff;
+    color: #1e40af;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.generate.compact {
+  padding: 6px 12px;
+  font-size: 11px;
+}
+
+.badge {
+  background: #1e3a8a;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.label {
+  white-space: nowrap;
+}

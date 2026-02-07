@@ -4,5 +4,3 @@ export interface Job {
   status: string;
   dateApplied: string;
 }
-
-// type JobStatus = "applied" | "interviewing" | "offer" | "rejected"

@@ -1,15 +1,29 @@
 import { createAction, props } from '@ngrx/store';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 
-export const createResume = createAction('[Resume] Create', props<{ resume: Resume }>());
+export const createResume = createAction('[AI] Create', props<{ resumeText: string }>());
 
 export const createResumeSuccess = createAction(
-  '[Resume] Create Success',
-  props<{ resume: Resume }>()
+  '[AI] Create Success',
+  props<{ resume: string }>()
 );
 
 export const createResumeFailure = createAction(
-  '[Resume] Create Failure',
+  '[AI] Create Failure',
+  props<{ error: string }>()
+);
+
+export const saveAIResult = createAction(
+  '[AI] Save Result',
+  props<{ userId: string; result: Resume }>()
+);
+
+export const saveAIResultSuccess = createAction(
+  '[AI] Save Result Success'
+);
+
+export const saveAIResultFailure = createAction(
+  '[AI] Save Result Failure',
   props<{ error: string }>()
 );
 

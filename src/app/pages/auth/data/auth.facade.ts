@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { selectAuthError, selectAuthStatus, selectUser } from './auth.selectors';
 import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
 import { initUser, loginUser, logout, registerUser } from './auth.actions';
+import { AuthStatus } from './auth.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {
@@ -21,10 +22,10 @@ export class AuthFacade {
   }
 
   initAuth(): void {
-    this.store.dispatch(initUser())
+    this.store.dispatch(initUser());
   }
 
   logout() {
-    this.store.dispatch(logout())
+    this.store.dispatch(logout());
   }
 }

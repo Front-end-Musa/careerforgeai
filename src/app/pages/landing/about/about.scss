@@ -13,35 +13,35 @@
     .title {
       font-size: 2rem;
       font-weight: 700;
-      color: #0f172a;
+      color: var(--text);
       margin-bottom: 8px;
     }
     .sub-title {
       font-size: 1.05rem;
-      color: var(--sub-text-color);
+      color: var(--text-muted);
       margin: 0;
     }
   }
 
   /* Mission card */
   .mission-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
     padding: 2rem;
     border-radius: 12px;
     max-width: 900px;
-    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.03);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
   }
 
   .mission-title {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text);
     margin-bottom: 0.75rem;
   }
   .mission-text {
     font-size: 0.95rem;
-    color: #4b5563;
+    color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 1rem;
   }
@@ -58,8 +58,8 @@
   }
 
   .feature-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
     padding: 2rem 1.5rem;
     border-radius: 12px;
     text-align: center;
@@ -75,15 +75,15 @@
 
   .feature-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
   }
 
   .feature-icon {
     font-size: 28px;
     padding: 12px;
     border-radius: 10px;
-    background: #eef4ff;
-    color: var(--mat-sys-primary, #2f6aff);
+    background: #e8eefc;
+    color: var(--brand-600);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,11 +93,11 @@
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
-    color: #0f172a;
+    color: var(--text);
   }
   .feature-description {
     font-size: 0.93rem;
-    color: var(--sub-text-color);
+    color: var(--text-muted);
     line-height: 1.45;
     margin: 0;
   }

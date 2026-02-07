@@ -5,14 +5,14 @@ export interface AppUser {
   password?: string;
   role: string;
   profileViews: number;
-  plan: {
-    name: userPlan;
-    price: number;
-  };
+  plan: 'free' | 'pro' | 'premium';
+  subscriptionStatus: 'none' | 'active' | 'past_due' | 'canceled';
+  currentPeriodEnd: Date | null;
+  providerCustomerId: string;
+  providerToken: string;
+  freeGenerationsUsed: number;
   emailVerified?: boolean;
 };
-
-type userPlan = 'Free' | 'Pro' | 'Premium'
 
 export interface LoginUser {
   email: string;

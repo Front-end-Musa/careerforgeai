@@ -42,7 +42,7 @@
     "@ngrx/store-devtools": "^21.0.1",
     "express": "^5.1.0",
     "lucide-angular": "^0.562.0",
-    "openai": "^6.16.0",
+    "openai": "^6.17.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.2",
     "zone.js": "~0.15.0"

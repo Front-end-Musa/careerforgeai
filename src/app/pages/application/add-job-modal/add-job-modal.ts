@@ -21,9 +21,7 @@ export class AddJobModal {
   constructor() {}
 
   openModal() {
-    setTimeout(() => {
-      this.isOpen = true;
-    });
+    this.isOpen = true;
   }
 
   closeModal() {

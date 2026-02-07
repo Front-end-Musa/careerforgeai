@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,7 +11,7 @@ interface Feature {
 
 @Component({
   selector: 'app-features',
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule],
   templateUrl: './features.html',
   styleUrl: './features.scss',
 })

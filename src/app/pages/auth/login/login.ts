@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { Logo } from '../../logos/logo/logo';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
@@ -27,9 +27,8 @@ import { AppUser } from '../../../core/interfaces/user.interface';
     ɵInternalFormsSharedModule,
     ReactiveFormsModule,
     MatError,
-    CommonModule,
-    RouterLink,
-  ],
+    RouterLink
+],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -38,7 +37,7 @@ export class Login {
   router = inject(Router);
   authFacade = inject(AuthFacade);
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
@@ -53,13 +52,5 @@ export class Login {
     } else {
       console.log('Form is invalid');
     }
-    this.authFacade.user$.subscribe({
-      next: (user: AppUser | null) => {
-        if (user) {
-          console.log('Login successful, navigating to dashboard');
-          this.router.navigate(['/application/dashboard']);
-        }
-      },
-    });
   }
 }

@@ -1,0 +1,214 @@
+<div class="resume-preview" [class.classic]="templateId === 'classic'" [class.modern]="templateId === 'modern'" [class.minimal]="templateId === 'minimal'">
+  @switch (templateId) {
+    @case ('classic') {
+      <div class="template template-classic">
+        <div class="header">
+          <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
+          <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
+          <div class="contact">
+            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
+            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
+          </div>
+        </div>
+
+        @if (resume?.summary) {
+          <div class="section">
+            <div class="section-title">Summary</div>
+            <div class="section-body">{{ resume?.summary }}</div>
+          </div>
+        }
+
+        @if (resume?.experience?.length) {
+          <div class="section">
+            <div class="section-title">Experience</div>
+            <div class="section-body">
+              @for (exp of resume?.experience ?? []; track $index) {
+                <div class="item">
+                  <div class="item-title">{{ exp.role }}</div>
+                  <div class="item-subtitle">{{ exp.company }} · {{ exp.startDate }} — {{ exp.endDate }}</div>
+                  @if (exp.description?.length) {
+                    <ul>
+                      @for (point of exp.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (resume?.education?.length) {
+          <div class="section">
+            <div class="section-title">Education</div>
+            <div class="section-body">
+              @for (edu of resume?.education ?? []; track $index) {
+                <div class="item">
+                  <div class="item-title">{{ edu.degree }}</div>
+                  <div class="item-subtitle">{{ edu.school }} · {{ edu.startDate }} — {{ edu.endDate }}</div>
+                  @if (edu.description?.length) {
+                    <ul>
+                      @for (point of edu.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (resume?.skills?.length) {
+          <div class="section">
+            <div class="section-title">Skills</div>
+            <div class="section-body skills-list">
+              @for (skill of resume?.skills ?? []; track $index) {
+                <span class="pill">{{ skill }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @case ('modern') {
+      <div class="template template-modern">
+        <div class="header">
+          <div>
+            <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
+            <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
+          </div>
+          <div class="contact">
+            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
+            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="primary">
+            @if (resume?.summary) {
+              <div class="section">
+                <div class="section-title">Profile</div>
+                <div class="section-body">{{ resume?.summary }}</div>
+              </div>
+            }
+
+            @if (resume?.experience?.length) {
+              <div class="section">
+                <div class="section-title">Experience</div>
+                <div class="section-body">
+                  @for (exp of resume?.experience ?? []; track $index) {
+                    <div class="item">
+                      <div class="item-title">{{ exp.role }}</div>
+                      <div class="item-subtitle">{{ exp.company }} · {{ exp.startDate }} — {{ exp.endDate }}</div>
+                      @if (exp.description?.length) {
+                        <ul>
+                          @for (point of exp.description; track $index) {
+                            <li>{{ point }}</li>
+                          }
+                        </ul>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="secondary">
+            @if (resume?.skills?.length) {
+              <div class="section">
+                <div class="section-title">Skills</div>
+                <div class="section-body skills-list">
+                  @for (skill of resume?.skills ?? []; track $index) {
+                    <span class="pill">{{ skill }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (resume?.education?.length) {
+              <div class="section">
+                <div class="section-title">Education</div>
+                <div class="section-body">
+                  @for (edu of resume?.education ?? []; track $index) {
+                    <div class="item">
+                      <div class="item-title">{{ edu.degree }}</div>
+                      <div class="item-subtitle">{{ edu.school }} · {{ edu.startDate }} — {{ edu.endDate }}</div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    @case ('minimal') {
+      <div class="template template-minimal">
+        <div class="header">
+          <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
+          <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
+          <div class="contact">
+            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
+            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
+          </div>
+        </div>
+
+        @if (resume?.summary) {
+          <div class="section">
+            <div class="section-body">{{ resume?.summary }}</div>
+          </div>
+        }
+
+        @if (resume?.experience?.length) {
+          <div class="section">
+            <div class="section-title">Experience</div>
+            <div class="section-body">
+              @for (exp of resume?.experience ?? []; track $index) {
+                <div class="item">
+                  <div class="item-title">{{ exp.role }} · {{ exp.company }}</div>
+                  <div class="item-subtitle">{{ exp.startDate }} — {{ exp.endDate }}</div>
+                  @if (exp.description?.length) {
+                    <div class="inline-points">
+                      @for (point of exp.description; track $index) {
+                        <span>{{ point }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (resume?.education?.length) {
+          <div class="section">
+            <div class="section-title">Education</div>
+            <div class="section-body">
+              @for (edu of resume?.education ?? []; track $index) {
+                <div class="item">
+                  <div class="item-title">{{ edu.degree }} · {{ edu.school }}</div>
+                  <div class="item-subtitle">{{ edu.startDate }} — {{ edu.endDate }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (resume?.skills?.length) {
+          <div class="section">
+            <div class="section-title">Skills</div>
+            <div class="section-body skills-list">
+              @for (skill of resume?.skills ?? []; track $index) {
+                <span>{{ skill }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

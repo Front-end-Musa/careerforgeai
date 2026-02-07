@@ -1,130 +1,336 @@
-<div class="resumes-create-wrapper flex-item-content">
-  <div class="resume-details flex-item">
-    <form [formGroup]="resumeGroup" class="resume-details-form flex-item-content">
-      <h2 class="section-title">Resume Details</h2>
-      <div class="form-field full-name-field">
-        <mat-label>Full Name</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="John Doe"
-          class="full-name"
-          formControlName="fullName"
-        />
-        @if (resumeGroup.get('fullName')?.invalid && resumeGroup.get('fullName')?.touched) {
-        <p class="error-message">Full name is required</p>
-        }
+<div class="resumes-create-wrapper">
+  <div class="form-container">
+    <!-- Header -->
+    <div class="header">
+      <button mat-icon-button class="back-btn" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-content">
+        <h1 class="title">Create New Resume</h1>
+        <p class="subtitle">Fill in your details to get started</p>
       </div>
-      <div class="form-field job-title-field">
-        <mat-label>Job Title</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="Software Engineer"
-          class="job-title"
-          formControlName="jobTitle"
-        />
-        @if (resumeGroup.get('jobTitle')?.invalid && resumeGroup.get('jobTitle')?.touched) {
-        <p class="error-message">Job title is required</p>
-        }
-      </div>
-      <div class="form-field email-field">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="john@example.com"
-          class="email"
-          formControlName="email"
-        />
-        @if (resumeGroup.get('email')?.invalid && resumeGroup.get('email')?.touched) {
-        <p class="error-message">Valid email is required</p>
-        }
-      </div>
-      <div class="form-field experience-field">
-        <mat-label>Experience</mat-label>
-        <textarea
-          placeholder="Describe your work experience..."
-          class="experience"
-          formControlName="experience"
-        >
-        </textarea>
-        @if (resumeGroup.get('experience')?.invalid && resumeGroup.get('experience')?.touched) {
-        <p class="error-message">Experience is required</p>
-        }
-      </div>
-      <div class="form-field skills-field">
-        <mat-label>Skills</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="React, Node.js, Python"
-          class="skills"
-          formControlName="skills"
-        />
-        @if (resumeGroup.get('skills')?.invalid && resumeGroup.get('skills')?.touched) {
-        <p class="error-message">Skills are required</p>
-        }
-      </div>
-    </form>
-    <form [formGroup]="resumeGroup" class="resume-details-form flex-item-content">
-      <div class="form-field tone-field">
-        <app-tone-choose [tones]="tones" (toneSelected)="onToneSelected($event)"></app-tone-choose>
-      </div>
-    </form>
-    <div class="form-actions">
-      <app-generate-btn
-        mat-raised-button
-        color="primary"
-        (click)="generateResume()"
-        [disabled]="isGenerating"
-        class="generate-btn"
-      >
-        @if (isGenerating) {
-        <mat-spinner diameter="20"></mat-spinner>
-        <span>Generating...</span>
-        }
-      </app-generate-btn>
-      @if (resumeGenerated) {
-      <button mat-stroked-button (click)="resetForm()" class="reset-btn">Reset</button>
-      }
     </div>
-  </div>
-  <div class="preview-wrapper flex-item flex-item-content">
-    <div class="preview">
-      <div class="preview-header">
-        <h2 class="section-title">Preview</h2>
-        @if (resumeGenerated) {
-        <div class="export-btns">
-          <button mat-raised-button color="accent" (click)="exportPDF()" class="export-btn pdf-btn">
-            <span class="material-symbols-outlined">picture_as_pdf</span>
-            PDF
-          </button>
+
+    <!-- Progress Bar -->
+    <mat-progress-bar
+      mode="determinate"
+      [value]="progressPercent"
+      class="progress-bar"
+    ></mat-progress-bar>
+
+    <!-- Form -->
+    <form [formGroup]="resumeGroup" class="form-content">
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <div class="section-header" (click)="toggleSection('personal')">
+          <mat-icon [class.rotated]="showPersonal">expand_more</mat-icon>
+          <div>
+            <h2 class="section-title">Personal Information</h2>
+            <p class="section-subtitle">Complete personal information to improve your score</p>
+          </div>
+        </div>
+
+        @if (showPersonal) {
+          <div class="section-content">
+            <div formGroupName="personalInfo">
+              <div class="form-row">
+                <div class="form-field full-width">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Full Name*</mat-label>
+                    <input matInput formControlName="fullName" placeholder="John Smith" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Job Title</mat-label>
+                    <input
+                      matInput
+                      formControlName="jobTitle"
+                      placeholder="Senior Software Engineer"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div formGroupName="contact">
+              <div class="form-row">
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email*</mat-label>
+                    <input matInput formControlName="email" placeholder="john@email.com" />
+                  </mat-form-field>
+                </div>
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" placeholder="+1 (555) 123-4567" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Location</mat-label>
+                    <input matInput formControlName="location" placeholder="San Francisco, CA" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field full-width">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Professional Summary</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="summary"
+                    placeholder="Brief professional summary..."
+                    rows="3"
+                  ></textarea>
+                  <mat-hint>AI uses only the info you provided. No invented details.</mat-hint>
+                </mat-form-field>
+                <app-generate-btn
+                  class="field-generate-btn"
+                  [disabled]="!canGenerateSummary() || isGenerating"
+                  (generate)="generateSummaryWithAI()"
+                  label="Generate with AI"
+                  [compact]="true"
+                ></app-generate-btn>
+                @if (!canGenerateSummary()) {
+                  <p class="summary-ai-note">
+                    Add your full name, job title, and skills before generating a summary.
+                  </p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Work Experience Section -->
+      <div class="form-section">
+        <div class="section-header" (click)="toggleSection('experience')">
+          <mat-icon [class.rotated]="showWorkExperience">expand_more</mat-icon>
+          <div class="section-header-content">
+            <h2 class="section-title">Work Experience</h2>
+            <span class="count">{{ workExperiences.length }} positions</span>
+          </div>
           <button
-            mat-raised-button
-            color="accent"
-            (click)="exportDOCX()"
-            class="export-btn docx-btn"
+            type="button"
+            mat-icon-button
+            class="add-btn"
+            (click)="addWorkExperience(); $event.stopPropagation()"
           >
-            <span class="material-symbols-outlined">description</span>
-            DOCX
+            <mat-icon>add</mat-icon>
           </button>
         </div>
+
+        @if (showWorkExperience) {
+          <div class="section-content" formArrayName="experience">
+            @for (exp of workExperiences; let i = $index; track i) {
+              <div class="experience-item" [formGroupName]="i">
+                <div class="form-row">
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Company</mat-label>
+                      <input matInput formControlName="company" placeholder="Company name" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Role</mat-label>
+                      <input matInput formControlName="role" placeholder="Job title" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Start Date</mat-label>
+                      <input matInput type="month" formControlName="startDate" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>End Date</mat-label>
+                      <input matInput type="month" formControlName="endDate" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field full-width">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Responsibilities & Achievements</mat-label>
+                      <textarea
+                        matInput
+                        formControlName="description"
+                        placeholder="Describe your responsibilities and achievements in this role"
+                        rows="4"
+                      ></textarea>
+                    </mat-form-field>
+                    <app-generate-btn
+                      class="field-generate-btn"
+                      [disabled]="!canGenerateExperience(i) || isGenerating"
+                      (generate)="generateExperienceWithAI(i)"
+                      label="Generate with AI"
+                      [compact]="true"
+                    ></app-generate-btn>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="remove-btn"
+                  (click)="removeWorkExperience(i)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
         }
       </div>
-      @if (isGenerating) {
-      <div class="preview-loading">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p>Generating your resume...</p>
+
+      <!-- Education Section -->
+      <div class="form-section">
+        <div class="section-header" (click)="toggleSection('education')">
+          <mat-icon [class.rotated]="showEducation">expand_more</mat-icon>
+          <div class="section-header-content">
+            <h2 class="section-title">Education</h2>
+            <span class="count">{{ educations.length }} degrees</span>
+          </div>
+          <button
+            type="button"
+            mat-icon-button
+            class="add-btn"
+            (click)="addEducation(); $event.stopPropagation()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        @if (showEducation) {
+          <div class="section-content" formArrayName="education">
+            @for (edu of educations; let i = $index; track i) {
+              <div class="education-item" [formGroupName]="i">
+                <div class="form-row">
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>School/University</mat-label>
+                      <input matInput formControlName="school" placeholder="School name" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Degree</mat-label>
+                      <input matInput formControlName="degree" placeholder="Bachelor's/Master's" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Start Date</mat-label>
+                      <input matInput type="month" formControlName="startDate" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>End Date</mat-label>
+                      <input matInput type="month" formControlName="endDate" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-field full-width">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Notes</mat-label>
+                      <textarea
+                        matInput
+                        formControlName="description"
+                        placeholder="Honors, activities, or focus areas"
+                        rows="3"
+                      ></textarea>
+                    </mat-form-field>
+                    <app-generate-btn
+                      class="field-generate-btn"
+                      [disabled]="!canGenerateEducation(i) || isGenerating"
+                      (generate)="generateEducationWithAI(i)"
+                      label="Generate with AI"
+                      [compact]="true"
+                    ></app-generate-btn>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="remove-btn"
+                  (click)="removeEducation(i)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
       </div>
-      } @else if (resumeGenerated && generatedResume) {
-      <div class="resume-preview-content" [innerHTML]="generatedResume.content"></div>
-      } @else {
-      <div class="preview-placeholder">
-        <span class="material-symbols-outlined">description</span>
-        <p class="preview-sub-text">Your AI-generated resume will appear here</p>
+
+      <!-- Skills Section -->
+      <div class="form-section">
+        <div class="section-header" (click)="toggleSection('skills')">
+          <mat-icon [class.rotated]="showSkills">expand_more</mat-icon>
+          <div class="section-header-content">
+            <h2 class="section-title">Skills</h2>
+            <span class="section-subtitle">Technical and soft skills</span>
+          </div>
+        </div>
+
+        @if (showSkills) {
+          <div class="section-content">
+            <div class="form-row">
+              <div class="form-field full-width">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Skills*</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="skills"
+                    placeholder="e.g., JavaScript, Python, Project Management"
+                    rows="3"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        }
       </div>
-      }
+    </form>
+  </div>
+
+  <!-- Preview Panel -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <div>
+        <h2 class="preview-title">Preview</h2>
+        <p class="preview-subtitle">Live as you type</p>
+      </div>
+      <mat-button-toggle-group
+        class="template-toggle"
+        [value]="previewTemplate"
+        (valueChange)="previewTemplate = $event"
+        aria-label="Resume template"
+      >
+        <mat-button-toggle value="classic">Classic</mat-button-toggle>
+        <mat-button-toggle value="modern">Modern</mat-button-toggle>
+        <mat-button-toggle value="minimal">Minimal</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="preview-content">
+      <app-resume-preview [resume]="(preview$ | async) || undefined" [templateId]="previewTemplate"></app-resume-preview>
     </div>
   </div>
 </div>

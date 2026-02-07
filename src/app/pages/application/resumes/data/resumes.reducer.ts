@@ -12,11 +12,12 @@ export interface ResumesState extends EntityState<Resume> {
   // UI / AI
   formValue: any | null;
   generating: boolean;
+  generatedText?: string;
 }
 
 export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>(
   {
-    selectId: (resume: Resume) => resume.id,
+    selectId: (resume: Resume) => resume.id ? resume.id : '',
     sortComparer: (a: Resume, b: Resume) => a.personalInfo.fullName.localeCompare(b.personalInfo.fullName),
   }
 );
@@ -36,6 +37,35 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
 export const resumesReducer = createReducer(
   initialState,
 
+  on(ResumesActions.createResume, (state) => ({
+    ...state,
+    generating: true,
+    error: null,
+  })),
+
+  on(ResumesActions.createResumeSuccess, (state, { resume }) => ({
+    ...state,
+    generating: false,
+    error: null,
+    generatedText: resume,
+  })),
+
+  on(ResumesActions.createResumeFailure, (state, { error }) => ({
+    ...state,
+    generating: false,
+    error: error,
+  })),
+
+  on(ResumesActions.saveAIResultSuccess, (state) => ({
+    ...state,
+    error: null,
+  })),
+
+  on(ResumesActions.saveAIResultFailure, (state, { error }) => ({
+    ...state,
+    error: error,
+  })),
+
   on(ResumesActions.loadResumes, (state) => ({
     ...state,
     status: 'loading',
@@ -47,12 +77,12 @@ export const resumesReducer = createReducer(
       ...state,
       status: 'loaded',
       error: null,
-    })
+    }),
   ),
 
   on(ResumesActions.loadResumesFailure, (state, { error }) => ({
     ...state,
     status: 'error',
     error: error,
-  }))
+  })),
 );

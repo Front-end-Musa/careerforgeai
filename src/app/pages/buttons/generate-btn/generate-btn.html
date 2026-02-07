@@ -1,1 +1,10 @@
-<button class="generate" (click)="onSubmit()" [disabled]="disabled">Generate Cover Letter</button>
+<button
+  class="generate"
+  [class.compact]="compact"
+  type="button"
+  (click)="onSubmit()"
+  [disabled]="disabled"
+>
+  <span class="badge">AI</span>
+  <span class="label">{{ label }}</span>
+</button>

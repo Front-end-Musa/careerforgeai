@@ -12,11 +12,9 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-landing',
-  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer, AsyncPipe],
+  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
 export class Landing {
-  private authFacade = inject(AuthFacade);
-  user$ = this.authFacade.user$;
 }

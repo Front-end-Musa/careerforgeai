@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-contact',
@@ -14,9 +14,8 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule,
-    CommonModule
-  ],
+    MatCardModule
+],
   templateUrl: './contact.html',
   styleUrls: ['./contact.scss'],
 })

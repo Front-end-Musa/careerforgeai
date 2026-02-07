@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../core/services/auth.service';
-import { catchError, exhaustMap, from, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, from, map, of, switchMap, take, tap } from 'rxjs';
 import {
+  authResolvedNoUser,
   initUser,
   initUserFailure,
   initUserSuccess,
@@ -50,30 +51,33 @@ export class AuthEffects {
     ),
   );
 
+  loginSuccessNavigate$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loginUserSuccess),
+        tap(() => this.router.navigate(['/application/dashboard'])),
+      ),
+    { dispatch: false },
+  );
+
   logoutEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(logout),
-      // Only proceed if Firebase actually thinks we are logged in
-      switchMap(() => {
-        if (!this.auth.currentUser) {
-          return of(logoutSuccess());
-        }
-        return this.authService$.logout().pipe(
+      switchMap(() =>
+        this.authService$.logout().pipe(
           map(() => logoutSuccess()),
-          catchError((error) => of(logoutFailure({ error: error.message }))),
-        );
-      }),
+          catchError((error: FirebaseError) => of(logoutFailure({ error: error.message }))),
+        ),
+      ),
     ),
   );
 
-  // Optional: Redirect user after successful logout
-  logoutSuccessEffect = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(logoutSuccess),
-        tap(() => this.router.navigate(['/'])),
-      ),
-    { dispatch: false },
+  logoutSuccessEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(logoutSuccess),
+      take(1),
+      tap(() => this.authService$.noUserRedirect()),
+    ),
   );
 
   initUserEffect = createEffect(() =>
@@ -81,14 +85,10 @@ export class AuthEffects {
       ofType(initUser),
       switchMap(() =>
         this.authService$.initAuth().pipe(
-          map((user) => {
-            if (user) {
-              return initUserSuccess({ user });
-            } else {
-              return initUserFailure({ error: 'No user logged in' });
-            }
-          }),
-          catchError((error: FirebaseError) => of(initUserFailure({ error: error.message }))),
+          map(
+            (user) => (user ? initUserSuccess({ user }) : authResolvedNoUser()), // 👈 NOT logout
+          ),
+          catchError((err) => of(initUserFailure({ error: err.message }))),
         ),
       ),
     ),

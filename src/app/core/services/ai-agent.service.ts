@@ -1,56 +1,40 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { addDoc, collection, Firestore, serverTimestamp } from '@angular/fire/firestore';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { from, Observable, take, firstValueFrom } from 'rxjs';
+import { Resume } from '../interfaces/resumes.interface';
+import { AuthFacade } from '../../pages/auth/data/auth.facade';
 
-export interface AIRequest {
-  prompt: string;
-  model?: string;
-  temperature?: number;
-}
+@Injectable({ providedIn: 'root' })
+export class AiAgentService {
+  constructor(
+    private functions: Functions,
+    private firestore: Firestore,
+    private authFacade: AuthFacade,
+  ) {}
 
-export interface AIResponse {
-  response: string;
-  usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
-}
+  /**
+   * Persist AI-generated resume JSON into Firestore.
+   * Ensures the userId is resolved before writing to avoid storing a Promise.
+   */
+  async saveAIResult(result: string) {
+    const colRef = collection(this.firestore, 'resumes');
+    const payload = JSON.parse(result);
+    const user = await firstValueFrom(this.authFacade.user$);
+    const userId = user?.uid ?? null;
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AIAgentService {
-  private apiUrl = 'https://api.openai.com/v1/chat/completions'; // Example API endpoint
-  private apiKey = 'your-api-key-here'; // Should be from environment
-
-  constructor(private http: HttpClient) {}
-
-  generateResponse(request: AIRequest): Observable<AIResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.apiKey}`,
+    return addDoc(colRef, {
+      ...payload,
+      userId,
+      createdAt: serverTimestamp(),
     });
-
-    const body = {
-      model: request.model || 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: request.prompt }],
-      temperature: request.temperature || 0.7,
-    };
-
-    return this.http.post<AIResponse>(this.apiUrl, body, { headers });
   }
 
-  // Additional methods for specific AI tasks
-  generateCoverLetter(jobDescription: string, userProfile: any): Observable<AIResponse> {
-    const prompt = `Generate a cover letter for the following job: ${jobDescription}. User profile: ${JSON.stringify(
-      userProfile
-    )}`;
-    return this.generateResponse({ prompt });
-  }
+  generateResume(resumeText: string): Observable<string> {
+    const fn = httpsCallable(this.functions, 'generateResume');
 
-  generateInterviewQuestions(jobTitle: string): Observable<AIResponse> {
-    const prompt = `Generate interview questions for the position of ${jobTitle}`;
-    return this.generateResponse({ prompt });
+    const generatedJson$ = fn({ resumeText }).then((res: any) => JSON.parse(res.data.text));
+
+    return from(generatedJson$);
   }
 }

@@ -1,0 +1,152 @@
+.resume-preview {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  color: var(--text);
+  min-height: 420px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.template {
+  display: block;
+}
+
+.header {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.title {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--text-muted);
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.section {
+  margin-top: 16px;
+}
+
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.section-body {
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.item {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item-title {
+  font-weight: 600;
+}
+
+.item-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  background: var(--surface-muted);
+}
+
+.template-modern .header {
+  grid-template-columns: 1fr auto;
+  align-items: end;
+}
+
+.template-modern .grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.template-modern .section-title {
+  color: #1b1b1b;
+  font-weight: 700;
+}
+
+.template-modern .pill {
+  background: var(--brand-700);
+  color: #ffffff;
+  border-color: var(--brand-700);
+}
+
+.template-minimal .header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.template-minimal .section-title {
+  font-size: 11px;
+}
+
+.template-minimal .item {
+  border-bottom: none;
+  padding: 8px 0;
+}
+
+.template-minimal .inline-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #4a4a4a;
+}
+
+@media (max-width: 900px) {
+  .template-modern .grid {
+    grid-template-columns: 1fr;
+  }
+}

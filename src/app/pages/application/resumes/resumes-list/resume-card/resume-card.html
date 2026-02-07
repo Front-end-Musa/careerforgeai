@@ -2,11 +2,10 @@
   <div class="resume-info-wrapper">
     <span class="material-symbols-outlined icon-blue">description</span>
     <div class="resume-info-text">
-      <div class="resume-title">{{ resume.personalInfo.title }}</div>
-      <div class="resume-info">{{ resume.tone }}</div>
+      <div class="resume-title">{{ resume.personalInfo.jobTitle }}</div>
     </div>
   </div>
-  <div class="updatedat">Updated at {{ resume.updatedAt | date : 'dd.MM.yyyy' }}</div>
+  <div class="updatedat">Updated at {{ resume.meta.updatedAt | date : 'dd.MM.yyyy' }}</div>
   <div class="resume-btns">
     <button class="edit-btn">Edit</button>
     <button class="download-btn">

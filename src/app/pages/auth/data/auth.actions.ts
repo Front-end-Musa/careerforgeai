@@ -33,4 +33,9 @@ export const initUserFailure = createAction(
 
 export const logout = createAction('[Users] Logout User');
 export const logoutSuccess = createAction('[Users] Logout User Success');
-export const logoutFailure = createAction('[Users] Logout User Failure', props<{ error: string }>());
+export const logoutFailure = createAction(
+  '[Users] Logout User Failure',
+  props<{ error: string }>(),
+);
+
+export const authResolvedNoUser = createAction('[Users] Auth Resolved No User');

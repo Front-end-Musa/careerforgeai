@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-pricing-card',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './pricing-card.html',
   styleUrl: './pricing-card.scss',
 })

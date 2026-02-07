@@ -9,7 +9,20 @@ import {
   signOut,
   User,
 } from '@angular/fire/auth';
-import { Observable, from, of, switchMap, tap, map, catchError } from 'rxjs';
+import {
+  Observable,
+  from,
+  of,
+  switchMap,
+  tap,
+  map,
+  catchError,
+  shareReplay,
+  throwError,
+  EMPTY,
+  take,
+  filter,
+} from 'rxjs';
 import { AppUser, LoginUser } from '../interfaces/user.interface';
 import { doc, docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -23,6 +36,12 @@ export class AuthService {
   private router = inject(Router);
 
   constructor(private firestore: Firestore) {}
+
+  noUserRedirect() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.router.navigate(['/']);
+    }
+  }
 
   login(credentials: LoginUser): Observable<any> {
     return from(
@@ -61,7 +80,6 @@ export class AuthService {
 
   logout(): Observable<unknown> {
     return from(signOut(this.auth)).pipe(
-      tap(async () => await this.router.navigate(['/'])),
       catchError((err) => {
         console.error('logout error:', err.message);
         throw err;
@@ -71,25 +89,22 @@ export class AuthService {
 
   initAuth(): Observable<AppUser | null> {
     if (!isPlatformBrowser(this.platformId)) {
-      return of(null);
+      return EMPTY;
     }
+
     return authState(this.auth).pipe(
-      switchMap((firebaseUser) => {
-        if (!firebaseUser) {
-          return of(null);
-        }
-        return this.getUser$(firebaseUser.uid);
-      }),
-      catchError((err) => {
-        console.error('Auth init error:', err);
-        return of(null);
-      }),
+      take(1),
+      switchMap((firebaseUser) => (firebaseUser ? this.getUser$(firebaseUser.uid) : of(null))),
     );
   }
 
   getUser$(uid: string): Observable<AppUser> {
     const userRef = doc(this.firestore, 'users', uid);
-    return docData(userRef, { idField: 'uid' }) as Observable<AppUser>;
+
+    return docData(userRef, { idField: 'uid' }).pipe(
+      filter((user): user is AppUser => !!user),
+      take(1),
+    );
   }
 
   sendVerification(): Observable<void> {

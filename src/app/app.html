@@ -1,6 +1,10 @@
-<ng-container *ngIf="ready(); else loading">
-  <router-outlet></router-outlet>
-</ng-container>
-<ng-template #loading>
-  <div class="loading">Loading...</div>
-</ng-template>
+@if (status$ | async; as status) {
+  <div>
+    @if (
+      status === authStatus.Loaded || status === authStatus.Init || status === authStatus.Error) {
+      <router-outlet></router-outlet>
+    } @else {
+      <div class="loading">Loading...</div>
+    }
+  </div>
+}

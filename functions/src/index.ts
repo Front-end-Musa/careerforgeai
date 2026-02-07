@@ -1,29 +1,36 @@
-import OpenAI from 'openai';
-import { onRequest } from 'firebase-functions/v2/https';
-import { defineSecret } from 'firebase-functions/params';
-import { setGlobalOptions } from 'firebase-functions/options';
+import {defineSecret} from "firebase-functions/params";
+import OpenAI from "openai";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
 
-const openaiKey = defineSecret('OPENAI_API_KEY');
+const openaiSecret = defineSecret("OPENAI_API_KEY");
 
-setGlobalOptions({ maxInstances: 10 });
+export const generateResume = onCall({secrets: [openaiSecret]}, async (request) => {
+  const {resumeText} = request.data as { resumeText?: string };
 
-export const generateResume = onRequest({ secrets: [openaiKey] }, async (req, res) => {
-  try {
-    const client = new OpenAI({
-      apiKey: openaiKey.value(),
-    });
-
-    const completion = await client.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: JSON.stringify(req.body) },
-      ],
-    });
-
-    res.json({ ok: true, completion });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error');
+  if (!resumeText) {
+    throw new HttpsError("invalid-argument", "No resume text");
   }
+
+  const openaiApiKey = await openaiSecret.value();
+  const client = new OpenAI({apiKey: openaiApiKey});
+
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant that helps users improve their resumes.",
+      },
+      {
+        role: "user",
+        content: resumeText,
+      },
+    ],
+  });
+
+  const responseText = completion.choices[0].message?.content;
+
+  return {
+    text: responseText,
+  };
 });

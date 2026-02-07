@@ -26,7 +26,7 @@ export class JobTracker implements OnInit {
   interviewingJobs: Signal<Job[]> = computed(() =>
     this.jobs.filter((j) => j.status === 'interviewing'),
   );
-  offerJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'offer'));
+  offerJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'offered'));
   rejectedJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'rejected'));
 
   constructor(
@@ -88,25 +88,15 @@ export class JobTracker implements OnInit {
       movedJob.status = this.getStatusFromId(event.container.id);
     }
 
-    // ✅ Rebuild from source of truth
-    this.rebuildColumns();
-
     // ✅ Persist
     this.saveToStorage();
-  }
-
-  private rebuildColumns() {
-    // this.appliedJobs()
-    // this.interviewingJobs = this.getJobsByStatus('interviewing');
-    // this.offerJobs = this.getJobsByStatus('offer');
-    // this.rejectedJobs = this.getJobsByStatus('rejected');
   }
 
   private getStatusFromId(id: string): string {
     // Matches the #appliedList, #offerList, etc., from your HTML
     if (id.includes('applied')) return 'applied';
     if (id.includes('interviewing')) return 'interviewing';
-    if (id.includes('offer')) return 'offer';
+    if (id.includes('offered')) return 'offered';
     if (id.includes('rejected')) return 'rejected';
     return 'applied';
   }

@@ -11,7 +11,7 @@
           <span class="material-symbols-outlined resume-mat icon-blue">description</span>
         </div>
         <div class="stat-value">
-          <div class="stat-value-number">{{ resumes.length }}</div>
+          <div class="stat-value-number">{{ resumes().length }}</div>
           <p class="stat-value-text">Total resumes</p>
         </div>
       </div>
@@ -21,7 +21,7 @@
           <span class="material-symbols-outlined applications-mat green-icon">work</span>
         </div>
         <div class="stat-value">
-          <div class="stat-value-number">{{ applications.length }}</div>
+          <div class="stat-value-number">{{ applications().length }}</div>
           <p class="stat-value-text">In progress</p>
         </div>
       </div>
@@ -31,18 +31,18 @@
           <span class="material-symbols-outlined interviews-mat purple-icon">event</span>
         </div>
         <div class="stat-value">
-          <div class="stat-value-number">{{ interviews.length }}</div>
+          <div class="stat-value-number">{{ interviews().length }}</div>
           <p class="stat-value-text">Scheduled</p>
         </div>
       </div>
       <div class="profile-views stat">
         <div class="stat-head">
-          <h4 class="stat-title">Profile Views</h4>
+          <h4 class="stat-title">Offers</h4>
           <span class="material-symbols-outlined profile-mat orange-icon">analytics</span>
         </div>
         <div class="stat-value">
-          <div class="stat-value-number">{{ user()?.profileViews }}</div>
-          <p class="stat-value-text">This month</p>
+          <div class="stat-value-number">{{ offers().length }}</div>
+          <p class="stat-value-text">Job offers</p>
         </div>
       </div>
     </div>
@@ -57,14 +57,6 @@
           <span class="material-symbols-outlined green-icon">mail_outline</span>
           <h4 class="action-title">Create Cover Letter</h4>
         </div>
-        <!-- <div class="action">
-          <span class="material-symbols-outlined purple-icon">badge</span>
-          <h4 class="action-title">Optimize LinkedIn</h4>
-        </div>
-        <div class="action">
-          <span class="material-symbols-outlined orange-icon">message</span>
-          <h4 class="action-title">Practice Interview</h4>
-        </div> -->
       </div>
     </div>
   </div>

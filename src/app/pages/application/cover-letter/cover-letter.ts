@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
 import { DirName } from '../dir-name/dir-name';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GenerateBtn } from '../../buttons/generate-btn/generate-btn';
 import { ToneChoose } from '../../buttons/tone-choose/tone-choose';
 
 @Component({
   selector: 'app-cover-letter',
-  imports: [MatLabel, DirName, CommonModule, ReactiveFormsModule, GenerateBtn, ToneChoose],
+  imports: [MatLabel, DirName, ReactiveFormsModule, GenerateBtn, ToneChoose],
   templateUrl: './cover-letter.html',
   styleUrl: './cover-letter.scss',
 })
@@ -23,8 +23,6 @@ export class CoverLetter implements OnInit {
       position: new FormControl('', Validators.required),
       jobDescription: new FormControl('', Validators.required),
       tone: new FormControl('', Validators.required),
-    });
-    this.coverLetterForm.controls['tone'].valueChanges.subscribe((value) => {
     });
   }
 
