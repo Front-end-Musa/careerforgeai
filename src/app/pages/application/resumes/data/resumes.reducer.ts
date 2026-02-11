@@ -15,12 +15,11 @@ export interface ResumesState extends EntityState<Resume> {
   generatedText?: string;
 }
 
-export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>(
-  {
-    selectId: (resume: Resume) => resume.id ? resume.id : '',
-    sortComparer: (a: Resume, b: Resume) => a.personalInfo.fullName.localeCompare(b.personalInfo.fullName),
-  }
-);
+export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
+  selectId: (resume: Resume) => (resume.id ? resume.id : ''),
+  sortComparer: (a: Resume, b: Resume) =>
+    a.personalInfo.fullName.localeCompare(b.personalInfo.fullName),
+});
 
 export const { selectIds, selectEntities, selectAll, selectTotal } = resumesAdapter.getSelectors();
 

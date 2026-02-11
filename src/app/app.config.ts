@@ -21,6 +21,8 @@ import { resumesReducer } from './pages/application/resumes/data/resumes.reducer
 import { ResumeEffects } from './pages/application/resumes/data/resumes.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { CoverLetterEffects } from './pages/application/cover-letter/data/cover-letter.effects';
+import { coverLetterReducer } from './pages/application/cover-letter/data/cover-letter.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -40,8 +42,8 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // NgRx
-    provideStore({ auth: authReducer, resumes: resumesReducer }),
-    provideEffects([AuthEffects, ResumeEffects]),
+    provideStore({ auth: authReducer, resumes: resumesReducer, coverLetters: coverLetterReducer }),
+    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,

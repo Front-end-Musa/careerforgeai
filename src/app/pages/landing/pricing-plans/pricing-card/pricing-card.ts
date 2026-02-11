@@ -11,7 +11,7 @@ export class PricingCard {
   @Input() plan!: {
     name: string;
     price: number;
-    features: string[];
+    features: { text: string; included: boolean }[];
     button: string;
   };
   @Input() popular: boolean = false;

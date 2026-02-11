@@ -35,6 +35,11 @@ export const routes: Routes = [
           import('./pages/application/settings/settings').then((c) => c.Settings),
       },
       {
+        path: 'resumes/:id/edit',
+        loadComponent: () =>
+          import('./pages/application/resumes/resumes-edit/resumes-edit').then((c) => c.ResumesEdit),
+      },
+      {
         path: 'resumes',
         loadComponent: () => import('./pages/application/resumes/resumes').then((c) => c.Resumes),
       },

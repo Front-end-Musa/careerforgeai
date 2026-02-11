@@ -34,3 +34,40 @@ export const generateResume = onCall({secrets: [openaiSecret]}, async (request) 
     text: responseText,
   };
 });
+
+export const generateCoverLetter = onCall({secrets: [openaiSecret]}, async (request) => {
+  const {resumeText} = request.data as { resumeText?: string };
+
+  if (!resumeText) {
+    throw new HttpsError("invalid-argument", "No resume text");
+  }
+
+  const openaiApiKey = await openaiSecret.value();
+  const client = new OpenAI({apiKey: openaiApiKey});
+
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant that helps users write cover letters based on their resumes.",
+      },
+      {
+        role: "user",
+        content: resumeText,
+      },
+    ],
+  });
+
+  const responseText = completion.choices[0].message?.content;
+
+  return {
+    text: responseText,
+  };
+});
+
+// For testing
+export const echo = onCall(async (request) => {
+  const {text} = request.data as { text?: string };
+  return {text: text || "No text provided"};
+});

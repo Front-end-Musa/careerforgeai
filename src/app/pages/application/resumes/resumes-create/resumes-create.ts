@@ -1,5 +1,5 @@
 import { ProjectEntry, Resume } from './../../../../core/interfaces/resumes.interface';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
@@ -12,7 +12,9 @@ import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Location } from '@angular/common';
 import { ResumePreview } from '../resume-preview/resume-preview';
-import { map, startWith } from 'rxjs';
+import { map, startWith, take } from 'rxjs';
+import { ResumeService } from '../../../../core/services/resume.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-resumes-create',
@@ -32,11 +34,17 @@ import { map, startWith } from 'rxjs';
   templateUrl: './resumes-create.html',
   styleUrl: './resumes-create.scss',
 })
-export class ResumesCreate {
+export class ResumesCreate implements OnInit {
+  @Input() mode: 'create' | 'edit' = 'create';
+  @Input() resumeId: string | null = null;
+
   resumeGroup: FormGroup;
   isGenerating: boolean = false;
+  isSaving = false;
   resumesFacade = inject(ResumesFacade);
   location = inject(Location);
+  resumeService = inject(ResumeService);
+  router = inject(Router);
   currentStep = 0;
   progressPercent = 25;
   workExperiences: FormGroup[] = [];
@@ -73,6 +81,17 @@ export class ResumesCreate {
     });
 
     this.preview$ = this.resumeGroupValueChanges();
+  }
+
+  ngOnInit() {
+    if (!this.isEditMode || !this.resumeId) {
+      return;
+    }
+    this.loadResumeForEdit(this.resumeId);
+  }
+
+  get isEditMode() {
+    return this.mode === 'edit';
   }
 
   get experienceArray() {
@@ -431,5 +450,100 @@ export class ResumesCreate {
 
   goBack() {
     this.location.back();
+  }
+
+  saveResume() {
+    if (!this.isEditMode || !this.resumeId || this.resumeGroup.invalid) {
+      this.resumeGroup.markAllAsTouched();
+      return;
+    }
+
+    this.isSaving = true;
+    const raw = this.resumeGroup.getRawValue();
+    const payload: Partial<Resume> = {
+      ...raw,
+      experience: this.normalizeExperience(raw.experience),
+      education: this.normalizeEducation(raw.education),
+      skills: this.normalizeSkills(raw.skills),
+      meta: {
+        ...(raw.meta ?? {}),
+        updatedAt: new Date().toISOString(),
+      },
+    };
+
+    this.resumeService.updateResume(this.resumeId, payload).pipe(take(1)).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.router.navigate(['/application/resumes']);
+      },
+      error: () => {
+        this.isSaving = false;
+      },
+    });
+  }
+
+  exportToPdf() {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  }
+
+  private loadResumeForEdit(id: string) {
+    this.resumeService.getResumeById(id).pipe(take(1)).subscribe((resume) => {
+      if (!resume) {
+        this.router.navigate(['/application/resumes']);
+        return;
+      }
+      const contact = (resume.contact ?? {}) as { email?: string; phone?: string; location?: string };
+
+      this.resumeGroup.patchValue({
+        userId: resume.userId,
+        personalInfo: {
+          fullName: resume.personalInfo?.fullName ?? '',
+          jobTitle: resume.personalInfo?.jobTitle ?? '',
+        },
+        contact: {
+          email: contact.email ?? '',
+          phone: contact.phone ?? '',
+          location: contact.location ?? '',
+        },
+        summary: resume.summary ?? '',
+        skills: Array.isArray(resume.skills) ? resume.skills.join(', ') : '',
+        projects: resume.projects ?? [],
+        certifications: resume.certifications ?? [],
+        meta: {
+          createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
+          updatedAt: resume.meta?.updatedAt ?? new Date().toISOString(),
+        },
+      });
+
+      this.experienceArray.clear();
+      (resume.experience ?? []).forEach((entry) => {
+        this.experienceArray.push(
+          new FormGroup({
+            company: new FormControl(entry.company ?? ''),
+            role: new FormControl(entry.role ?? ''),
+            startDate: new FormControl(entry.startDate ?? ''),
+            endDate: new FormControl(entry.endDate ?? ''),
+            description: new FormControl((entry.description ?? []).join('\n')),
+          }),
+        );
+      });
+      this.workExperiences = this.experienceArray.controls;
+
+      this.educationArray.clear();
+      (resume.education ?? []).forEach((entry) => {
+        this.educationArray.push(
+          new FormGroup({
+            school: new FormControl(entry.school ?? ''),
+            degree: new FormControl(entry.degree ?? ''),
+            startDate: new FormControl(entry.startDate ?? ''),
+            endDate: new FormControl(entry.endDate ?? ''),
+            description: new FormControl((entry.description ?? []).join('\n')),
+          }),
+        );
+      });
+      this.educations = this.educationArray.controls;
+    });
   }
 }

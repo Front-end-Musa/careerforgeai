@@ -7,7 +7,7 @@
   </div>
   <div class="updatedat">Updated at {{ resume.meta.updatedAt | date : 'dd.MM.yyyy' }}</div>
   <div class="resume-btns">
-    <button class="edit-btn">Edit</button>
+    <button class="edit-btn" [routerLink]="['/application/resumes', resume.id, 'edit']">Edit</button>
     <button class="download-btn">
       <span class="material-symbols-outlined resume-mat">Download</span>
     </button>

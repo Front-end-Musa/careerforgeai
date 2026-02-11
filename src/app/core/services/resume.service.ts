@@ -6,10 +6,12 @@ import {
   query,
   where,
   orderBy,
+  doc,
   docData,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
 
 @Injectable({
@@ -41,5 +43,31 @@ export class ResumeService {
         return of([] as Resume[]);
       }),
     );
+  }
+
+  getResumeById(id: string): Observable<Resume | null> {
+    const resumeRef = doc(this.firestore, 'resumes', id);
+    return docData(resumeRef, { idField: 'id' }).pipe(
+      map((data) => (data as Resume) ?? null),
+      catchError((err) => {
+        console.error('Error fetching resume by id:', err);
+        return of(null);
+      }),
+    );
+  }
+
+  updateResume(id: string, changes: Partial<Resume>): Observable<void> {
+    const resumeRef = doc(this.firestore, 'resumes', id);
+    return new Observable<void>((observer) => {
+      updateDoc(resumeRef, changes as Record<string, unknown>)
+        .then(() => {
+          observer.next();
+          observer.complete();
+        })
+        .catch((err) => {
+          console.error('Error updating resume:', err);
+          observer.error(err);
+        });
+    });
   }
 }

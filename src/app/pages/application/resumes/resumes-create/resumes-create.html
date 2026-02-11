@@ -6,17 +6,21 @@
         <mat-icon>arrow_back</mat-icon>
       </button>
       <div class="header-content">
-        <h1 class="title">Create New Resume</h1>
-        <p class="subtitle">Fill in your details to get started</p>
+        <h1 class="title">{{ isEditMode ? 'Edit Resume' : 'Create New Resume' }}</h1>
+        <p class="subtitle">
+          {{ isEditMode ? 'Update details and save changes' : 'Fill in your details to get started' }}
+        </p>
       </div>
     </div>
 
     <!-- Progress Bar -->
-    <mat-progress-bar
-      mode="determinate"
-      [value]="progressPercent"
-      class="progress-bar"
-    ></mat-progress-bar>
+    @if (!isEditMode) {
+      <mat-progress-bar
+        mode="determinate"
+        [value]="progressPercent"
+        class="progress-bar"
+      ></mat-progress-bar>
+    }
 
     <!-- Form -->
     <form [formGroup]="resumeGroup" class="form-content">
@@ -92,19 +96,23 @@
                     placeholder="Brief professional summary..."
                     rows="3"
                   ></textarea>
-                  <mat-hint>AI uses only the info you provided. No invented details.</mat-hint>
+                  @if (!isEditMode) {
+                    <mat-hint>AI uses only the info you provided. No invented details.</mat-hint>
+                  }
                 </mat-form-field>
-                <app-generate-btn
-                  class="field-generate-btn"
-                  [disabled]="!canGenerateSummary() || isGenerating"
-                  (generate)="generateSummaryWithAI()"
-                  label="Generate with AI"
-                  [compact]="true"
-                ></app-generate-btn>
-                @if (!canGenerateSummary()) {
-                  <p class="summary-ai-note">
-                    Add your full name, job title, and skills before generating a summary.
-                  </p>
+                @if (!isEditMode) {
+                  <app-generate-btn
+                    class="field-generate-btn"
+                    [disabled]="!canGenerateSummary() || isGenerating"
+                    (generate)="generateSummaryWithAI()"
+                    label="Generate with AI"
+                    [compact]="true"
+                  ></app-generate-btn>
+                  @if (!canGenerateSummary()) {
+                    <p class="summary-ai-note">
+                      Add your full name, job title, and skills before generating a summary.
+                    </p>
+                  }
                 }
               </div>
             </div>
@@ -173,13 +181,15 @@
                         rows="4"
                       ></textarea>
                     </mat-form-field>
-                    <app-generate-btn
-                      class="field-generate-btn"
-                      [disabled]="!canGenerateExperience(i) || isGenerating"
-                      (generate)="generateExperienceWithAI(i)"
-                      label="Generate with AI"
-                      [compact]="true"
-                    ></app-generate-btn>
+                    @if (!isEditMode) {
+                      <app-generate-btn
+                        class="field-generate-btn"
+                        [disabled]="!canGenerateExperience(i) || isGenerating"
+                        (generate)="generateExperienceWithAI(i)"
+                        label="Generate with AI"
+                        [compact]="true"
+                      ></app-generate-btn>
+                    }
                   </div>
                 </div>
                 <button
@@ -257,13 +267,15 @@
                         rows="3"
                       ></textarea>
                     </mat-form-field>
-                    <app-generate-btn
-                      class="field-generate-btn"
-                      [disabled]="!canGenerateEducation(i) || isGenerating"
-                      (generate)="generateEducationWithAI(i)"
-                      label="Generate with AI"
-                      [compact]="true"
-                    ></app-generate-btn>
+                    @if (!isEditMode) {
+                      <app-generate-btn
+                        class="field-generate-btn"
+                        [disabled]="!canGenerateEducation(i) || isGenerating"
+                        (generate)="generateEducationWithAI(i)"
+                        label="Generate with AI"
+                        [compact]="true"
+                      ></app-generate-btn>
+                    }
                   </div>
                 </div>
                 <button
@@ -308,6 +320,15 @@
           </div>
         }
       </div>
+
+      @if (isEditMode) {
+        <div class="form-actions">
+          <button type="button" mat-stroked-button (click)="exportToPdf()">Export to PDF</button>
+          <button type="button" mat-flat-button color="primary" (click)="saveResume()" [disabled]="isSaving">
+            {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      }
     </form>
   </div>
 

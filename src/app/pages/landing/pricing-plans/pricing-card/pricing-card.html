@@ -18,8 +18,8 @@
   </div>
 
   <ul class="features">
-    @for (feature of plan.features; track feature) {
-      <li>{{ feature }}</li>
+    @for (feature of plan.features; track feature.text) {
+      <li [class.excluded]="!feature.included" [class.included]="feature.included">{{ feature.text }}</li>
     }
   </ul>
 </div>

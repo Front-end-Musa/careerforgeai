@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  background: var(--surface-card);
+  background: #ffffff;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   height: 100%;
@@ -59,9 +59,19 @@
   gap: 8px;
 }
 
-.features li::before {
-  content: '\\2713';
+.features li.included::before {
+  content: '\2713';
   color: #16a34a;
+}
+
+.features li.excluded {
+  color: var(--text-muted);
+}
+
+.features li.excluded::before {
+  content: 'X';
+  color: #dc2626;
+  font-weight: 700;
 }
 
 .btn-outline,
@@ -74,7 +84,7 @@
   cursor: pointer;
   transition: 0.2s;
   border: 1px solid var(--border);
-  background: var(--surface-card);
+  background: #ffffff;
 }
 
 .btn-filled {
