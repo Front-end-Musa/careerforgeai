@@ -75,7 +75,6 @@ export class AuthEffects {
   logoutSuccessEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(logoutSuccess),
-      take(1),
       tap(() => this.authService$.noUserRedirect()),
     ),
   );

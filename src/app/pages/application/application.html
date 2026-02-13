@@ -1,7 +1,17 @@
-<div class="layout">
-    <app-sidebar class="sidebar"></app-sidebar>
-    <div class="main-content">
-        <router-outlet class="main"></router-outlet>
-    </div>
-    <div class="content-dim"></div>
-</div>
+@if (status$ | async; as status) {
+  <div>
+    @if (
+      status === authStatus.Loaded || status === authStatus.Init || status === authStatus.Error
+    ) {
+      <div class="layout">
+        <app-sidebar class="sidebar"></app-sidebar>
+        <div class="main-content">
+          <router-outlet class="main"></router-outlet>
+        </div>
+        <div class="content-dim"></div>
+      </div>
+    } @else {
+      <div class="loading">Loading...</div>
+    }
+  </div>
+}

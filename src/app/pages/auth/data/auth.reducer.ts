@@ -2,6 +2,7 @@ import { AppUser } from '../../../core/interfaces/user.interface';
 import { createReducer, on } from '@ngrx/store';
 import {
   authResolvedNoUser,
+  initUser,
   initUserFailure,
   initUserSuccess,
   loginUser,
@@ -72,6 +73,11 @@ export const authReducer = createReducer(
     status: AuthStatus.Error,
     error,
   })),
+  on(initUser, (state) => ({
+    ...state,
+    status: AuthStatus.Loading,
+    error: null,
+  })),
   on(initUserSuccess, (state, { user }) => ({
     ...state,
     user,
@@ -99,6 +105,7 @@ export const authReducer = createReducer(
   })),
   on(authResolvedNoUser, (state) => ({
     ...state,
+    status: AuthStatus.Init,
     user: null,
   }))
 );

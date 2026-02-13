@@ -27,7 +27,9 @@ export class Dashboard {
   offers = signal<Job[]>([]);
 
   ngOnInit() {
+    console.log('Dashboard initialized');
     this.resumesFacade.loadResumes();
+    console.log('Resumes loaded');
     this.resumesFacade.resumes$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((resumes) => {
       this.resumes.set(resumes);
     });

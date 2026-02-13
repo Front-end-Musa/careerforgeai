@@ -1,10 +1,1 @@
-@if (status$ | async; as status) {
-  <div>
-    @if (
-      status === authStatus.Loaded || status === authStatus.Init || status === authStatus.Error) {
-      <router-outlet></router-outlet>
-    } @else {
-      <div class="loading">Loading...</div>
-    }
-  </div>
-}
+<router-outlet></router-outlet>
