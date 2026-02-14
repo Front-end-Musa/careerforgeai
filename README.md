@@ -1,59 +1,125 @@
-# Application
+# AI Job Seek Helper
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+AI Job Seek Helper is an Angular application for managing a job search workflow with AI-assisted content generation.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Landing page and authentication (Firebase Auth)
+- Resume management and editing
+- AI-assisted cover letter generation
+- Job application tracker (kanban-style states)
+- Dashboard and settings pages
+- Firebase-backed data storage (Firestore)
 
-```bash
-ng serve
+## Tech Stack
+
+- Angular 21 (standalone components, SSR build target)
+- NgRx (state management for auth, resumes, cover letters)
+- Angular Material + CDK
+- Firebase (Auth, Firestore, Cloud Functions, Hosting)
+- OpenAI API (used from Firebase Functions)
+
+## Project Structure
+
+```text
+.
+|- src/                 # Angular app
+|  |- app/
+|  |  |- core/          # services, interfaces, interceptors
+|  |  |- pages/         # landing, auth, application modules/pages
+|- functions/           # Firebase Cloud Functions (TypeScript)
+|- public/              # static assets copied to build output
+|- firebase.json        # emulators + hosting/functions config
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Prerequisites
 
-## Code scaffolding
+- Node.js 22.x (matches Cloud Functions runtime)
+- npm
+- Firebase CLI (`npm i -g firebase-tools`)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Installation
 
 ```bash
-ng generate --help
+npm install
+cd functions && npm install && cd ..
 ```
 
-## Building
+## Environment and Secrets
 
-To build the project run:
+Frontend Firebase config is currently in:
+
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
+
+Cloud Functions use Firebase Secrets for OpenAI:
 
 ```bash
-ng build
+firebase functions:secrets:set OPENAI_API_KEY
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Running Locally
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### 1) Start Angular app
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+App runs at `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+### 2) Start Firebase emulators (functions/firestore/hosting/ui)
+
+In another terminal:
 
 ```bash
-ng e2e
+firebase emulators:start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Configured emulator ports:
 
-## Additional Resources
+- Hosting: `5000`
+- Functions: `5001`
+- Firestore: `8080`
+- Emulator UI: `4000`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The Angular app is configured to call Functions emulator at `localhost:5001`.
+
+## Build
+
+```bash
+npm run build
+```
+
+SSR output is generated under `dist/application/`.
+
+## Run SSR Build
+
+```bash
+npm run serve:ssr:application
+```
+
+## Tests
+
+```bash
+npm test
+```
+
+## Functions Commands
+
+From `functions/`:
+
+```bash
+npm run build
+npm run serve
+npm run deploy
+npm run logs
+```
+
+## Deployment
+
+Deploy web hosting and functions with Firebase CLI:
+
+```bash
+firebase deploy
+```
