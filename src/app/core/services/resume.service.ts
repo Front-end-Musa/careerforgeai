@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Firestore,
+  addDoc,
   collection,
   collectionData,
   query,
@@ -9,6 +10,7 @@ import {
   doc,
   docData,
   updateDoc,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
@@ -43,6 +45,31 @@ export class ResumeService {
         return of([] as Resume[]);
       }),
     );
+  }
+
+  createResume(resume: Partial<Resume>): Observable<string> {
+    const resumesRef = collection(this.firestore, 'resumes');
+    return new Observable<string>((observer) => {
+      const currentUser = this.auth.currentUser;
+      if (!currentUser) {
+        observer.error(new Error('User not authenticated'));
+        return;
+      }
+
+      addDoc(resumesRef, {
+        ...resume,
+        userId: currentUser.uid,
+        createdAt: serverTimestamp(),
+      })
+        .then((docRef) => {
+          observer.next(docRef.id);
+          observer.complete();
+        })
+        .catch((err) => {
+          console.error('Error creating resume:', err);
+          observer.error(err);
+        });
+    });
   }
 
   getResumeById(id: string): Observable<Resume | null> {

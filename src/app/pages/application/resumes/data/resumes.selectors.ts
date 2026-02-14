@@ -37,3 +37,13 @@ export const selectGeneratedResumeText = createSelector(
   selectResumesFeature,
   (state: ResumesState) => state.generatedText,
 );
+
+export const selectIsSaving = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.saving,
+);
+
+export const selectSaveSucceeded = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.saveSucceeded,
+);

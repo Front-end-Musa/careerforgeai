@@ -1,12 +1,18 @@
 .resumes-list-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    flex-direction: row;
-    justify-content: space-around;
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+  justify-content: space-around;
 
-    .resume-card {
-        flex: content;
-        box-sizing: border-box;
-    }
+  .viewport {
+    height: 70vh; // or fixed px/calc(...)
+    width: 100%;
+  }
+  .resume-card-wrapper {
+    height: 200px; // must match itemSize
+  }
+
+  .resume-card {
+    box-sizing: border-box;
+  }
 }

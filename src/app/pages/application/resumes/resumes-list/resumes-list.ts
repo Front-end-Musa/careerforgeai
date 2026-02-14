@@ -3,17 +3,21 @@ import { ResumeCard } from './resume-card/resume-card';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Observable } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ResumesStatus } from '../data/resumes.reducer';
+import { AsyncPipe } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-resumes-list',
-  imports: [ResumeCard],
+  imports: [ResumeCard, ScrollingModule, AsyncPipe, MatProgressSpinnerModule],
   templateUrl: './resumes-list.html',
   styleUrl: './resumes-list.scss',
 })
 export class ResumesList implements OnInit {
   private resumesFacade = inject(ResumesFacade);
-  // resumes = toSignal(this.resumesFacade.resumes$, { initialValue: [] });
+  resumesStatus = ResumesStatus;
+  status$: Observable<ResumesStatus> = this.resumesFacade.status$;
   resumes = signal<Resume[]>([]);
   loading$: Observable<boolean> = this.resumesFacade.loading$;
   error$: Observable<string | null> = this.resumesFacade.error$;

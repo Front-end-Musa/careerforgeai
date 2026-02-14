@@ -1,5 +1,5 @@
 import { ProjectEntry, Resume } from './../../../../core/interfaces/resumes.interface';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
@@ -12,9 +12,10 @@ import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Location } from '@angular/common';
 import { ResumePreview } from '../resume-preview/resume-preview';
-import { map, startWith, take } from 'rxjs';
+import { map, startWith, take, filter, skip } from 'rxjs';
 import { ResumeService } from '../../../../core/services/resume.service';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-resumes-create',
@@ -42,6 +43,7 @@ export class ResumesCreate implements OnInit {
   isGenerating: boolean = false;
   isSaving = false;
   resumesFacade = inject(ResumesFacade);
+  destroyRef = inject(DestroyRef);
   location = inject(Location);
   resumeService = inject(ResumeService);
   router = inject(Router);
@@ -84,6 +86,20 @@ export class ResumesCreate implements OnInit {
   }
 
   ngOnInit() {
+    this.resumesFacade.saving$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((saving) => {
+      this.isSaving = saving;
+    });
+
+    this.resumesFacade.saveSucceeded$
+      .pipe(
+        skip(1),
+        filter((saved) => saved),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        this.router.navigate(['/application/resumes']);
+      });
+
     if (!this.isEditMode || !this.resumeId) {
       return;
     }
@@ -453,12 +469,11 @@ export class ResumesCreate implements OnInit {
   }
 
   saveResume() {
-    if (!this.isEditMode || !this.resumeId || this.resumeGroup.invalid) {
+    if (this.resumeGroup.invalid) {
       this.resumeGroup.markAllAsTouched();
       return;
     }
 
-    this.isSaving = true;
     const raw = this.resumeGroup.getRawValue();
     const payload: Partial<Resume> = {
       ...raw,
@@ -471,15 +486,26 @@ export class ResumesCreate implements OnInit {
       },
     };
 
-    this.resumeService.updateResume(this.resumeId, payload).pipe(take(1)).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.router.navigate(['/application/resumes']);
+    if (this.isEditMode) {
+      if (!this.resumeId) {
+        return;
+      }
+
+      this.resumesFacade.saveResumeData(payload, this.resumeId);
+      return;
+    }
+
+    const createPayload: Partial<Resume> = {
+      ...payload,
+      meta: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        source: 'manual',
+        version: 1,
       },
-      error: () => {
-        this.isSaving = false;
-      },
-    });
+    };
+
+    this.resumesFacade.saveResumeData(createPayload);
   }
 
   exportToPdf() {

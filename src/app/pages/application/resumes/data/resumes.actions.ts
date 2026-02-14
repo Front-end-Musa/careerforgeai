@@ -53,3 +53,18 @@ export const updateResumeFailure = createAction(
   '[Resume] Update Failure',
   props<{ error: string }>()
 );
+
+export const saveResume = createAction(
+  '[Resume] Save',
+  props<{ resume: Partial<Resume>; resumeId?: string | null }>()
+);
+
+export const saveResumeSuccess = createAction(
+  '[Resume] Save Success',
+  props<{ resumeId?: string }>()
+);
+
+export const saveResumeFailure = createAction(
+  '[Resume] Save Failure',
+  props<{ error: string }>()
+);

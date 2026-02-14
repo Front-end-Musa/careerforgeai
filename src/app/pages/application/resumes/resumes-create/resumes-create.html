@@ -321,14 +321,14 @@
         }
       </div>
 
-      @if (isEditMode) {
-        <div class="form-actions">
+      <div class="form-actions">
+        @if (isEditMode) {
           <button type="button" mat-stroked-button (click)="exportToPdf()">Export to PDF</button>
-          <button type="button" mat-flat-button color="primary" (click)="saveResume()" [disabled]="isSaving">
-            {{ isSaving ? 'Saving...' : 'Save Changes' }}
-          </button>
-        </div>
-      }
+        }
+        <button type="button" mat-flat-button color="primary" (click)="saveResume()" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : isEditMode ? 'Save Changes' : 'Save Resume' }}
+        </button>
+      </div>
     </form>
   </div>
 

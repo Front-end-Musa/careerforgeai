@@ -11,10 +11,13 @@ import {
 } from '@angular/forms';
 import { MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
+import { AuthStatus } from '../data/auth.reducer';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +30,9 @@ import { AppUser } from '../../../core/interfaces/user.interface';
     ɵInternalFormsSharedModule,
     ReactiveFormsModule,
     MatError,
-    RouterLink
+    RouterLink,
+    AsyncPipe,
+    MatProgressSpinnerModule,
 ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -36,6 +41,8 @@ export class Login {
   loginForm: FormGroup;
   router = inject(Router);
   authFacade = inject(AuthFacade);
+  authStatus = AuthStatus;
+  status$ = this.authFacade.status$;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.loginForm = new FormGroup({

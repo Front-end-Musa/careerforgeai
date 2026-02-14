@@ -92,22 +92,23 @@ export const authReducer = createReducer(
   })),
   on(logout, (state) => ({
     ...state,
-    loading: true,
+    status: AuthStatus.Loading,
+    error: null,
   })),
   on(logoutSuccess, () => ({
     ...initialState, // Reset to initial state on success
-    status: AuthStatus.Init
+    status: AuthStatus.Init,
   })),
   on(logoutFailure, (state, { error }) => ({
     ...state,
+    status: AuthStatus.Error,
     error,
-    loading: false,
   })),
   on(authResolvedNoUser, (state) => ({
     ...state,
     status: AuthStatus.Init,
     user: null,
-  }))
+  })),
 );
 
 export const reducerName = 'auth';

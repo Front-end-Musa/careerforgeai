@@ -45,4 +45,35 @@ export class ResumeEffects {
       ),
     ),
   );
+
+  saveResumeEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.saveResume),
+      switchMap(({ resume, resumeId }) => {
+        if (resumeId) {
+          return this.apiService.updateResume(resumeId, resume).pipe(
+            map(() => resumesActions.saveResumeSuccess({ resumeId })),
+            catchError((error) =>
+              of(
+                resumesActions.saveResumeFailure({
+                  error: error instanceof Error ? error.message : String(error),
+                }),
+              ),
+            ),
+          );
+        }
+
+        return this.apiService.createResume(resume).pipe(
+          map((createdResumeId) => resumesActions.saveResumeSuccess({ resumeId: createdResumeId })),
+          catchError((error) =>
+            of(
+              resumesActions.saveResumeFailure({
+                error: error instanceof Error ? error.message : String(error),
+              }),
+            ),
+          ),
+        );
+      }),
+    ),
+  );
 }

@@ -3,16 +3,23 @@ import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { createReducer, on } from '@ngrx/store';
 import * as ResumesActions from '../data/resumes.actions';
 
-type stateStatus = 'init' | 'loading' | 'loaded' | 'error';
+export enum ResumesStatus {
+  Init = 'init',
+  Loading = 'loading',
+  Loaded = 'loaded',
+  Error = 'error',
+}
 
 export interface ResumesState extends EntityState<Resume> {
   resumes: Resume[];
-  status: stateStatus;
+  status: ResumesStatus;
   error: string | null;
   // UI / AI
   formValue: any | null;
   generating: boolean;
   generatedText?: string;
+  saving: boolean;
+  saveSucceeded: boolean;
 }
 
 export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
@@ -25,11 +32,14 @@ export const { selectIds, selectEntities, selectAll, selectTotal } = resumesAdap
 
 export const initialState: ResumesState = resumesAdapter.getInitialState({
   resumes: [],
-  status: 'init',
+  status: ResumesStatus.Init,
   error: null,
   formValue: null,
   generating: false,
+  saving: false,
+  saveSucceeded: false,
 });
+
 
 // REDUCER
 
@@ -67,21 +77,42 @@ export const resumesReducer = createReducer(
 
   on(ResumesActions.loadResumes, (state) => ({
     ...state,
-    status: 'loading',
+    status: ResumesStatus.Loading,
     error: null,
   })),
 
   on(ResumesActions.loadResumesSuccess, (state, { resumes }) =>
     resumesAdapter.setAll(resumes, {
       ...state,
-      status: 'loaded',
+      status: ResumesStatus.Loaded,
       error: null,
     }),
   ),
 
   on(ResumesActions.loadResumesFailure, (state, { error }) => ({
     ...state,
-    status: 'error',
+    status: ResumesStatus.Error,
     error: error,
+  })),
+
+  on(ResumesActions.saveResume, (state) => ({
+    ...state,
+    saving: true,
+    saveSucceeded: false,
+    error: null,
+  })),
+
+  on(ResumesActions.saveResumeSuccess, (state) => ({
+    ...state,
+    saving: false,
+    saveSucceeded: true,
+    error: null,
+  })),
+
+  on(ResumesActions.saveResumeFailure, (state, { error }) => ({
+    ...state,
+    saving: false,
+    saveSucceeded: false,
+    error,
   })),
 );
