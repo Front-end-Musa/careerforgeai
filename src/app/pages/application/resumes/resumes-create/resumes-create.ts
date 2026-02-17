@@ -60,7 +60,6 @@ export class ResumesCreate implements OnInit {
 
   constructor() {
     this.resumeGroup = new FormGroup({
-      userId: new FormControl('', Validators.required),
       personalInfo: new FormGroup({
         fullName: new FormControl('', Validators.required),
         jobTitle: new FormControl(''),
@@ -68,7 +67,11 @@ export class ResumesCreate implements OnInit {
       contact: new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email]),
         phone: new FormControl('', Validators.pattern(/^\+?[0-9\s\-]{7,15}$/)),
-        location: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]),
+        location: new FormControl('', [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(100),
+        ]),
       }),
       summary: new FormControl(''),
       skills: new FormControl('', Validators.required),
@@ -267,13 +270,15 @@ export class ResumesCreate implements OnInit {
       .filter(Boolean);
   }
 
-  private normalizeExperience(raw: Array<{
-    company?: string;
-    role?: string;
-    startDate?: string;
-    endDate?: string;
-    description?: string;
-  }>) {
+  private normalizeExperience(
+    raw: Array<{
+      company?: string;
+      role?: string;
+      startDate?: string;
+      endDate?: string;
+      description?: string;
+    }>,
+  ) {
     return raw.map((entry) => ({
       company: entry.company?.trim() ?? '',
       role: entry.role?.trim() ?? '',
@@ -283,13 +288,15 @@ export class ResumesCreate implements OnInit {
     }));
   }
 
-  private normalizeEducation(raw: Array<{
-    school?: string;
-    degree?: string;
-    startDate?: string;
-    endDate?: string;
-    description?: string;
-  }>) {
+  private normalizeEducation(
+    raw: Array<{
+      school?: string;
+      degree?: string;
+      startDate?: string;
+      endDate?: string;
+      description?: string;
+    }>,
+  ) {
     return raw.map((entry) => ({
       school: entry.school?.trim() ?? '',
       degree: entry.degree?.trim() ?? '',
@@ -302,12 +309,15 @@ export class ResumesCreate implements OnInit {
   private resumeGroupValueChanges() {
     return this.resumeGroup.valueChanges.pipe(
       startWith(this.resumeGroup.getRawValue()),
-      map((raw) => ({
-        ...raw,
-        experience: this.normalizeExperience(raw.experience),
-        education: this.normalizeEducation(raw.education),
-        skills: this.normalizeSkills(raw.skills),
-      }) as Partial<Resume>),
+      map(
+        (raw) =>
+          ({
+            ...raw,
+            experience: this.normalizeExperience(raw.experience),
+            education: this.normalizeEducation(raw.education),
+            skills: this.normalizeSkills(raw.skills),
+          }) as Partial<Resume>,
+      ),
     );
   }
 
@@ -469,7 +479,9 @@ export class ResumesCreate implements OnInit {
   }
 
   saveResume() {
+    console.log(this.isEditMode ? 'Updating resume...' : 'Creating resume...');
     if (this.resumeGroup.invalid) {
+      console.log(this.resumeGroup);
       this.resumeGroup.markAllAsTouched();
       return;
     }
@@ -488,6 +500,7 @@ export class ResumesCreate implements OnInit {
 
     if (this.isEditMode) {
       if (!this.resumeId) {
+        // debugger;
         return;
       }
 
@@ -497,6 +510,8 @@ export class ResumesCreate implements OnInit {
 
     const createPayload: Partial<Resume> = {
       ...payload,
+      createdAt: new Date().toISOString(),
+
       meta: {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -504,72 +519,93 @@ export class ResumesCreate implements OnInit {
         version: 1,
       },
     };
-
     this.resumesFacade.saveResumeData(createPayload);
   }
 
   exportToPdf() {
-    if (typeof window !== 'undefined') {
-      window.print();
+    if (typeof window === 'undefined') {
+      return;
     }
+
+    const printClass = 'resume-print-mode';
+    let cleanedUp = false;
+    const cleanup = () => {
+      if (cleanedUp) {
+        return;
+      }
+      cleanedUp = true;
+      document.body.classList.remove(printClass);
+    };
+
+    window.addEventListener('afterprint', cleanup, { once: true });
+    document.body.classList.add(printClass);
+    setTimeout(cleanup, 3000);
+    window.print();
   }
 
   private loadResumeForEdit(id: string) {
-    this.resumeService.getResumeById(id).pipe(take(1)).subscribe((resume) => {
-      if (!resume) {
-        this.router.navigate(['/application/resumes']);
-        return;
-      }
-      const contact = (resume.contact ?? {}) as { email?: string; phone?: string; location?: string };
+    this.resumeService
+      .getResumeById(id)
+      .pipe(take(1))
+      .subscribe((resume) => {
+        if (!resume) {
+          this.router.navigate(['/application/resumes']);
+          return;
+        }
+        const contact = (resume.contact ?? {}) as {
+          email?: string;
+          phone?: string;
+          location?: string;
+        };
 
-      this.resumeGroup.patchValue({
-        userId: resume.userId,
-        personalInfo: {
-          fullName: resume.personalInfo?.fullName ?? '',
-          jobTitle: resume.personalInfo?.jobTitle ?? '',
-        },
-        contact: {
-          email: contact.email ?? '',
-          phone: contact.phone ?? '',
-          location: contact.location ?? '',
-        },
-        summary: resume.summary ?? '',
-        skills: Array.isArray(resume.skills) ? resume.skills.join(', ') : '',
-        projects: resume.projects ?? [],
-        certifications: resume.certifications ?? [],
-        meta: {
-          createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
-          updatedAt: resume.meta?.updatedAt ?? new Date().toISOString(),
-        },
-      });
+        this.resumeGroup.patchValue({
+          userId: resume.userId,
+          personalInfo: {
+            fullName: resume.personalInfo?.fullName ?? '',
+            jobTitle: resume.personalInfo?.jobTitle ?? '',
+          },
+          contact: {
+            email: contact.email ?? '',
+            phone: contact.phone ?? '',
+            location: contact.location ?? '',
+          },
+          summary: resume.summary ?? '',
+          skills: Array.isArray(resume.skills) ? resume.skills.join(', ') : '',
+          projects: resume.projects ?? [],
+          certifications: resume.certifications ?? [],
+          meta: {
+            createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
+            updatedAt: resume.meta?.updatedAt ?? new Date().toISOString(),
+          },
+        });
 
-      this.experienceArray.clear();
-      (resume.experience ?? []).forEach((entry) => {
-        this.experienceArray.push(
-          new FormGroup({
-            company: new FormControl(entry.company ?? ''),
-            role: new FormControl(entry.role ?? ''),
-            startDate: new FormControl(entry.startDate ?? ''),
-            endDate: new FormControl(entry.endDate ?? ''),
-            description: new FormControl((entry.description ?? []).join('\n')),
-          }),
-        );
-      });
-      this.workExperiences = this.experienceArray.controls;
+        this.experienceArray.clear();
+        (resume.experience ?? []).forEach((entry) => {
+          this.experienceArray.push(
+            new FormGroup({
+              company: new FormControl(entry.company ?? ''),
+              role: new FormControl(entry.role ?? ''),
+              startDate: new FormControl(entry.startDate ?? ''),
+              endDate: new FormControl(entry.endDate ?? ''),
+              description: new FormControl((entry.description ?? []).join('\n')),
+            }),
+          );
+        });
+        this.workExperiences = this.experienceArray.controls;
 
-      this.educationArray.clear();
-      (resume.education ?? []).forEach((entry) => {
-        this.educationArray.push(
-          new FormGroup({
-            school: new FormControl(entry.school ?? ''),
-            degree: new FormControl(entry.degree ?? ''),
-            startDate: new FormControl(entry.startDate ?? ''),
-            endDate: new FormControl(entry.endDate ?? ''),
-            description: new FormControl((entry.description ?? []).join('\n')),
-          }),
-        );
+        this.educationArray.clear();
+        (resume.education ?? []).forEach((entry) => {
+          this.educationArray.push(
+            new FormGroup({
+              school: new FormControl(entry.school ?? ''),
+              degree: new FormControl(entry.degree ?? ''),
+              startDate: new FormControl(entry.startDate ?? ''),
+              endDate: new FormControl(entry.endDate ?? ''),
+              description: new FormControl((entry.description ?? []).join('\n')),
+            }),
+          );
+        });
+        this.educations = this.educationArray.controls;
       });
-      this.educations = this.educationArray.controls;
-    });
   }
 }

@@ -5,6 +5,8 @@ export interface Resume {
   personalInfo: PersonalInfo;
   summary: string;
 
+  createdAt: string;
+
   experience: ExperienceEntry[];
   education: EducationEntry[];
   skills: string[];
