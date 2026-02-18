@@ -1,3 +1,5 @@
+import { Timestamp } from "@angular/fire/firestore";
+
 export interface AppUser {
   uid?: string;
   name: string;
@@ -6,10 +8,11 @@ export interface AppUser {
   role: string;
   profileViews: number;
   plan: 'free' | 'pro' | 'premium';
-  subscriptionStatus: 'none' | 'active' | 'past_due' | 'canceled';
-  currentPeriodEnd: Date | null;
+  subscriptionStatus: 'none' | 'active' | 'past_due' | 'cancelled';
+  currentPeriodEnd: Timestamp | null;
   providerCustomerId: string;
-  providerToken: string;
+  providerSubscriptionId: string;
+  providerVariantId: string;
   freeGenerationsUsed: number;
   emailVerified?: boolean;
 };

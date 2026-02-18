@@ -1,40 +1,39 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { ResumesState } from "../../resumes/data/resumes.reducer";
-import { coverLettersAdapter } from "./cover-letter.reducer";
+import { coverLettersAdapter, CoverLetterState } from "./cover-letter.reducer";
 
-export const selectResumeFeature = createFeatureSelector<ResumesState>('resumes');
+export const selectCoverLetterFeature = createFeatureSelector<CoverLetterState>('coverLetters');
 
 export const { selectAll, selectEntities, selectIds, selectTotal } = coverLettersAdapter.getSelectors();
 
 export const selectCoverLettersStatus = createSelector(
-    selectResumeFeature,
-    (state: ResumesState) => state.status,
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.status,
 );
 
 export const selectIsLoading = createSelector(
-    selectResumeFeature,
-    (state: any) => state.resumes?.status === 'loading',
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.status === 'loading',
 );
 
 export const selectCoverLettersError = createSelector(
-    selectResumeFeature,
-    (state: ResumesState) => state.error,
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.error,
 );
 
 export const selectCoverLettersFormValue = createSelector(
-    selectResumeFeature,
-    (state: ResumesState) => state.formValue,
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.formValue,
 );
 
 export const selectCoverLettersGenerating = createSelector(
-    selectResumeFeature,
-    (state: ResumesState) => state.generating,
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.generating,
 );
 
 export const selectCoverLettersById = (id: string) =>
     createSelector(selectEntities, (entities) => entities[id]);
 
 export const selectGeneratedCoverLetterText = createSelector(
-    selectResumeFeature,
-    (state: ResumesState) => state.generatedText,
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.generatedText ?? '',
 );

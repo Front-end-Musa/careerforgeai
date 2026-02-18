@@ -1,4 +1,52 @@
 .landing {
   background: var(--surface);
   color: var(--text);
+  overflow: clip;
+}
+
+.landing .reveal-item {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0) scale(0.98);
+  filter: blur(8px);
+  transition:
+    opacity 0.65s cubic-bezier(0.2, 0.65, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.65, 0.2, 1),
+    filter 0.65s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: transform, opacity, filter;
+}
+
+.landing .reveal-item.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+.landing .card,
+.landing .feature-card,
+.landing .pricing-card,
+.landing .contact-us,
+.landing .mission-card {
+  transform-style: preserve-3d;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.landing .card:hover,
+.landing .feature-card:hover,
+.landing .pricing-card:hover,
+.landing .contact-us:hover,
+.landing .mission-card:hover {
+  transform: translateY(-6px) scale(1.01);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .reveal-item,
+  .landing .reveal-item.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
 }

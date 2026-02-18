@@ -42,7 +42,8 @@ export class Signup {
       subscriptionStatus: 'none',
       currentPeriodEnd: null,
       providerCustomerId: '',
-      providerToken: '',
+      providerSubscriptionId: '',
+      providerVariantId: '',
       freeGenerationsUsed: 0,
     };
     await this.authFacade.register(signupCredentials);

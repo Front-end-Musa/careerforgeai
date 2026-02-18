@@ -1,13 +1,16 @@
 import { inject, Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { deleteCoverLetter, generateCoverLetter, loadAllCoverLetters } from "./cover-letter.actions";
+import { selectCoverLettersError, selectCoverLettersGenerating, selectGeneratedCoverLetterText } from "./cover-letter.selectors";
 
 @Injectable({
     providedIn: "root"
 })
 export class CoverLetterFacade {
-    coverLetters$ = null;
     store = inject(Store);
+    generatedText$ = this.store.select(selectGeneratedCoverLetterText);
+    generating$ = this.store.select(selectCoverLettersGenerating);
+    error$ = this.store.select(selectCoverLettersError);
     constructor(  ) { }
 
     loadCoverLetters() {
