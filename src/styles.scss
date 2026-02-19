@@ -55,6 +55,10 @@ body {
   font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif;
   background: var(--surface);
 }
+
+body.mobile-menu-open {
+  overflow: hidden;
+}
 /* You can add global styles to this file, and also import other style files */
 .wrapper {
   width: 80vw;
@@ -110,6 +114,7 @@ button {
 @media (max-width: 768px) {
   .wrapper {
     width: 100%;
+    padding: 0 16px;
   }
 }
 

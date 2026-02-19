@@ -1,5 +1,5 @@
-import { AsyncPipe, ViewportScroller } from '@angular/common';
-import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, HostListener, OnDestroy, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -7,7 +7,7 @@ import { ScrollService } from '../../../core/services/scroll.service';
 import { Logo } from '../../logos/logo/logo';
 import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../../auth/data/auth.facade';
-import { Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthStatus } from '../../auth/data/auth.reducer';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -17,11 +17,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
-  @ViewChild('burgerBtn') burgerBtn!: ElementRef<HTMLButtonElement>;
-  @ViewChild('burgerMenu') burgerMenu!: ElementRef<HTMLDivElement>;
+export class Header implements OnDestroy {
   authStatus = AuthStatus;
   status$ = new Observable<AuthStatus>();
+  menuOpen = signal(false);
 
   constructor(
     public scrollService: ScrollService,
@@ -29,11 +28,55 @@ export class Header {
   ) { }
   
   ngOnInit() {
-    this.status$ = this.authFacade.status$
+    this.status$ = this.authFacade.status$;
   }
 
   toggleMenu() {
-    this.burgerBtn.nativeElement.classList.toggle('active');
-    this.burgerMenu.nativeElement.classList.toggle('showMenu');
+    this.menuOpen.update((open) => !open);
+    this.syncBodyLock();
+  }
+
+  closeMenu() {
+    if (!this.menuOpen()) {
+      return;
+    }
+
+    this.menuOpen.set(false);
+    this.syncBodyLock();
+  }
+
+  onMobileSectionClick(sectionId: string) {
+    this.scrollService.scrollTo(sectionId);
+    this.closeMenu();
+  }
+
+  onMobileRouteClick() {
+    this.closeMenu();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapePress() {
+    this.closeMenu();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (typeof window !== 'undefined' && window.innerWidth > 915) {
+      this.closeMenu();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('mobile-menu-open');
+    }
+  }
+
+  private syncBodyLock() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    document.body.classList.toggle('mobile-menu-open', this.menuOpen());
   }
 }
