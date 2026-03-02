@@ -3,13 +3,13 @@ import { Component, HostListener, OnDestroy, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ScrollService } from '../../../core/services/scroll.service';
 import { Logo } from '../../logos/logo/logo';
 import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../../auth/data/auth.facade';
 import { Observable } from 'rxjs';
 import { AuthStatus } from '../../auth/data/auth.reducer';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LandingFacade } from '../data/landing.facade';
 
 @Component({
   selector: 'app-header',
@@ -23,8 +23,8 @@ export class Header implements OnDestroy {
   menuOpen = signal(false);
 
   constructor(
-    public scrollService: ScrollService,
     private authFacade: AuthFacade,
+    private landingDataFacade: LandingFacade,
   ) { }
   
   ngOnInit() {
@@ -46,7 +46,7 @@ export class Header implements OnDestroy {
   }
 
   onMobileSectionClick(sectionId: string) {
-    this.scrollService.scrollTo(sectionId);
+    this.landingDataFacade.scrollTo(sectionId);
     this.closeMenu();
   }
 
@@ -78,5 +78,9 @@ export class Header implements OnDestroy {
     }
 
     document.body.classList.toggle('mobile-menu-open', this.menuOpen());
+  }
+
+  scrollTo(sectionId: string) {
+    this.landingDataFacade.scrollTo(sectionId);
   }
 }

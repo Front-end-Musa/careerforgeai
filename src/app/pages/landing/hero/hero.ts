@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ScrollService } from '../../../core/services/scroll.service';
 import { RouterLink } from '@angular/router';
+import { LandingFacade } from '../data/landing.facade';
 
 @Component({
   selector: 'app-hero',
@@ -10,5 +10,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './hero.scss',
 })
 export class Hero {
-  constructor(public scrollService: ScrollService) {}
+  constructor(private landingFacade: LandingFacade) {}
+
+  scrollTo(sectionId: string) {
+    this.landingFacade.scrollTo(sectionId);
+  }
 }

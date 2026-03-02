@@ -76,4 +76,22 @@ export class ResumeEffects {
       }),
     ),
   );
+
+  deleteResumeEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.deleteResume),
+      switchMap(({ resumeId }) =>
+        this.apiService.deleteResume(resumeId).pipe(
+          map(() => resumesActions.deleteResumeSuccess({ resumeId })),
+          catchError((error) =>
+            of(
+              resumesActions.deleteResumeFailure({
+                error: error instanceof Error ? error.message : String(error),
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

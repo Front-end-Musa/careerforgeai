@@ -13,9 +13,10 @@ import { ResumesFacade } from '../data/resumes.facade';
 import { Location } from '@angular/common';
 import { ResumePreview } from '../resume-preview/resume-preview';
 import { map, startWith, take, filter, skip } from 'rxjs';
-import { ResumeService } from '../../../../core/services/resume.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-resumes-create',
@@ -41,12 +42,11 @@ export class ResumesCreate implements OnInit {
 
   resumeGroup: FormGroup;
   isGenerating: boolean = false;
-  isSaving = false;
   resumesFacade = inject(ResumesFacade);
   destroyRef = inject(DestroyRef);
   location = inject(Location);
-  resumeService = inject(ResumeService);
   router = inject(Router);
+  isSaving$ = this.resumesFacade.saving$;
   currentStep = 0;
   progressPercent = 25;
   workExperiences: FormGroup[] = [];
@@ -89,10 +89,6 @@ export class ResumesCreate implements OnInit {
   }
 
   ngOnInit() {
-    this.resumesFacade.saving$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((saving) => {
-      this.isSaving = saving;
-    });
-
     this.resumesFacade.saveSucceeded$
       .pipe(
         skip(1),
@@ -522,29 +518,48 @@ export class ResumesCreate implements OnInit {
     this.resumesFacade.saveResumeData(createPayload);
   }
 
-  exportToPdf() {
+  async exportToPdf() {
     if (typeof window === 'undefined') {
       return;
     }
 
-    const printClass = 'resume-print-mode';
-    let cleanedUp = false;
-    const cleanup = () => {
-      if (cleanedUp) {
-        return;
-      }
-      cleanedUp = true;
-      document.body.classList.remove(printClass);
-    };
+    const previewElement = document.querySelector('.preview-content .resume-preview') as HTMLElement | null;
+    if (!previewElement) {
+      return;
+    }
 
-    window.addEventListener('afterprint', cleanup, { once: true });
-    document.body.classList.add(printClass);
-    setTimeout(cleanup, 3000);
-    window.print();
+    const canvas = await html2canvas(previewElement, {
+      scale: Math.max(window.devicePixelRatio, 2),
+      backgroundColor: '#ffffff',
+      useCORS: true,
+    });
+
+    const imageData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 8;
+    const contentWidth = pageWidth - margin * 2;
+    const imageHeight = (canvas.height * contentWidth) / canvas.width;
+    const pageContentHeight = pageHeight - margin * 2;
+
+    let renderedHeight = 0;
+    pdf.addImage(imageData, 'PNG', margin, margin, contentWidth, imageHeight);
+    renderedHeight += pageContentHeight;
+
+    while (renderedHeight < imageHeight) {
+      pdf.addPage();
+      pdf.addImage(imageData, 'PNG', margin, margin - renderedHeight, contentWidth, imageHeight);
+      renderedHeight += pageContentHeight;
+    }
+
+    const fullName = this.resumeGroup.get('personalInfo.fullName')?.value?.trim();
+    const sanitizedName = (fullName || 'resume').replace(/[^\w\-]+/g, '_');
+    pdf.save(`${sanitizedName}.pdf`);
   }
 
   private loadResumeForEdit(id: string) {
-    this.resumeService
+    this.resumesFacade
       .getResumeById(id)
       .pipe(take(1))
       .subscribe((resume) => {

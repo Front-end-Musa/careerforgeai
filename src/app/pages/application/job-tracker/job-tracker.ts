@@ -2,7 +2,6 @@ import { Component, computed, OnInit, Signal, ViewChild, ViewEncapsulation } fro
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
-import { StorageService } from '../../../core/services/storage.service';
 import { AddJobModal } from '../add-job-modal/add-job-modal';
 import { Job } from '../../../core/interfaces/job.interface';
 import {
@@ -11,6 +10,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { ApplicationStorageFacade } from '../data/application-storage.facade';
 
 @Component({
   selector: 'app-job-tracker',
@@ -31,7 +31,7 @@ export class JobTracker implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private storage: StorageService,
+    private storageFacade: ApplicationStorageFacade,
   ) {
     this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(
       `<button class="add-job-btn" type="button" aria-label="Add Job">
@@ -61,7 +61,7 @@ export class JobTracker implements OnInit {
     this.jobs = this.jobs || [];
     this.jobs.unshift(job);
     try {
-      this.storage.set('jobs-track', JSON.stringify(this.jobs));
+      this.storageFacade.set('jobs-track', JSON.stringify(this.jobs));
     } catch (err) {
       console.warn('Failed to persist jobs:', err);
     }
@@ -102,7 +102,7 @@ export class JobTracker implements OnInit {
   }
   private saveToStorage() {
     // If you use one big array 'this.jobs' as the source for all columns:
-    this.storage.set('jobs-track', JSON.stringify(this.jobs));
+    this.storageFacade.set('jobs-track', JSON.stringify(this.jobs));
 
     // NOTE: If your HTML uses separate arrays (e.g., [cdkDropListData]="appliedJobs"),
     // you must make sure those changes reflect back into 'this.jobs'
@@ -111,7 +111,7 @@ export class JobTracker implements OnInit {
   }
 
   ngOnInit() {
-    this.jobs = JSON.parse(this.storage.get('jobs-track') || '[]');
+    this.jobs = JSON.parse(this.storageFacade.get('jobs-track') || '[]');
   }
 
   ngOnDestroy() {

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { StorageService } from '../../../core/services/storage.service';
 import { Resume } from '../../../core/interfaces/resumes.interface';
 import { DirName } from '../dir-name/dir-name';
 import { MatButton } from '@angular/material/button';
@@ -7,6 +6,7 @@ import { SafeHtml } from '@angular/platform-browser';
 import { CreateListResumeSwitch } from '../../buttons/create-list-resume-switch/create-list-resume-switch';
 import { ResumesCreate } from './resumes-create/resumes-create';
 import { ResumesList } from './resumes-list/resumes-list';
+import { ApplicationStorageFacade } from '../data/application-storage.facade';
 
 @Component({
   selector: 'app-resumes',
@@ -19,7 +19,7 @@ export class Resumes {
   resumes: Resume[] = [];
   viewMode: string = 'create';
   createSwitchHtml: SafeHtml;
-  constructor(private storage: StorageService) {
+  constructor(private storageFacade: ApplicationStorageFacade) {
     this.createSwitchHtml = `
     <div class="list-create-switch">
       <button
@@ -46,7 +46,7 @@ export class Resumes {
   }
 
   ngOnInit() {
-    this.storage.set('resumes', JSON.stringify(this.resumes));
+    this.storageFacade.set('resumes', JSON.stringify(this.resumes));
   }
 
   setViewMode() {

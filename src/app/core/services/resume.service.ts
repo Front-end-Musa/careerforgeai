@@ -11,10 +11,15 @@ import {
   docData,
   updateDoc,
   serverTimestamp,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +28,7 @@ export class ResumeService {
   constructor(
     private firestore: Firestore,
     private auth: Auth,
+    private functions: Functions,
   ) {}
 
   getResumesForUser(): Observable<Resume[]> {
@@ -96,5 +102,58 @@ export class ResumeService {
           observer.error(err);
         });
     });
+  }
+
+  async exportToPdf(formGroup: FormGroup): Promise<void> {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const previewElement = document.querySelector(
+      '.preview-content .resume-preview',
+    ) as HTMLElement | null;
+    if (!previewElement) {
+      return;
+    }
+
+    const canvas = await html2canvas(previewElement, {
+      scale: Math.max(window.devicePixelRatio, 2),
+      backgroundColor: '#ffffff',
+      useCORS: true,
+    });
+
+    const imageData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 8;
+    const contentWidth = pageWidth - margin * 2;
+    const imageHeight = (canvas.height * contentWidth) / canvas.width;
+    const pageContentHeight = pageHeight - margin * 2;
+
+    let renderedHeight = 0;
+    pdf.addImage(imageData, 'PNG', margin, margin, contentWidth, imageHeight);
+    renderedHeight += pageContentHeight;
+
+    while (renderedHeight < imageHeight) {
+      pdf.addPage();
+      pdf.addImage(imageData, 'PNG', margin, margin - renderedHeight, contentWidth, imageHeight);
+      renderedHeight += pageContentHeight;
+    }
+
+    const fullName = formGroup.get('personalInfo.fullName')?.value?.trim();
+    const sanitizedName = (fullName || 'resume').replace(/[^\w\-]+/g, '_');
+    pdf.save(`${sanitizedName}.pdf`);
+  }
+
+  deleteResume(id: string): Observable<void> {
+    const resumeRef = doc(this.firestore, 'resumes', id);
+    return from(deleteDoc(resumeRef)).pipe(
+      map(() => {}),
+      catchError((err) => {
+        console.error('Error deleting resume:', err);
+        throw err;
+      }),
+    );
   }
 }

@@ -8,7 +8,9 @@
       <div class="header-content">
         <h1 class="title">{{ isEditMode ? 'Edit Resume' : 'Create New Resume' }}</h1>
         <p class="subtitle">
-          {{ isEditMode ? 'Update details and save changes' : 'Fill in your details to get started' }}
+          {{
+            isEditMode ? 'Update details and save changes' : 'Fill in your details to get started'
+          }}
         </p>
       </div>
     </div>
@@ -325,9 +327,19 @@
         @if (isEditMode) {
           <button type="button" mat-stroked-button (click)="exportToPdf()">Export to PDF</button>
         }
-        <button type="button" mat-flat-button color="primary" (click)="saveResume()" [disabled]="isSaving">
-          {{ isSaving ? 'Saving...' : isEditMode ? 'Save Changes' : 'Save Resume' }}
-        </button>
+        @if (isSaving$ | async) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        } @else {
+          <button
+            type="button"
+            mat-flat-button
+            color="primary"
+            (click)="saveResume()"
+            [disabled]="isSaving$ | async"
+          >
+            {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
+          </button>
+        }
       </div>
     </form>
   </div>
@@ -351,7 +363,10 @@
       </mat-button-toggle-group>
     </div>
     <div class="preview-content">
-      <app-resume-preview [resume]="(preview$ | async) || undefined" [templateId]="previewTemplate"></app-resume-preview>
+      <app-resume-preview
+        [resume]="(preview$ | async) || undefined"
+        [templateId]="previewTemplate"
+      ></app-resume-preview>
     </div>
   </div>
 </div>

@@ -1,5 +1,4 @@
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
-import { StorageService } from '../../../core/services/storage.service';
 import { AppUser } from '../../../core/interfaces/user.interface';
 import { Job } from '../../../core/interfaces/job.interface';
 import { Resume } from '../../../core/interfaces/resumes.interface';
@@ -7,6 +6,7 @@ import { AuthFacade } from '../../auth/data/auth.facade';
 import { RouterLink } from '@angular/router';
 import { ResumesFacade } from '../resumes/data/resumes.facade';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ApplicationStorageFacade } from '../data/application-storage.facade';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class Dashboard {
   authFacade = inject(AuthFacade);
   resumesFacade = inject(ResumesFacade);
-  storage = inject(StorageService);
+  storageFacade = inject(ApplicationStorageFacade);
   private destroyRef = inject(DestroyRef);
 
   user: WritableSignal<AppUser | null> = signal(null);
@@ -38,7 +38,7 @@ export class Dashboard {
         this.user.set(user);
       },
     });
-    const jobTracks: Job[] = JSON.parse(this.storage.get('jobs-track')!);
+    const jobTracks: Job[] = JSON.parse(this.storageFacade.get('jobs-track')!);
     if (jobTracks != null) {
       this.applications.set(jobTracks.filter((job) => job.status === 'applied'));
       this.interviews.set(jobTracks.filter((job) => job.status === 'interviewing'));

@@ -1,17 +1,28 @@
 import { inject, Injectable } from '@angular/core';
 import { Store, createFeatureSelector } from '@ngrx/store';
-import { createResume, loadResumes, saveResume } from './resumes.actions';
+import { createResume, deleteResume, loadResumes, saveResume } from './resumes.actions';
 import { selectAll, resumesAdapter } from './resumes.reducer';
 import { startWith } from 'rxjs';
 import { ResumesState } from './resumes.reducer';
-import { selectIsLoading, selectIsSaving, selectResumesError, selectResumesStatus, selectSaveSucceeded } from './resumes.selectors';
+import {
+  selectIsLoading,
+  selectIsSaving,
+  selectResumesError,
+  selectResumesStatus,
+  selectSaveSucceeded,
+} from './resumes.selectors';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { ResumeService } from '../../../../core/services/resume.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResumesFacade {
   private store = inject(Store);
+  private resumeService = inject(ResumeService);
+  private notificationsService = inject(NotificationsService);
   private selectResumesState = createFeatureSelector<ResumesState>('resumes');
   private selectAllResumes = resumesAdapter.getSelectors(this.selectResumesState).selectAll;
   resumes$ = this.store.select(this.selectAllResumes).pipe(startWith([]));
@@ -31,5 +42,17 @@ export class ResumesFacade {
 
   saveResumeData(resume: Partial<Resume>, resumeId?: string | null) {
     this.store.dispatch(saveResume({ resume, resumeId }));
+  }
+
+  getResumeById(id: string) {
+    return this.resumeService.getResumeById(id);
+  }
+
+  exportResumeToPdf(formGroup: FormGroup) {
+    return this.resumeService.exportToPdf(formGroup);
+  }
+
+  deleteResume(resumeId: string) {
+    this.store.dispatch(deleteResume({ resumeId }));
   }
 }

@@ -50,7 +50,9 @@ export const appConfig: ApplicationConfig = {
     }),
     provideFunctions(() => {
       const functions = getFunctions();
-      connectFunctionsEmulator(functions, 'localhost', 5001);
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
       return functions;
     })
   ],

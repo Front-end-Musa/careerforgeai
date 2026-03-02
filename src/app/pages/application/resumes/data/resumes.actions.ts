@@ -13,6 +13,21 @@ export const createResumeFailure = createAction(
   props<{ error: string }>()
 );
 
+export const deleteResume = createAction(
+  '[Resume] Delete',
+  props<{ resumeId: string }>()
+);
+
+export const deleteResumeSuccess = createAction(
+  '[Resume] Delete Success',
+  props<{ resumeId: string }>()
+);
+
+export const deleteResumeFailure = createAction(
+  '[Resume] Delete Failure',
+  props<{ error: string }>()
+);
+
 export const saveAIResult = createAction(
   '[AI] Save Result',
   props<{ userId: string; result: Resume }>()
@@ -66,5 +81,19 @@ export const saveResumeSuccess = createAction(
 
 export const saveResumeFailure = createAction(
   '[Resume] Save Failure',
+  props<{ error: string }>()
+);
+
+export const exportResumeToPdf = createAction(
+  '[Resume] Export To PDF',
+  props<{ formGroup: any }>()
+);
+
+export const exportResumeToPdfSuccess = createAction(
+  '[Resume] Export To PDF Success'
+);
+
+export const exportResumeToPdfFailure = createAction(
+  '[Resume] Export To PDF Failure',
   props<{ error: string }>()
 );

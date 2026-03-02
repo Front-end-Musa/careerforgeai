@@ -65,6 +65,18 @@ export const resumesReducer = createReducer(
     error: error,
   })),
 
+  on(ResumesActions.deleteResume, (state) => ({
+    ...state,
+    error: null,
+  })),
+
+  on(ResumesActions.deleteResumeSuccess, (state, { resumeId }) =>
+    resumesAdapter.removeOne(resumeId, {
+      ...state,
+      error: null,
+    }),
+  ),
+
   on(ResumesActions.saveAIResultSuccess, (state) => ({
     ...state,
     error: null,
