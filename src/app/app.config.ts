@@ -23,6 +23,8 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
 import { CoverLetterEffects } from './pages/application/cover-letter/data/cover-letter.effects';
 import { coverLetterReducer } from './pages/application/cover-letter/data/cover-letter.reducer';
+import { billingReducer } from './pages/landing/pricing-plans/data/billing.reducer';
+import { BillingEffects } from './pages/landing/pricing-plans/data/billing.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,8 +44,8 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // NgRx
-    provideStore({ auth: authReducer, resumes: resumesReducer, coverLetters: coverLetterReducer }),
-    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects]),
+    provideStore({ auth: authReducer, resumes: resumesReducer, coverLetters: coverLetterReducer, billing: billingReducer }),
+    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects, BillingEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,

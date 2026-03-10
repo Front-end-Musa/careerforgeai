@@ -6,7 +6,14 @@
     </header>
     <div class="pricing-cards">
       @for (plan of plans; track plan.name) {
-      <app-pricing-card [plan]="plan" [popular]="plan.popular" class="pricing-card"> </app-pricing-card>
+      <app-pricing-card
+        [plan]="plan"
+        [popular]="plan.popular"
+        [disabled]="loading$ | async"
+        (planSelected)="onPlanSelected($event)"
+        class="pricing-card"
+      >
+      </app-pricing-card>
       }
     </div>
   </div>

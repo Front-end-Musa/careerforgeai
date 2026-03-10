@@ -1,13 +1,20 @@
+:host {
+  display: block;
+  width: 210mm;
+  max-width: 210mm;
+}
+
 .resume-preview {
-  width: min(100%, 210mm);
+  box-sizing: border-box;
+  width: 210mm;
   min-height: 297mm;
   margin: 0 auto;
   padding: 16mm 16mm 14mm;
   background: #ffffff;
   color: #111111;
-  border: 1px solid #d5dbe5;
-  border-radius: 6px;
-  box-shadow: 0 20px 38px rgba(15, 23, 42, 0.12);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   font-family: 'Times New Roman', Georgia, serif;
   line-height: 1.35;
 }
@@ -158,11 +165,6 @@ li {
 }
 
 @media (max-width: 900px) {
-  .resume-preview {
-    padding: 28px 24px;
-    min-height: auto;
-  }
-
   .template-modern .grid {
     grid-template-columns: 1fr;
   }

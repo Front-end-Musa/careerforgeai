@@ -20,7 +20,14 @@
       <div class="plan">
         <h4 class="plan-name">{{ user()?.plan }} plan</h4>
       </div>
-      <button mat-button class="manage-btn">Manage Subscription</button>
+      <button
+        mat-button
+        class="manage-btn"
+        [disabled]="managingSubscription()"
+        (click)="onManageSubscription()"
+      >
+        {{ managingSubscription() ? 'Opening...' : 'Manage Subscription' }}
+      </button>
     </div>
     <div class="danger-zone">
       <h3 class="section-title">Danger Zone</h3>

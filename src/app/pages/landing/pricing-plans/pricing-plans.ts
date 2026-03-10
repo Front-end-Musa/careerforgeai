@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { PricingCard } from './pricing-card/pricing-card';
+import { BillingFacade } from './data/billing.facade';
 
 interface Plan {
   name: string;
@@ -10,56 +13,62 @@ interface Plan {
 }
 
 type FeatureKey =
-  | 'everythingInPro'
-  | 'aiResumeOne'
-  | 'basicTemplate'
-  | 'coverLetterOne'
-  | 'interviewBasic'
-  | 'exportPdf'
-  | 'resumeUnlimited'
-  | 'templatePremium'
-  | 'resumeTailoring'
-  | 'interviewScoring'
-  | 'prioritySupport'
+  | 'resumeBuilder'
+  | 'oneTemplate'
+  | 'allTemplates'
   | 'jobTracker'
-  | 'advancedAnalytics'
-  | 'careerRoadmap'
-  | 'earlyAccess';
+  | 'aiCredits3'
+  | 'aiCredits30'
+  | 'aiCredits80'
+  | 'aiSummary'
+  | 'aiExperience'
+  | 'aiEducation'
+  | 'aiCoverLetter'
+  | 'unlimitedResumes'
+  | 'pdfExport'
+  | 'prioritySupport'
+  | 'resumeTailoringSoon'
+  | 'interviewCoachSoon'
+  | 'linkedinOptimizerSoon';
 
 const FEATURE_LABELS: Record<FeatureKey, string> = {
-  everythingInPro: 'Everything in Pro',
-  aiResumeOne: '1 AI Resume Generation',
-  basicTemplate: 'Basic Resume Template',
-  coverLetterOne: '1 Cover Letter Generation',
-  interviewBasic: 'Basic Interview Questions',
-  exportPdf: 'Export to PDF',
-  resumeUnlimited: 'Unlimited Resume & Cover Letter Generation',
-  templatePremium: 'Premium Resume Templates',
-  resumeTailoring: 'Job-Specific Resume Tailoring',
-  interviewScoring: 'Interview Questions with AI Feedback & Scoring',
-  prioritySupport: 'Priority Support',
-  jobTracker: 'Job Application Tracker',
-  advancedAnalytics: 'Advanced Interview Analytics',
-  careerRoadmap: 'Personalized Career Roadmap',
-  earlyAccess: 'Early Access to New Features',
+  resumeBuilder: 'Resume builder and editor',
+  oneTemplate: '1 resume template',
+  allTemplates: 'All resume templates',
+  jobTracker: 'Job application tracker',
+  aiCredits3: '3 AI generations per month',
+  aiCredits30: '30 AI generations per month',
+  aiCredits80: '80 AI generations per month',
+  aiSummary: 'AI summary generation',
+  aiExperience: 'AI experience bullets',
+  aiEducation: 'AI education bullets',
+  aiCoverLetter: 'AI cover letter generator',
+  unlimitedResumes: 'Unlimited resumes',
+  pdfExport: 'PDF export',
+  prioritySupport: 'Priority email support',
+  resumeTailoringSoon: 'Resume tailoring (coming soon)',
+  interviewCoachSoon: 'Interview coach (coming soon)',
+  linkedinOptimizerSoon: 'LinkedIn optimizer (coming soon)',
 };
 
 const FEATURE_ORDER: FeatureKey[] = [
-  'everythingInPro',
-  'aiResumeOne',
-  'basicTemplate',
-  'coverLetterOne',
-  'interviewBasic',
-  'exportPdf',
-  'resumeUnlimited',
-  'templatePremium',
-  'resumeTailoring',
-  'interviewScoring',
-  'prioritySupport',
+  'resumeBuilder',
+  'oneTemplate',
+  'allTemplates',
   'jobTracker',
-  'advancedAnalytics',
-  'careerRoadmap',
-  'earlyAccess',
+  'aiCredits3',
+  'aiCredits30',
+  'aiCredits80',
+  'aiSummary',
+  'aiExperience',
+  'aiEducation',
+  'aiCoverLetter',
+  'unlimitedResumes',
+  'pdfExport',
+  'prioritySupport',
+  'resumeTailoringSoon',
+  'interviewCoachSoon',
+  'linkedinOptimizerSoon',
 ];
 
 function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Plan['features'] {
@@ -75,44 +84,99 @@ function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Pla
 
 @Component({
   selector: 'app-pricing-plans',
-  imports: [PricingCard],
+  imports: [PricingCard, AsyncPipe],
   templateUrl: './pricing-plans.html',
   styleUrl: './pricing-plans.scss',
 })
 export class PricingPlans {
+  private readonly billingFacade: BillingFacade;
+  private readonly router: Router;
+  loading$;
+
+  constructor(billingFacade: BillingFacade, router: Router) {
+    this.billingFacade = billingFacade;
+    this.router = router;
+    this.loading$ = this.billingFacade.loading$;
+  }
+
   plans: Plan[] = [
     {
       name: 'Free',
       price: 0,
       features: buildFeatures(
-        ['aiResumeOne', 'basicTemplate', 'coverLetterOne', 'interviewBasic', 'exportPdf'],
-        ['resumeUnlimited', 'resumeTailoring', 'interviewScoring', 'jobTracker'],
+        ['resumeBuilder', 'oneTemplate', 'jobTracker', 'aiCredits3', 'pdfExport'],
+        [
+          'allTemplates',
+          'aiCredits30',
+          'aiCredits80',
+          'aiSummary',
+          'aiExperience',
+          'aiEducation',
+          'aiCoverLetter',
+          'unlimitedResumes',
+          'prioritySupport',
+          'resumeTailoringSoon',
+          'interviewCoachSoon',
+          'linkedinOptimizerSoon',
+        ],
       ),
       button: 'Start Free',
       popular: false,
     },
     {
       name: 'Pro',
-      price: 7.99,
+      price: 12,
       features: buildFeatures(
-        ['resumeUnlimited', 'templatePremium', 'resumeTailoring', 'interviewScoring', 'prioritySupport'],
-        ['jobTracker', 'advancedAnalytics'],
+        [
+          'resumeBuilder',
+          'allTemplates',
+          'jobTracker',
+          'aiCredits30',
+          'aiSummary',
+          'aiExperience',
+          'aiEducation',
+          'aiCoverLetter',
+          'unlimitedResumes',
+          'pdfExport',
+          'prioritySupport',
+        ],
+        ['resumeTailoringSoon', 'interviewCoachSoon', 'linkedinOptimizerSoon'],
       ),
       button: 'Start Pro',
       popular: true,
     },
     {
       name: 'Premium',
-      price: 59,
+      price: 19,
       features: buildFeatures([
-        'everythingInPro',
+        'resumeBuilder',
+        'allTemplates',
         'jobTracker',
-        'advancedAnalytics',
-        'careerRoadmap',
-        'earlyAccess',
+        'aiCredits80',
+        'aiSummary',
+        'aiExperience',
+        'aiEducation',
+        'aiCoverLetter',
+        'unlimitedResumes',
+        'pdfExport',
+        'prioritySupport',
+        'resumeTailoringSoon',
+        'interviewCoachSoon',
+        'linkedinOptimizerSoon',
       ]),
       button: 'Start Premium',
       popular: false,
     },
   ];
+
+  onPlanSelected(planName: string): void {
+    if (planName === 'Free') {
+      this.router.navigate(['/auth/signup']);
+      return;
+    }
+
+    const normalized = planName.toLowerCase() as 'pro' | 'premium';
+    this.billingFacade.clearError();
+    this.billingFacade.startCheckout(normalized);
+  }
 }

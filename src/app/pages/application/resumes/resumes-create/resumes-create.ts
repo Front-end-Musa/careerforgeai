@@ -57,6 +57,7 @@ export class ResumesCreate implements OnInit {
   showSkills = false;
   previewTemplate: 'classic' | 'modern' | 'minimal' = 'classic';
   preview$!: ReturnType<ResumesCreate['resumeGroupValueChanges']>;
+  showTailoring = false;
 
   constructor() {
     this.resumeGroup = new FormGroup({
@@ -117,7 +118,7 @@ export class ResumesCreate implements OnInit {
     return this.resumeGroup.get('education') as FormArray<FormGroup>;
   }
 
-  toggleSection(section: 'personal' | 'experience' | 'education' | 'skills') {
+  toggleSection(section: 'personal' | 'experience' | 'education' | 'tailoring' | 'skills') {
     if (section === 'personal') {
       this.showPersonal = !this.showPersonal;
     } else if (section === 'experience') {
@@ -538,7 +539,7 @@ export class ResumesCreate implements OnInit {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 8;
+    const margin = 0;
     const contentWidth = pageWidth - margin * 2;
     const imageHeight = (canvas.height * contentWidth) / canvas.width;
     const pageContentHeight = pageHeight - margin * 2;

@@ -5,25 +5,27 @@
       <p class="sub-title">Have questions? We'd love to hear from you.</p>
     </header>
     <mat-card class="contact-us">
-      <form class="contact-form" [formGroup]="contactForm">
+      <form
+        class="contact-form"
+        [formGroup]="contactForm"
+        (ngSubmit)="onSubmit()"
+        novalidate
+        action="https://formspree.io/f/mgolqdrv"
+        method="POST"
+      >
         <div class="form-group">
           <div class="form-field">
             <mat-label>Name</mat-label>
-            <input matInput formControlName="name" required />
+            <input matInput formControlName="name" name="name" required />
             @if (contactForm.get('name')?.invalid && contactForm.get('name')?.touched) {
-              <mat-error>
-                Name is required.
-              </mat-error>
+              <mat-error> Name is required. </mat-error>
             }
           </div>
           <div class="form-field">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" required />
+            <input matInput type="email" formControlName="email" name="email" required />
             @if (contactForm.get('email')?.invalid && contactForm.get('email')?.touched) {
-              <mat-error
-                >
-                Valid email is required.
-              </mat-error>
+              <mat-error> Valid email is required. </mat-error>
             }
           </div>
           <div class="form-field">
@@ -37,17 +39,26 @@
               formControlName="message"
             ></textarea>
             @if (contactForm.get('message')?.invalid && contactForm.get('message')?.touched) {
-              <mat-error
-                >
-                Message is required.
-              </mat-error>
+              <mat-error> Message is required. </mat-error>
             }
           </div>
-          <button class="send-btn" type="submit">Send Message</button>
+          <button class="send-btn" type="submit" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              Sending...
+            } @else {
+              Send Message
+            }
+          </button>
+          @if (submitMessage()) {
+            <p class="support-text">{{ submitMessage() }}</p>
+          }
+          @if (submitError()) {
+            <p class="support-text">{{ submitError() }}</p>
+          }
 
           <div class="support-text">
             Or reach us at: <br />
-            <a href="mailto:support@resumecraft.ai">support@resumecraft.ai</a>
+            <a href="mailto:support@ResumeCrafts.ai">support@ResumeCrafts.ai</a>
           </div>
         </div>
       </form>

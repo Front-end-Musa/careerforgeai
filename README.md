@@ -1,35 +1,37 @@
-# AI Job Seek Helper
+# ResumeCrafts AI (AI Job Seek Helper)
 
-AI Job Seek Helper is an Angular application for managing a job search workflow with AI-assisted content generation.
+ResumeCrafts AI is an Angular + Firebase application for managing a full job-search workflow, including AI-assisted resume and cover letter generation, resume editing, and application tracking.
 
-## Features
+## Key Features
 
-- Landing page and authentication (Firebase Auth)
-- Resume management and editing
-- AI-assisted cover letter generation
-- Job application tracker (kanban-style states)
-- Dashboard and settings pages
-- Firebase-backed data storage (Firestore)
+- Landing site with SEO metadata and legal pages
+- Firebase Auth login and signup flows
+- Resume builder with multi-step form, live preview, and PDF export
+- AI-assisted resume content generation (summary, experience, education)
+- Cover letter generator with tone selection and clipboard copy
+- Job tracker with kanban-style drag-and-drop columns persisted in local storage
+- Dashboard, settings, and marketing/pricing sections
 
-## Tech Stack
+## Architecture
 
-- Angular 21 (standalone components, SSR build target)
-- NgRx (state management for auth, resumes, cover letters)
-- Angular Material + CDK
-- Firebase (Auth, Firestore, Cloud Functions, Hosting)
-- OpenAI API (used from Firebase Functions)
+- Frontend: Angular 21 standalone components with SSR build output
+- State: NgRx store + effects for auth, resumes, cover letters, and billing
+- UI: Angular Material, CDK DragDrop, and custom UI components
+- Backend: Firebase Auth, Firestore, Functions, Hosting
+- AI: OpenAI Chat Completions (gpt-4o) called from Cloud Functions
 
 ## Project Structure
 
 ```text
 .
-|- src/                 # Angular app
+|- src/                  # Angular app (standalone components)
 |  |- app/
-|  |  |- core/          # services, interfaces, interceptors
-|  |  |- pages/         # landing, auth, application modules/pages
-|- functions/           # Firebase Cloud Functions (TypeScript)
-|- public/              # static assets copied to build output
-|- firebase.json        # emulators + hosting/functions config
+|  |  |- core/           # services, interceptors, interfaces, prompts
+|  |  |- pages/          # landing, auth, application features
+|  |- environments/      # Firebase configs
+|- functions/            # Firebase Cloud Functions (TypeScript)
+|- public/               # static assets copied to build output
+|- firebase.json         # emulator + hosting config
 ```
 
 ## Prerequisites
@@ -47,12 +49,12 @@ cd functions && npm install && cd ..
 
 ## Environment and Secrets
 
-Frontend Firebase config is currently in:
+Frontend Firebase config is in:
 
 - `src/environments/environment.ts`
 - `src/environments/environment.prod.ts`
 
-Cloud Functions use Firebase Secrets for OpenAI:
+Set the OpenAI key for Functions:
 
 ```bash
 firebase functions:secrets:set OPENAI_API_KEY
@@ -60,7 +62,7 @@ firebase functions:secrets:set OPENAI_API_KEY
 
 ## Running Locally
 
-### 1) Start Angular app
+### 1) Start the Angular dev server
 
 ```bash
 npm start
@@ -68,7 +70,7 @@ npm start
 
 App runs at `http://localhost:4200`.
 
-### 2) Start Firebase emulators (functions/firestore/hosting/ui)
+### 2) Start Firebase emulators (functions, firestore, hosting, UI)
 
 In another terminal:
 
@@ -83,21 +85,16 @@ Configured emulator ports:
 - Firestore: `8080`
 - Emulator UI: `4000`
 
-The Angular app is configured to call Functions emulator at `localhost:5001`.
+The Angular app connects to the Functions emulator when running on `localhost`.
 
-## Build
+## Build and SSR
 
 ```bash
 npm run build
+npm run serve:ssr:application
 ```
 
 SSR output is generated under `dist/application/`.
-
-## Run SSR Build
-
-```bash
-npm run serve:ssr:application
-```
 
 ## Tests
 
@@ -105,11 +102,10 @@ npm run serve:ssr:application
 npm test
 ```
 
-## Functions Commands
-
-From `functions/`:
+## Functions (from `functions/`)
 
 ```bash
+npm run lint
 npm run build
 npm run serve
 npm run deploy
@@ -123,3 +119,15 @@ Deploy web hosting and functions with Firebase CLI:
 ```bash
 firebase deploy
 ```
+
+## Data Storage
+
+- Firestore collections: `resumes`, `coverLetters`
+- Local storage: `jobs-track` for the job tracker kanban state
+
+## Notes and Gaps
+
+- Billing is stubbed. `BillingService` throws a configuration error by design.
+- Interview Coach, LinkedIn Optimizer, and Resume Tailor routes are currently placeholders.
+- The Functions `generateCoverLetter` handler only reads `resumeText` today, even though the UI submits job description, company, position, and tone.
+- Only the Functions emulator is wired in the frontend. Auth/Firestore emulators are not connected unless added.

@@ -4,13 +4,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { Logo } from '../../logos/logo/logo';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
 
 @Component({
   selector: 'app-signup',
-  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo],
+  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo, RouterLink],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
