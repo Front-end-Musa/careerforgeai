@@ -351,16 +351,7 @@
         <h2 class="preview-title">Preview</h2>
         <p class="preview-subtitle">Live as you type</p>
       </div>
-      <mat-button-toggle-group
-        class="template-toggle"
-        [value]="previewTemplate"
-        (valueChange)="previewTemplate = $event"
-        aria-label="Resume template"
-      >
-        <mat-button-toggle value="classic">Classic</mat-button-toggle>
-        <mat-button-toggle value="modern">Modern</mat-button-toggle>
-        <mat-button-toggle value="minimal">Minimal</mat-button-toggle>
-      </mat-button-toggle-group>
+      <div class="template-info">`r`n        <div class="template-label">Template</div>`r`n        <div class="template-name">{{ getTemplateLabel(previewTemplate) }}</div>`r`n      </div>`r`n      <button type="button" class="change-template" (click)="requestTemplateChange()">Change template</button>
     </div>
     <div class="preview-content">
       <app-resume-preview
@@ -370,3 +361,6 @@
     </div>
   </div>
 </div>
+
+
+

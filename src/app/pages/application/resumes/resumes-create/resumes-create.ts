@@ -1,5 +1,5 @@
-import { ProjectEntry, Resume } from './../../../../core/interfaces/resumes.interface';
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { ProjectEntry, Resume, ResumeTemplateId } from './../../../../core/interfaces/resumes.interface';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
@@ -7,7 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Location } from '@angular/common';
@@ -28,17 +27,18 @@ import jsPDF from 'jspdf';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatProgressBarModule,
-    MatButtonToggleModule,
-    GenerateBtn,
+    MatProgressBarModule,    GenerateBtn,
     ResumePreview,
   ],
   templateUrl: './resumes-create.html',
   styleUrl: './resumes-create.scss',
 })
-export class ResumesCreate implements OnInit {
+export class ResumesCreate implements OnInit, OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() resumeId: string | null = null;
+  @Input() templateId?: ResumeTemplateId;
+  @Input() plan: 'free' | 'pro' | 'premium' = 'free';
+  @Output() changeTemplate = new EventEmitter<void>();
 
   resumeGroup: FormGroup;
   isGenerating: boolean = false;
@@ -55,7 +55,7 @@ export class ResumesCreate implements OnInit {
   showWorkExperience = false;
   showEducation = false;
   showSkills = false;
-  previewTemplate: 'classic' | 'modern' | 'minimal' = 'classic';
+  previewTemplate: ResumeTemplateId = 'basic';
   preview$!: ReturnType<ResumesCreate['resumeGroupValueChanges']>;
   showTailoring = false;
 
@@ -90,6 +90,9 @@ export class ResumesCreate implements OnInit {
   }
 
   ngOnInit() {
+    if (this.templateId) {
+      this.previewTemplate = this.templateId;
+    }
     this.resumesFacade.saveSucceeded$
       .pipe(
         skip(1),
@@ -104,6 +107,12 @@ export class ResumesCreate implements OnInit {
       return;
     }
     this.loadResumeForEdit(this.resumeId);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['templateId']?.currentValue) {
+      this.previewTemplate = changes['templateId'].currentValue;
+    }
   }
 
   get isEditMode() {
@@ -181,6 +190,7 @@ export class ResumesCreate implements OnInit {
       experience: this.normalizeExperience(raw.experience),
       education: this.normalizeEducation(raw.education),
       skills: this.normalizeSkills(raw.skills),
+      templateId: this.previewTemplate,
       meta: {
         ...(raw.meta ?? {}),
         updatedAt: new Date().toISOString(),
@@ -313,6 +323,7 @@ export class ResumesCreate implements OnInit {
             experience: this.normalizeExperience(raw.experience),
             education: this.normalizeEducation(raw.education),
             skills: this.normalizeSkills(raw.skills),
+      templateId: this.previewTemplate,
           }) as Partial<Resume>,
       ),
     );
@@ -471,6 +482,68 @@ export class ResumesCreate implements OnInit {
     ].join('\n');
   }
 
+  getTemplateLabel(templateId: ResumeTemplateId) {
+    const labels: Record<ResumeTemplateId, string> = {
+      'basic': 'Basic',
+      'ats-simple': 'ATS-Friendly Simple',
+      'classic-one-column': 'Classic One-Column',
+      'pro-modern': 'Pro (Professional & Modern)',
+      'cascade': 'Cascade (Pro)',
+      'cubic-pro': 'Cubic (Pro)',
+      'tech-savvy': 'Tech-Savvy',
+      'modern-executive': 'Modern Executive',
+      'premium-executive': 'Premium (Executive & High-End)',
+      'executive-edge': 'Executive Edge',
+      'graphical-genius': 'Graphical Genius',
+      'elite-senior': 'Elite Senior',
+      'metamorphic-masterpiece': 'Metamorphic Masterpiece',
+    };
+    return labels[templateId] ?? 'Basic';
+  }
+
+  requestTemplateChange() {
+    this.changeTemplate.emit();
+  }
+
+  isTemplateLocked(templateId: ResumeTemplateId) {
+    return this.planRank(this.plan) < this.planRank(this.requiredPlan(templateId));
+  }
+
+  private requiredPlan(templateId: ResumeTemplateId) {
+    const proTemplates: ResumeTemplateId[] = [
+      'pro-modern',
+      'cascade',
+      'cubic-pro',
+      'tech-savvy',
+      'modern-executive',
+    ];
+    const premiumTemplates: ResumeTemplateId[] = [
+      'premium-executive',
+      'executive-edge',
+      'graphical-genius',
+      'elite-senior',
+      'metamorphic-masterpiece',
+    ];
+
+    if (premiumTemplates.includes(templateId)) {
+      return 'premium';
+    }
+    if (proTemplates.includes(templateId)) {
+      return 'pro';
+    }
+    return 'free';
+  }
+
+  private planRank(plan: 'free' | 'pro' | 'premium') {
+    if (plan === 'premium') {
+      return 3;
+    }
+    if (plan === 'pro') {
+      return 2;
+    }
+    return 1;
+  }
+
   goBack() {
     this.location.back();
   }
@@ -489,6 +562,7 @@ export class ResumesCreate implements OnInit {
       experience: this.normalizeExperience(raw.experience),
       education: this.normalizeEducation(raw.education),
       skills: this.normalizeSkills(raw.skills),
+      templateId: this.previewTemplate,
       meta: {
         ...(raw.meta ?? {}),
         updatedAt: new Date().toISOString(),
@@ -595,6 +669,9 @@ export class ResumesCreate implements OnInit {
           },
         });
 
+        this.previewTemplate = resume.templateId ?? this.previewTemplate;
+
+
         this.experienceArray.clear();
         (resume.experience ?? []).forEach((entry) => {
           this.experienceArray.push(
@@ -625,3 +702,22 @@ export class ResumesCreate implements OnInit {
       });
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

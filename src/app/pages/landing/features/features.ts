@@ -1,5 +1,4 @@
-
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 interface Feature {
@@ -33,25 +32,15 @@ export class Features {
     },
     {
       id: 2,
-      icon: 'badge',
-      title: 'LinkedIn Optimization',
-      description: 'Optimize your LinkedIn profile to attract more opportunities.',
+      icon: 'description',
+      title: 'Resume Builder + Templates',
+      description: 'Edit, preview, and export resumes with flexible templates.',
     },
     {
       id: 3,
-      icon: 'record_voice_over',
-      title: 'Interview AI Coach',
-      description: 'Practice interviews with AI and get real-time feedback on your answers.',
+      icon: 'view_kanban',
+      title: 'Job Tracker',
+      description: 'Organize applications in a kanban-style board.',
     },
   ];
-
-  // features: any = {
-  //   0: {
-  //     id: 0,
-  //     icon: 'book',
-  //     title: 'AI Resume Generator',
-  //     description:
-  //       'Create professional resumes tailored to any job with AI-powered content generation.',
-  //   },
-  // };
 }

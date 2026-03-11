@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, signal, OnInit, Output } from '@angular/core';
 import { ResumeCard } from './resume-card/resume-card';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { ResumesFacade } from '../data/resumes.facade';
@@ -7,14 +7,16 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ResumesStatus } from '../data/resumes.reducer';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-resumes-list',
-  imports: [ResumeCard, ScrollingModule, AsyncPipe, MatProgressSpinnerModule],
+  imports: [ResumeCard, ScrollingModule, AsyncPipe, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './resumes-list.html',
   styleUrl: './resumes-list.scss',
 })
 export class ResumesList implements OnInit {
+  @Output() createRequested = new EventEmitter<void>();
   private resumesFacade = inject(ResumesFacade);
   resumesStatus = ResumesStatus;
   status$: Observable<ResumesStatus> = this.resumesFacade.status$;
@@ -28,4 +30,11 @@ export class ResumesList implements OnInit {
       this.resumes.set(resumes ?? []);
     });
   }
+
+
+  requestCreate() {
+    this.createRequested.emit();
+  }
 }
+
+

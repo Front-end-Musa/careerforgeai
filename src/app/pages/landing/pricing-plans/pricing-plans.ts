@@ -28,13 +28,13 @@ type FeatureKey =
   | 'pdfExport'
   | 'prioritySupport'
   | 'resumeTailoringSoon'
-  | 'interviewCoachSoon'
-  | 'linkedinOptimizerSoon';
+  | 'proTemplates';
 
 const FEATURE_LABELS: Record<FeatureKey, string> = {
   resumeBuilder: 'Resume builder and editor',
   oneTemplate: '1 resume template',
   allTemplates: 'All resume templates',
+  proTemplates: 'Pro templates',
   jobTracker: 'Job application tracker',
   aiCredits3: '3 AI generations per month',
   aiCredits30: '30 AI generations per month',
@@ -47,14 +47,13 @@ const FEATURE_LABELS: Record<FeatureKey, string> = {
   pdfExport: 'PDF export',
   prioritySupport: 'Priority email support',
   resumeTailoringSoon: 'Resume tailoring (coming soon)',
-  interviewCoachSoon: 'Interview coach (coming soon)',
-  linkedinOptimizerSoon: 'LinkedIn optimizer (coming soon)',
 };
 
 const FEATURE_ORDER: FeatureKey[] = [
   'resumeBuilder',
   'oneTemplate',
   'allTemplates',
+  'proTemplates',
   'jobTracker',
   'aiCredits3',
   'aiCredits30',
@@ -67,8 +66,6 @@ const FEATURE_ORDER: FeatureKey[] = [
   'pdfExport',
   'prioritySupport',
   'resumeTailoringSoon',
-  'interviewCoachSoon',
-  'linkedinOptimizerSoon',
 ];
 
 function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Plan['features'] {
@@ -103,45 +100,30 @@ export class PricingPlans {
     {
       name: 'Free',
       price: 0,
-      features: buildFeatures(
-        ['resumeBuilder', 'oneTemplate', 'jobTracker', 'aiCredits3', 'pdfExport'],
-        [
-          'allTemplates',
-          'aiCredits30',
-          'aiCredits80',
-          'aiSummary',
-          'aiExperience',
-          'aiEducation',
-          'aiCoverLetter',
-          'unlimitedResumes',
-          'prioritySupport',
-          'resumeTailoringSoon',
-          'interviewCoachSoon',
-          'linkedinOptimizerSoon',
-        ],
-      ),
+      features: buildFeatures([
+        'resumeBuilder',
+        'oneTemplate',
+        'jobTracker',
+        'aiCredits3',
+        'pdfExport',
+      ]),
       button: 'Start Free',
       popular: false,
     },
     {
       name: 'Pro',
       price: 12,
-      features: buildFeatures(
-        [
-          'resumeBuilder',
-          'allTemplates',
-          'jobTracker',
-          'aiCredits30',
-          'aiSummary',
-          'aiExperience',
-          'aiEducation',
-          'aiCoverLetter',
-          'unlimitedResumes',
-          'pdfExport',
-          'prioritySupport',
-        ],
-        ['resumeTailoringSoon', 'interviewCoachSoon', 'linkedinOptimizerSoon'],
-      ),
+      features: buildFeatures([
+        'resumeBuilder',
+        'proTemplates',
+        'aiCredits30',
+        'aiSummary',
+        'aiExperience',
+        'aiEducation',
+        'aiCoverLetter',
+        'unlimitedResumes',
+        'pdfExport',
+      ]),
       button: 'Start Pro',
       popular: true,
     },
@@ -151,7 +133,6 @@ export class PricingPlans {
       features: buildFeatures([
         'resumeBuilder',
         'allTemplates',
-        'jobTracker',
         'aiCredits80',
         'aiSummary',
         'aiExperience',
@@ -159,10 +140,8 @@ export class PricingPlans {
         'aiCoverLetter',
         'unlimitedResumes',
         'pdfExport',
-        'prioritySupport',
+        'jobTracker',
         'resumeTailoringSoon',
-        'interviewCoachSoon',
-        'linkedinOptimizerSoon',
       ]),
       button: 'Start Premium',
       popular: false,
@@ -178,5 +157,12 @@ export class PricingPlans {
     const normalized = planName.toLowerCase() as 'pro' | 'premium';
     this.billingFacade.clearError();
     this.billingFacade.startCheckout(normalized);
+    this.router
+      .navigate([`/checkouts/checkout`], {
+        queryParams: { plan: normalized },
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }
 }

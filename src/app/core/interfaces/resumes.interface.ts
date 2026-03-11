@@ -1,3 +1,18 @@
+export type ResumeTemplateId =
+  | 'basic'
+  | 'ats-simple'
+  | 'classic-one-column'
+  | 'pro-modern'
+  | 'cascade'
+  | 'cubic-pro'
+  | 'tech-savvy'
+  | 'modern-executive'
+  | 'premium-executive'
+  | 'executive-edge'
+  | 'graphical-genius'
+  | 'elite-senior'
+  | 'metamorphic-masterpiece';
+
 export interface Resume {
   id?: string; // Firestore doc id (optional in data, known in app)
   userId: string;
@@ -15,6 +30,8 @@ export interface Resume {
   certifications?: string[];
 
   contact: ContactInfo;
+
+  templateId?: ResumeTemplateId;
 
   meta: ResumeMeta;
 }
@@ -64,3 +81,7 @@ export interface ResumeMeta {
 
 // Resume template tone
 export type ResumeTone = 'modern' | 'minimal' | 'creative';
+
+
+
+

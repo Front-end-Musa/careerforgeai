@@ -1,15 +1,28 @@
 <div class="resumes">
+  <app-resume-template-modal
+    #templateModal
+    [plan]="(plan$ | async) || 'free'"
+    [selectedTemplateId]="selectedTemplateId ?? null"
+    (templateSelected)="onTemplateSelected($event)"
+    (closed)="handleTemplateModalClosed()"
+  ></app-resume-template-modal>
   <app-dir-name title="AI Resume Generator">
     <app-create-list-resume-switch
       [active]="viewMode"
-      (change)="viewMode = $event"
+      (change)="handleViewModeChange($event)"
     ></app-create-list-resume-switch>
   </app-dir-name>
   <div class="app-section">
     @if (viewMode === 'create') {
-      <app-resumes-create></app-resumes-create>
+      <app-resumes-create
+        [templateId]="selectedTemplateId"
+        [plan]="(plan$ | async) || 'free'"
+        (changeTemplate)="openTemplateModal()"
+      ></app-resumes-create>
     } @else {
-      <app-resumes-list></app-resumes-list>
+      <app-resumes-list (createRequested)="handleViewModeChange('create')"></app-resumes-list>
     }
   </div>
 </div>
+
+

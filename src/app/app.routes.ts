@@ -89,7 +89,7 @@ export const routes: Routes = [
   },
   {
     path: 'checkouts',
-    loadComponent: () => import('./pages/checkouts/checkouts').then((c) => c.Checkouts),
+    loadChildren: () => import('./pages/checkouts/checkouts.routes').then((c) => c.CHECKOUT_ROUTES),
     data: {
       seo: {
         title: 'Checkout | ResumeCrafts AI',

@@ -6,13 +6,23 @@
     <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
   }
   @if (status === resumesStatus.Loaded) {
-    <div class="resumes-list-wrapper">
-      <cdk-virtual-scroll-viewport itemSize="200" class="viewport">
-        <div *cdkVirtualFor="let resume of resumes()" class="resume-card-wrapper">
-          <app-resume-card [resume]="resume"></app-resume-card>
-        </div>
-      </cdk-virtual-scroll-viewport>
-    </div>
+    @if (!resumes().length) {
+      <div class="resumes-empty">
+        <h3>No resumes yet</h3>
+        <p>Build your first resume in minutes with our templates.</p>
+        <button mat-flat-button color="primary" (click)="requestCreate()">
+          Create your first resume
+        </button>
+      </div>
+    } @else {
+      <div class="resumes-list-wrapper">
+        <cdk-virtual-scroll-viewport itemSize="200" class="viewport">
+          <div *cdkVirtualFor="let resume of resumes()" class="resume-card-wrapper">
+            <app-resume-card [resume]="resume"></app-resume-card>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    }
   }
   @if (status === resumesStatus.Error) {
     <p>Error loading resumes.</p>

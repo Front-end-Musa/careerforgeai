@@ -1,0 +1,53 @@
+@if (isOpen) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2>Choose a Resume Template</h2>
+          <p class="modal-subtitle">Pick a starting point before you begin.</p>
+        </div>
+        <button class="close-btn" (click)="closeModal()" aria-label="Close modal">x</button>
+      </div>
+
+      <div class="modal-body">
+        @if (upsellMessage) {
+          <div class="upsell-banner">{{ upsellMessage }}</div>
+        }
+
+        <div class="template-grid">
+          @for (template of templates; track template.id) {
+            <button
+              type="button"
+              class="template-card"
+              [class.locked]="isLocked(template.id)"
+              [class.selected]="selectedTemplateId === template.id"
+              (click)="selectTemplate(template.id)"
+            >
+              <div class="template-preview">
+                <app-resume-preview
+                  [resume]="demoResume"
+                  [templateId]="template.id"
+                ></app-resume-preview>
+              </div>
+              <div class="template-meta">
+                <div class="template-header">
+                  <div class="template-name">{{ template.name }}</div>
+                  <span
+                    class="template-badge"
+                    [class.locked-badge]="isLocked(template.id)"
+                  >
+                    {{ requiredPlanLabel(template.id) | titlecase }}
+                  </span>
+                </div>
+                <div class="template-description">{{ template.description }}</div>
+                @if (isLocked(template.id)) {
+                  <div class="template-lock">Upgrade to unlock</div>
+                }
+              </div>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

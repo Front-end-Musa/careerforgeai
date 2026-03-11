@@ -1,5 +1,5 @@
-<div class="resume-preview" [class.classic]="templateId === 'classic'" [class.modern]="templateId === 'modern'" [class.minimal]="templateId === 'minimal'">
-  @switch (templateId) {
+<div class="resume-preview" [attr.data-template]="templateId" [class.template-classic]="layoutType === 'classic'" [class.template-modern]="layoutType === 'modern'" [class.template-minimal]="layoutType === 'minimal'">
+  @switch (layoutType) {
     @case ('classic') {
       <div class="template template-classic">
         <div class="header">
@@ -212,3 +212,4 @@
     }
   }
 </div>
+
