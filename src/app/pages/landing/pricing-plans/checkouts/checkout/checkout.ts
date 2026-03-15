@@ -3,12 +3,13 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Header } from '../../landing/header/header';
-import { selectSelectedPlan } from '../../landing/pricing-plans/data/billing.selectors';
-import { getPlanBySlug } from '../../landing/pricing-plans/data/plan-config';
-import type { PaidPlan } from '../../landing/pricing-plans/data/billing.actions';
-import { BillingFacade } from '../../landing/pricing-plans/data/billing.facade';
+import { map, take } from 'rxjs/operators';
+import { Header } from '../../../header/header';
+import { selectSelectedPlan } from '../../data/billing.selectors';
+import { getPlanBySlug } from '../../data/plan-config';
+import type { PaidPlan } from '../../data/billing.actions';
+import { BillingFacade } from '../../data/billing.facade';
+import { BillingService } from '../../../../../core/services/billing.service';
 
 function isPaidPlan(slug: string | undefined): slug is PaidPlan {
   return slug === 'pro' || slug === 'premium';
@@ -23,6 +24,7 @@ function isPaidPlan(slug: string | undefined): slug is PaidPlan {
 export class Checkout {
   private route = inject(ActivatedRoute);
   private billingFacade = inject(BillingFacade);
+  private billingService = inject(BillingService); // временное решение
   idToken = null;
 
   billingCycle: 'monthly' | 'yearly' = 'monthly';
@@ -39,6 +41,19 @@ export class Checkout {
       return effectiveSlug ? getPlanBySlug(effectiveSlug) : null;
     }),
   );
+
+  ngOnInit() {
+    this.billingFacade.selectedPlan$.pipe(take(1)).subscribe((plan) => {
+      plan == 'pro' || plan == 'premium' ? (this.plan = plan) : '';
+    });
+  }
+
+  private plan: PaidPlan = 'pro';
+
+  checkoutCall() {
+    // временное решение
+    this.billingService.createCheckout(this.plan);
+  }
 
   planState$ = this.planInfo$.pipe(map((planInfo) => ({ planInfo })));
 }

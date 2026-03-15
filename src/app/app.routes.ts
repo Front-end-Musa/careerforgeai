@@ -89,7 +89,10 @@ export const routes: Routes = [
   },
   {
     path: 'checkouts',
-    loadChildren: () => import('./pages/checkouts/checkouts.routes').then((c) => c.CHECKOUT_ROUTES),
+    loadChildren: () =>
+      import('./pages/landing/pricing-plans/checkouts/checkouts.routes').then(
+        (c) => c.CHECKOUT_ROUTES,
+      ),
     data: {
       seo: {
         title: 'Checkout | ResumeCrafts AI',
@@ -145,6 +148,3 @@ export const routes: Routes = [
     },
   },
 ];
-
-
-

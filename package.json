@@ -41,6 +41,7 @@
     "@ngrx/store": "^21.0.1",
     "@ngrx/store-devtools": "^21.0.1",
     "@polar-sh/sdk": "^0.46.3",
+    "cors": "^2.8.6",
     "express": "^5.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.0",

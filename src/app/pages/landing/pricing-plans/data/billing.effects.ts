@@ -13,23 +13,23 @@ export class BillingEffects {
   notifications = inject(NotificationsService);
   router = inject(Router);
 
-  startCheckoutEffect = createEffect(() =>
-    this.actions$.pipe(
-      ofType(BillingActions.startCheckout),
-      switchMap(({ plan }) =>
-        from(this.billingService.createCheckout(plan)).pipe(
-          map((checkoutUrl) => BillingActions.startCheckoutSuccess({ checkoutUrl })),
-          catchError((error) =>
-            of(
-              BillingActions.startCheckoutFailure({
-                error: error instanceof Error ? error.message : String(error),
-              }),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
+  // startCheckoutEffect = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(BillingActions.startCheckout),
+  //     switchMap(({ plan }) =>
+  //       from(this.billingService.createCheckout(plan)).pipe(
+  //         map((checkoutUrl) => BillingActions.startCheckoutSuccess({ checkoutUrl })),
+  //         catchError((error) =>
+  //           of(
+  //             BillingActions.startCheckoutFailure({
+  //               error: error instanceof Error ? error.message : String(error),
+  //             }),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   ),
+  // );
 
   checkoutRedirectEffect = createEffect(
     () =>
