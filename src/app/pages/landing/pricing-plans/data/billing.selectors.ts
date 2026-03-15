@@ -5,3 +5,4 @@ export const selectBillingState = createFeatureSelector<BillingState>('billing')
 
 export const selectBillingLoading = createSelector(selectBillingState, (state) => state.loading);
 export const selectBillingError = createSelector(selectBillingState, (state) => state.error);
+export const selectSelectedPlan = createSelector(selectBillingState, (state) => state.selectedPlan);

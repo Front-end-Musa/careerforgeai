@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, HostListener, OnDestroy, signal } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -11,13 +11,16 @@ import { AuthStatus } from '../../auth/data/auth.reducer';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LandingFacade } from '../data/landing.facade';
 
+type HeaderType = 'nav' | 'checkout';
+
 @Component({
   selector: 'app-header',
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, Logo, AsyncPipe, RouterLink, MatProgressSpinnerModule],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, Logo, AsyncPipe, RouterLink, MatProgressSpinnerModule, MatIconModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header implements OnDestroy {
+  @Input({ required: true }) headerType: HeaderType | null = null;
   authStatus = AuthStatus;
   status$ = new Observable<AuthStatus>();
   menuOpen = signal(false);

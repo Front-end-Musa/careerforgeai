@@ -1,108 +1,139 @@
 <header class="header">
-  <div class="wrapper header-wrapper">
-    <app-logo></app-logo>
+  @if (headerType === 'nav') {
+    <div class="wrapper header-wrapper">
+      <app-logo></app-logo>
 
-    <nav class="nav">
-      <ul class="nav-list">
-        <li><a (click)="scrollTo('hero')">Home</a></li>
-        <li><a (click)="scrollTo('features')">Features</a></li>
-        <li><a (click)="scrollTo('about')">About</a></li>
-        <li><a (click)="scrollTo('pricing')">Pricing</a></li>
-        <li><a (click)="scrollTo('contact')">Contact</a></li>
-      </ul>
-    </nav>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a (click)="scrollTo('hero')">Home</a></li>
+          <li><a (click)="scrollTo('features')">Features</a></li>
+          <li><a (click)="scrollTo('about')">About</a></li>
+          <li><a (click)="scrollTo('pricing')">Pricing</a></li>
+          <li><a (click)="scrollTo('contact')">Contact</a></li>
+        </ul>
+      </nav>
 
-    <!-- Right: Auth -->
-    @if (status$ | async; as status) {
-      @if (status === authStatus.Loaded) {
-        <div class="auth-btn primary desktop-dashboard" routerLink="application/dashboard">Dashboard</div>
-      } @else if (status === authStatus.Loading) {
-        <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
-      } @else {
-        <div class="auth-group">
-          <button mat-stroked-button class="auth-link" routerLink="auth/login">Login</button>
-          <button mat-flat-button class="auth-btn primary" routerLink="auth/signup">Sign Up</button>
+      <!-- Right: Auth -->
+      @if (status$ | async; as status) {
+        @if (status === authStatus.Loaded) {
+          <div class="auth-btn primary desktop-dashboard" routerLink="application/dashboard">
+            Dashboard
+          </div>
+        } @else if (status === authStatus.Loading) {
+          <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
+        } @else {
+          <div class="auth-group">
+            <button mat-stroked-button class="auth-link" routerLink="auth/login">Login</button>
+            <button mat-flat-button class="auth-btn primary" routerLink="auth/signup">
+              Sign Up
+            </button>
+          </div>
+        }
+      }
+      <button
+        id="burger-btn"
+        class="burger-toggle"
+        type="button"
+        [class.active]="menuOpen()"
+        [attr.aria-expanded]="menuOpen()"
+        aria-label="Toggle mobile menu"
+        (click)="toggleMenu()"
+      >
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+
+    <button
+      class="menu-backdrop"
+      type="button"
+      aria-label="Close mobile menu"
+      [class.open]="menuOpen()"
+      (click)="closeMenu()"
+    ></button>
+
+    <div class="burger-panel" [class.open]="menuOpen()">
+      @if (status$ | async; as status) {
+        <div class="wrapper">
+          <div class="mobile-menu">
+            <nav class="nav-burger">
+              <ul class="nav-list nav-list-burger">
+                <li>
+                  <button type="button" class="menu-link" (click)="onMobileSectionClick('hero')">
+                    Home
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="menu-link"
+                    (click)="onMobileSectionClick('features')"
+                  >
+                    Features
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-link" (click)="onMobileSectionClick('about')">
+                    About
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-link" (click)="onMobileSectionClick('pricing')">
+                    Pricing
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="menu-link" (click)="onMobileSectionClick('contact')">
+                    Contact
+                  </button>
+                </li>
+                @if (status === authStatus.Loaded) {
+                  <li>
+                    <a
+                      class="menu-link dashboard-link"
+                      routerLink="application/dashboard"
+                      (click)="onMobileRouteClick()"
+                    >
+                      Dashboard
+                    </a>
+                  </li>
+                }
+              </ul>
+            </nav>
+
+            @if (status !== authStatus.Loaded) {
+              <div class="auth-group-burger">
+                <button
+                  mat-stroked-button
+                  class="auth-link mobile-btn"
+                  routerLink="auth/login"
+                  (click)="onMobileRouteClick()"
+                >
+                  Log In
+                </button>
+                <button
+                  mat-flat-button
+                  class="primary mobile-btn"
+                  routerLink="auth/signup"
+                  (click)="onMobileRouteClick()"
+                >
+                  Sign Up
+                </button>
+              </div>
+            }
+          </div>
         </div>
       }
-    }
-    <button
-      id="burger-btn"
-      class="burger-toggle"
-      type="button"
-      [class.active]="menuOpen()"
-      [attr.aria-expanded]="menuOpen()"
-      aria-label="Toggle mobile menu"
-      (click)="toggleMenu()"
-    >
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-  </div>
+    </div>
+  } @else if (headerType === 'checkout') {
+    <div class="wrapper header-wrapper">
+      <app-logo></app-logo>
 
-  <button
-    class="menu-backdrop"
-    type="button"
-    aria-label="Close mobile menu"
-    [class.open]="menuOpen()"
-    (click)="closeMenu()"
-  ></button>
-
-  <div class="burger-panel" [class.open]="menuOpen()">
-    @if (status$ | async; as status) {
-      <div class="wrapper">
-        <div class="mobile-menu">
-          <nav class="nav-burger">
-            <ul class="nav-list nav-list-burger">
-              <li><button type="button" class="menu-link" (click)="onMobileSectionClick('hero')">Home</button></li>
-              <li>
-                <button type="button" class="menu-link" (click)="onMobileSectionClick('features')">
-                  Features
-                </button>
-              </li>
-              <li><button type="button" class="menu-link" (click)="onMobileSectionClick('about')">About</button></li>
-              <li>
-                <button type="button" class="menu-link" (click)="onMobileSectionClick('pricing')">
-                  Pricing
-                </button>
-              </li>
-              <li>
-                <button type="button" class="menu-link" (click)="onMobileSectionClick('contact')">
-                  Contact
-                </button>
-              </li>
-              @if (status === authStatus.Loaded) {
-                <li>
-                  <a class="menu-link dashboard-link" routerLink="application/dashboard" (click)="onMobileRouteClick()">
-                    Dashboard
-                  </a>
-                </li>
-              }
-            </ul>
-          </nav>
-
-          @if (status !== authStatus.Loaded) {
-            <div class="auth-group-burger">
-              <button
-                mat-stroked-button
-                class="auth-link mobile-btn"
-                routerLink="auth/login"
-                (click)="onMobileRouteClick()"
-              >
-                Log In
-              </button>
-              <button
-                mat-flat-button
-                class="primary mobile-btn"
-                routerLink="auth/signup"
-                (click)="onMobileRouteClick()"
-              >
-                Sign Up
-              </button>
-            </div>
-          }
-        </div>
+      <div class="secure-mark">
+        <mat-icon class="material-symbols-outlined security-shield">verified_user</mat-icon
+        ><span class="security-text">Secure Checkout</span>
       </div>
-    }
-  </div>
+    </div>
+  }
 </header>
