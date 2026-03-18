@@ -1,6 +1,7 @@
 import {defineSecret} from "firebase-functions/params";
 import OpenAI from "openai";
 import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {logger} from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import {Polar} from "@polar-sh/sdk";
@@ -12,30 +13,104 @@ initializeApp();
 
 export const createCheckout = onCall({secrets: [polarToken]}, async (req) => {
   const polar = new Polar({
-    accessToken: await polarToken.value(),
+    accessToken: polarToken.value(),
   });
 
   const uid = req.auth?.uid;
-  if (!uid) {
-    throw new Error("Unauthorized");
-  }
 
   const priceId = req.data.priceId;
-  if (!priceId) {
-    throw new Error("Price ID is required");
-  }
 
-  const checkout = await polar.checkouts.create({
-    products: ["ac58d79e-1d84-4322-bef6-05147be57cc7", "7ad22fce-484d-472c-ad6e-f08e09e3e264"],
-    successUrl: "https://resume-crafts.com/checkouts/success",
-    returnUrl: "https://resume-crafts.com/#pricing",
-    customerId: uid,
+  logger.info("createCheckout invoked", {
+    hasAuth: Boolean(uid),
+    hasPriceId: Boolean(priceId),
+    projectId: process.env.GCLOUD_PROJECT ?? null,
+    functionTarget: process.env.FUNCTION_TARGET ?? null,
   });
 
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "User must be logged in");
+  }
+
+  if (!priceId) {
+    throw new HttpsError("invalid-argument", "Price ID is required");
+  }
+
   try {
+    const checkout = await polar.checkouts.create({
+      products: [priceId],
+      successUrl: "https://resume-crafts.com/checkouts/success",
+      returnUrl: "https://resume-crafts.com/#pricing",
+      externalCustomerId: uid,
+    });
+
+    logger.info("createCheckout succeeded", {
+      uid,
+      hasCheckoutUrl: Boolean(checkout.url),
+    });
     return checkout.url;
   } catch (error) {
-    throw new Error("Failed to create checkout");
+    logger.error("createCheckout failed", error);
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "statusCode" in error &&
+      error.statusCode === 422
+    ) {
+      throw new HttpsError(
+        "invalid-argument",
+        "Checkout configuration is invalid. Verify product IDs and billing settings.",
+      );
+    }
+
+    throw new HttpsError("internal", "Unable to create checkout session.");
+  }
+});
+
+export const createPortalSession = onCall({secrets: [polarToken]}, async (req) => {
+  const polar = new Polar({
+    accessToken: polarToken.value(),
+  });
+
+  const uid = req.auth?.uid;
+
+  logger.info("createPortalSession invoked", {
+    hasAuth: Boolean(uid),
+    projectId: process.env.GCLOUD_PROJECT ?? null,
+    functionTarget: process.env.FUNCTION_TARGET ?? null,
+  });
+
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "User must be logged in");
+  }
+
+  try {
+    const polarSession = await polar.customerSessions.create({
+      externalCustomerId: uid ? uid : "",
+      returnUrl: "https://resume-crafts.com/application/settings",
+    });
+
+    logger.info("createPortalSession succeeded", {
+      uid,
+    });
+
+    return polarSession;
+  } catch (error) {
+    logger.error("createPortalSession failed", error);
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "statusCode" in error &&
+      error.statusCode === 422
+    ) {
+      throw new HttpsError(
+        "invalid-argument",
+        "Portal configuration is invalid. Verify product IDs and billing settings.",
+      );
+    }
+
+    throw new HttpsError("internal", "Unable to create portal session.");
   }
 });
 

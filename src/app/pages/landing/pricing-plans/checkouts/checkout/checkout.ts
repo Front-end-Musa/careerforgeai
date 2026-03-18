@@ -1,15 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Header } from '../../../header/header';
-import { selectSelectedPlan } from '../../data/billing.selectors';
 import { getPlanBySlug } from '../../data/plan-config';
 import type { PaidPlan } from '../../data/billing.actions';
 import { BillingFacade } from '../../data/billing.facade';
-import { BillingService } from '../../../../../core/services/billing.service';
 
 function isPaidPlan(slug: string | undefined): slug is PaidPlan {
   return slug === 'pro' || slug === 'premium';
@@ -24,7 +21,6 @@ function isPaidPlan(slug: string | undefined): slug is PaidPlan {
 export class Checkout {
   private route = inject(ActivatedRoute);
   private billingFacade = inject(BillingFacade);
-  private billingService = inject(BillingService); // временное решение
   idToken = null;
 
   billingCycle: 'monthly' | 'yearly' = 'monthly';
@@ -51,8 +47,7 @@ export class Checkout {
   private plan: PaidPlan = 'pro';
 
   checkoutCall() {
-    // временное решение
-    this.billingService.createCheckout(this.plan);
+    this.billingFacade.startCheckout(this.plan);
   }
 
   planState$ = this.planInfo$.pipe(map((planInfo) => ({ planInfo })));

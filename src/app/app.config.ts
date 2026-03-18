@@ -25,6 +25,10 @@ import { CoverLetterEffects } from './pages/application/cover-letter/data/cover-
 import { coverLetterReducer } from './pages/application/cover-letter/data/cover-letter.reducer';
 import { billingReducer } from './pages/landing/pricing-plans/data/billing.reducer';
 import { BillingEffects } from './pages/landing/pricing-plans/data/billing.effects';
+import { notificationsReducer } from './core/state/notifications/notifications.reducer';
+import { NotificationsEffects } from './core/state/notifications/notifications.effects';
+
+const LOCAL_FUNCTIONS_HOSTNAMES = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -39,23 +43,30 @@ export const appConfig: ApplicationConfig = {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideFunctions(() => {
+      const functions = getFunctions(undefined, 'us-central1');
+      if (typeof window !== 'undefined' && LOCAL_FUNCTIONS_HOSTNAMES.has(window.location.hostname)) {
+        const emulatorHost = window.location.hostname === '[::1]' ? '127.0.0.1' : window.location.hostname;
+        connectFunctionsEmulator(functions, emulatorHost, 5001);
+      }
+      return functions;
+    }),
 
     // HTTP
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // NgRx
-    provideStore({ auth: authReducer, resumes: resumesReducer, coverLetters: coverLetterReducer, billing: billingReducer }),
-    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects, BillingEffects]),
+    provideStore({
+      auth: authReducer,
+      resumes: resumesReducer,
+      coverLetters: coverLetterReducer,
+      billing: billingReducer,
+      notifications: notificationsReducer,
+    }),
+    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects, BillingEffects, NotificationsEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,
     }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-      return functions;
-    })
   ],
 };

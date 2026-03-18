@@ -1,1 +1,14 @@
-<p>success works!</p>
+<section class="success">
+  <h1>Payment received</h1>
+  @if (syncing()) {
+    <p>Updating your subscription access...</p>
+  } @else {
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+      <p>Your payment completed, but subscription sync failed. Try again from Settings.</p>
+    } @else {
+      <p>Your plan is active. You can continue in the app.</p>
+    }
+    <a routerLink="/application/resumes">Go to application</a>
+  }
+</section>

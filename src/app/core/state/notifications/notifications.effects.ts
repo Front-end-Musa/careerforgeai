@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { showNotification, hideNotification } from './notifications.actions';
-import { map, delay, mergeMap } from 'rxjs/operators';
-import { timer } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { EMPTY, timer } from 'rxjs';
 
 @Injectable()
 export class NotificationsEffects {
+  private readonly actions$ = inject(Actions);
+
   autoHideNotification$ = createEffect(() =>
     this.actions$.pipe(
       ofType(showNotification),
@@ -14,10 +16,8 @@ export class NotificationsEffects {
         if (duration > 0) {
           return timer(duration).pipe(map(() => hideNotification({ id: action.notification.id })));
         }
-        return [];
+        return EMPTY;
       }),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

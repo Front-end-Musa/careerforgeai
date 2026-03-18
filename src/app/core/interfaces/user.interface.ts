@@ -15,6 +15,7 @@ export interface AppUser {
   providerVariantId: string;
   freeGenerationsUsed: number;
   emailVerified?: boolean;
+  entitlementsUpdatedAt?: number | null;
 };
 
 export interface LoginUser {

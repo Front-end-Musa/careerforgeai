@@ -6,10 +6,11 @@ import { AuthStatus } from './pages/auth/data/auth.reducer';
 import { SeoMetadata, SeoService } from './core/services/seo.service';
 import { filter, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Notifications } from './lib/notifications/notifications';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, Notifications],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
 })

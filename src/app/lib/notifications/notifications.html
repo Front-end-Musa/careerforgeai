@@ -1,0 +1,28 @@
+@if (notifications$ | async; as notifications) {
+  @if (notifications.length) {
+    <div class="notifications" aria-live="polite" aria-atomic="true">
+      @for (notification of notifications; track notification.id) {
+        <article
+          class="notification"
+          [class.notification--success]="notification.type === notificationType.Success"
+          [class.notification--error]="notification.type === notificationType.Error"
+          [class.notification--info]="notification.type === notificationType.Info"
+          [class.notification--warning]="notification.type === notificationType.Warning"
+          role="status"
+        >
+          <p class="notification__message">{{ notification.message }}</p>
+          <button
+            class="notification__close"
+            type="button"
+            (click)="close(notification.id)"
+            aria-label="Dismiss notification"
+          >
+            &times;
+          </button>
+        </article>
+      }
+    </div>
+  }
+}
+
+

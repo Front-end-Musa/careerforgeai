@@ -1,0 +1,54 @@
+.notifications {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1100;
+  display: grid;
+  gap: 0.75rem;
+  width: min(24rem, calc(100vw - 2rem));
+}
+
+.notification {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  padding: 0.75rem 0.875rem;
+  color: #0f172a;
+}
+
+.notification__message {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.notification__close {
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-size: 1.125rem;
+  line-height: 1;
+  padding: 0.125rem;
+  cursor: pointer;
+}
+
+.notification--success {
+  border-color: #86efac;
+}
+
+.notification--error {
+  border-color: #fca5a5;
+}
+
+.notification--info {
+  border-color: #93c5fd;
+}
+
+.notification--warning {
+  border-color: #fcd34d;
+}
