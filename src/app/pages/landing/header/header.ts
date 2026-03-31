@@ -11,7 +11,7 @@ import { AuthStatus } from '../../auth/data/auth.reducer';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LandingFacade } from '../data/landing.facade';
 
-type HeaderType = 'nav' | 'checkout';
+type HeaderType = 'nav';
 
 @Component({
   selector: 'app-header',

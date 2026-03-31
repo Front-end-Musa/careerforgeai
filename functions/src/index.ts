@@ -1,15 +1,65 @@
 import {defineSecret} from "firebase-functions/params";
 import OpenAI from "openai";
-import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onCall, onRequest, HttpsError} from "firebase-functions/v2/https";
 import {logger} from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import {Polar} from "@polar-sh/sdk";
+import {validateEvent, WebhookVerificationError} from "@polar-sh/sdk/webhooks";
 
 const openaiSecret = defineSecret("OPENAI_API_KEY");
 
 const polarToken = defineSecret("POLAR_ACCESS_TOKEN");
+const polarWebhookSecret = defineSecret("POLAR_WEBHOOK_SECRET");
 initializeApp();
+
+export const polarWebhook = onRequest({secrets: [polarWebhookSecret]}, async (req, res) => {
+  if (req.method !== "POST") {
+    res.status(405).send("Method Not Allowed");
+    return;
+  }
+
+  try {
+    const webhookSecret = polarWebhookSecret.value();
+    const rawBody = req.rawBody;
+
+    if (!rawBody || rawBody.length === 0) {
+      logger.warn("polarWebhook missing raw body");
+      res.status(400).send("Missing request body");
+      return;
+    }
+
+    const signatureHeaders: Record<string, string> = {};
+    for (const [headerName, headerValue] of Object.entries(req.headers)) {
+      if (typeof headerValue === "string") {
+        signatureHeaders[headerName] = headerValue;
+      } else if (Array.isArray(headerValue) && headerValue.length > 0) {
+        signatureHeaders[headerName] = headerValue[0];
+      }
+    }
+
+    const event = validateEvent(rawBody, signatureHeaders, webhookSecret);
+
+    logger.info("polarWebhook received", {
+      type: event.type,
+      id: event.data?.id ?? null,
+    });
+
+    // TODO: Handle event types and persist entitlements/subscription state as needed.
+    res.status(200).send("ok");
+  } catch (error) {
+    if (error instanceof WebhookVerificationError) {
+      logger.warn("polarWebhook signature verification failed", {
+        message: error.message,
+      });
+      res.status(403).send("Invalid signature");
+      return;
+    }
+
+    logger.error("polarWebhook processing failed", error);
+    res.status(500).send("Webhook handling failed");
+  }
+});
 
 export const createCheckout = onCall({secrets: [polarToken]}, async (req) => {
   const polar = new Polar({

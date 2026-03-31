@@ -8,9 +8,9 @@
       @for (plan of plans; track plan.name) {
       <app-pricing-card
         [plan]="plan"
+        [planSlug]="plan.planSlug"
         [popular]="plan.popular"
         [disabled]="loading$ | async"
-        (planSelected)="onPlanSelected($event)"
         class="pricing-card"
       >
       </app-pricing-card>

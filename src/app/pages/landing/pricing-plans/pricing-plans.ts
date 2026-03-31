@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Router } from '@angular/router';
 import { PricingCard } from './pricing-card/pricing-card';
 import { BillingFacade } from './data/billing.facade';
+import { PaidPlan } from './data/billing.actions';
 
 interface Plan {
   name: string;
@@ -10,6 +10,7 @@ interface Plan {
   features: { text: string; included: boolean }[];
   button: string;
   popular: boolean;
+  planSlug: PaidPlan | null;
 }
 
 type FeatureKey =
@@ -87,12 +88,10 @@ function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Pla
 })
 export class PricingPlans {
   private readonly billingFacade: BillingFacade;
-  private readonly router: Router;
   loading$;
 
-  constructor(billingFacade: BillingFacade, router: Router) {
+  constructor(billingFacade: BillingFacade) {
     this.billingFacade = billingFacade;
-    this.router = router;
     this.loading$ = this.billingFacade.loading$;
   }
 
@@ -109,6 +108,7 @@ export class PricingPlans {
       ]),
       button: 'Start Free',
       popular: false,
+      planSlug: null,
     },
     {
       name: 'Pro',
@@ -126,6 +126,7 @@ export class PricingPlans {
       ]),
       button: 'Start Pro',
       popular: true,
+      planSlug: 'pro',
     },
     {
       name: 'Premium',
@@ -145,24 +146,7 @@ export class PricingPlans {
       ]),
       button: 'Start Premium',
       popular: false,
+      planSlug: 'premium',
     },
   ];
-
-  onPlanSelected(planName: string): void {
-    if (planName === 'Free') {
-      this.router.navigate(['/auth/signup']);
-      return;
-    }
-
-    const normalized = planName.toLowerCase() as 'pro' | 'premium';
-    this.billingFacade.clearError();
-    this.billingFacade.startCheckout(normalized);
-    this.router
-      .navigate([`/checkouts/checkout`], {
-        queryParams: { plan: normalized },
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }
 }

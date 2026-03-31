@@ -6,19 +6,6 @@ export const CHECKOUT_ROUTES: Routes = [
     loadComponent: () => import('./checkouts').then((c) => c.Checkouts),
     children: [
       {
-        path: 'checkout',
-        loadComponent: () => import('./checkout/checkout').then((c) => c.Checkout),
-        data: {
-          seo: {
-            title: 'Checkout | ResumeCrafts AI',
-            description: 'Complete your purchase to unlock ResumeCrafts AI premium features.',
-            robots: 'noindex, nofollow',
-            canonicalPath: '/checkouts/checkout',
-            ogType: 'website',
-          },
-        },
-      },
-      {
         path: 'success',
         loadComponent: () => import('./success/success').then((c) => c.Success),
         data: {
