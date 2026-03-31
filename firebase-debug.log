@@ -1,0 +1,30 @@
+[debug] [2026-03-31T15:12:46.214Z] ----------------------------------------------------------------------
+[debug] [2026-03-31T15:12:46.216Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2026-03-31T15:12:46.216Z] CLI Version:   15.12.0
+[debug] [2026-03-31T15:12:46.216Z] Platform:      win32
+[debug] [2026-03-31T15:12:46.216Z] Node Version:  v22.20.0
+[debug] [2026-03-31T15:12:46.216Z] Time:          Tue Mar 31 2026 20:12:46 GMT+0500 (Kazakhstan Time)
+[debug] [2026-03-31T15:12:46.216Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-31T15:13:01.673Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"ui"}
+[debug] [2026-03-31T15:13:01.681Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-31T15:13:01.681Z] > authorizing via signed-in user (rufatulymusa567@gmail.com)
+[debug] [2026-03-31T15:13:01.681Z] [iam] checking project ai-job-seeker-ed1d3 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-03-31T15:13:01.682Z] Checked if tokens are valid: true, expires at: 1774971783594
+[debug] [2026-03-31T15:13:01.682Z] Checked if tokens are valid: true, expires at: 1774971783594
+[debug] [2026-03-31T15:13:01.683Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3:testIamPermissions [none]
+[debug] [2026-03-31T15:13:01.683Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3:testIamPermissions  x-goog-user-project=ai-job-seeker-ed1d3
+[debug] [2026-03-31T15:13:01.683Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-31T15:13:03.027Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3:testIamPermissions 200
+[debug] [2026-03-31T15:13:03.027Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ai-job-seeker-ed1d3:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-31T15:13:03.027Z] Checked if tokens are valid: true, expires at: 1774971783594
+[debug] [2026-03-31T15:13:03.027Z] Checked if tokens are valid: true, expires at: 1774971783594
+[debug] [2026-03-31T15:13:03.027Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/ai-job-seeker-ed1d3/serviceAccounts/ai-job-seeker-ed1d3@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-03-31T15:13:03.027Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/ai-job-seeker-ed1d3/serviceAccounts/ai-job-seeker-ed1d3@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-31T15:13:04.377Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/ai-job-seeker-ed1d3/serviceAccounts/ai-job-seeker-ed1d3@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-03-31T15:13:04.377Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/ai-job-seeker-ed1d3/serviceAccounts/ai-job-seeker-ed1d3@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'ai-job-seeker-ed1d3'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint

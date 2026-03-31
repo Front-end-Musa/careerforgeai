@@ -13,7 +13,7 @@ const polarToken = defineSecret("POLAR_ACCESS_TOKEN");
 const polarWebhookSecret = defineSecret("POLAR_WEBHOOK_SECRET");
 initializeApp();
 
-export const polarWebhook = onRequest({secrets: [polarWebhookSecret]}, async (req, res) => {
+export const polarWebhook = onRequest({secrets: [polarWebhookSecret], invoker: "public"}, async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).send("Method Not Allowed");
     return;
@@ -36,6 +36,21 @@ export const polarWebhook = onRequest({secrets: [polarWebhookSecret]}, async (re
       } else if (Array.isArray(headerValue) && headerValue.length > 0) {
         signatureHeaders[headerName] = headerValue[0];
       }
+    }
+
+    const hasRequiredSignatureHeaders = Boolean(
+      signatureHeaders["webhook-id"] &&
+      signatureHeaders["webhook-signature"] &&
+      signatureHeaders["webhook-timestamp"],
+    );
+    if (!hasRequiredSignatureHeaders) {
+      logger.warn("polarWebhook missing signature headers", {
+        hasWebhookId: Boolean(signatureHeaders["webhook-id"]),
+        hasWebhookSignature: Boolean(signatureHeaders["webhook-signature"]),
+        hasWebhookTimestamp: Boolean(signatureHeaders["webhook-timestamp"]),
+      });
+      res.status(400).send("Missing webhook signature headers");
+      return;
     }
 
     const event = validateEvent(rawBody, signatureHeaders, webhookSecret);
