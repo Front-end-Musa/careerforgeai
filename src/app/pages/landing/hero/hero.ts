@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
 import { LandingFacade } from '../data/landing.facade';
+import { LandingCta } from '../landing-cta/landing-cta';
 
 @Component({
   selector: 'app-hero',
-  imports: [MatButtonModule, RouterLink],
+  imports: [LandingCta],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })

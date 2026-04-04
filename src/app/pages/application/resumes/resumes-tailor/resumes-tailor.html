@@ -1,1 +1,69 @@
-<p>resumes-tailor works!</p>
+<div class="resumes-tailor-wrapper">
+  <div class="tailor-card">
+    <div class="tailor-header">
+      <button mat-icon-button type="button" routerLink="/application/resumes" aria-label="Back to resumes">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>AI Tailor Resume</h1>
+        <p>Adjust summary, experience bullets, and skills for a specific job.</p>
+      </div>
+    </div>
+
+    @if (resume(); as currentResume) {
+      <div class="resume-context">
+        <div>
+          <span class="label">Resume</span>
+          <span class="value">{{ currentResume.personalInfo.fullName }}</span>
+        </div>
+        <div>
+          <span class="label">Current role</span>
+          <span class="value">{{ currentResume.personalInfo.jobTitle || 'Not set' }}</span>
+        </div>
+      </div>
+
+      <form [formGroup]="tailorForm" (ngSubmit)="applyTailoring()" class="tailor-form">
+        <mat-form-field   class="full-width">
+          <mat-label>Company Name</mat-label>
+          <input matInput formControlName="companyName" placeholder="Acme Inc." />
+        </mat-form-field>
+
+        <mat-form-field   class="full-width">
+          <mat-label>Position</mat-label>
+          <input matInput formControlName="position" placeholder="Senior Frontend Engineer" />
+        </mat-form-field>
+
+        <mat-form-field   class="full-width">
+          <mat-label>Job Description</mat-label>
+          <textarea
+            matInput
+            rows="8"
+            formControlName="jobDescription"
+            placeholder="Paste the full job description"
+          ></textarea>
+        </mat-form-field>
+
+        @if (tailorError$ | async; as error) {
+          <div class="feedback error">{{ error }}</div>
+        }
+
+        @if (applySuccess()) {
+          <div class="feedback success">Tailoring applied and saved to this resume.</div>
+        }
+
+        @if (submitting$ | async) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+
+        <div class="actions">
+          <button type="button" mat-stroked-button routerLink="/application/resumes">Cancel</button>
+          <button type="submit" mat-flat-button color="primary" [disabled]="submitting$ | async">
+            Apply Tailoring
+          </button>
+        </div>
+      </form>
+    } @else {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+  </div>
+</div>

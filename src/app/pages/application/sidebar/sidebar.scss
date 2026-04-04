@@ -64,7 +64,7 @@
       &:hover {
         background-color: #edf2ff;
         * {
-          color: var(--brand-600) !important;
+          color: var(--mat-sys-primary) !important;
         }
       }
     }
@@ -81,7 +81,7 @@
   .sidebar-signout {
     width: 100%;
     padding: 10px 12px;
-    
+
     .signout-btn {
       height: 50px;
       width: 100%;
@@ -90,7 +90,7 @@
       &:hover {
         background-color: #ffe5e5;
       }
-      
+
       .signout-btn-content {
         display: flex;
         flex-direction: row;
@@ -112,7 +112,7 @@
   background-color: #dbeafe;
 
   * {
-    color: var(--brand-600) !important;
+    color: var(--mat-sys-primary) !important;
   }
 }
 

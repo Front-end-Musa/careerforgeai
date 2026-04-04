@@ -1,16 +1,17 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { LandingCta } from '../landing-cta/landing-cta';
 
 interface Feature {
-  id: number,
-  icon: string,
-  title: string,
-  description: string
+  id: number;
+  icon: string;
+  title: string;
+  description: string;
 }
 
 @Component({
   selector: 'app-features',
-  imports: [MatIconModule],
+  imports: [MatIconModule, LandingCta],
   templateUrl: './features.html',
   styleUrl: './features.scss',
 })
@@ -20,27 +21,32 @@ export class Features {
     {
       id: 0,
       icon: 'book',
-      title: 'AI Resume Generator',
+      title: 'AI-Powered Generation',
       description:
-        'Create professional resumes tailored to any job with AI-powered content generation.',
+        'Our advanced AI writes professional resume content tailored to your experience and target job in seconds.',
     },
     {
       id: 1,
       icon: 'insert_drive_file',
-      title: 'AI Cover Letters',
-      description: 'Generate compelling cover letters that get you noticed by recruiters.',
+      title: 'AI Cover Letters Generator',
+      description:
+        'Create personalized cover letters that complement your resume and highlight your best qualities for each job.',
     },
     {
       id: 2,
       icon: 'description',
-      title: 'Resume Builder + Templates',
-      description: 'Edit, preview, and export resumes with flexible templates.',
+      title: 'Professional Templates',
+      description:
+        'Choose from expertly designed templates that make you stand out while maintaining professional standards.',
     },
     {
       id: 3,
       icon: 'view_kanban',
-      title: 'Job Tracker',
-      description: 'Organize applications in a kanban-style board.',
+      title: 'Job Application Tracker',
+      description:
+        'Track all your applications in one place with our intuitive kanban board. Never lose track of opportunities.',
     },
   ];
+
+  ctaHelperTexts: string[] = ['Pick a template in seconds', 'Start building for free'];
 }

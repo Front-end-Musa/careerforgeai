@@ -20,6 +20,8 @@ export function defaultSpecProviders(): Array<Provider | EnvironmentProviders> {
           generating: false,
           saving: false,
           saveSucceeded: false,
+          tailoring: false,
+          tailorError: null,
         },
         coverLetters: {
           ids: [],

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { LandingCta } from '../landing-cta/landing-cta';
 
 interface Mission {
   icon: string,
@@ -9,7 +10,7 @@ interface Mission {
 
 @Component({
   selector: 'app-about',
-  imports: [MatIconModule],
+  imports: [MatIconModule, LandingCta],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
@@ -31,4 +32,6 @@ export class About {
       description: 'Your data is secure and never shared',
     },
   ];
+
+  ctaHelperTexts: string[] = ['Trusted by job seekers worldwide', 'Launch your first resume in minutes'];
 }

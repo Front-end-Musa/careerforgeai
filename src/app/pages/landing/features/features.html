@@ -1,17 +1,28 @@
 <section class="features" id="features" #featuresRef>
-    <div class="wrapper">
-        <header class="head">
-            <h2 class="title">Everything You Need to Get Hired</h2>
-            <p class="sub-title">Powerful AI tools to accelerate your career</p>
-        </header>
-        <div class="features-cards" #features_list>
-            @for (feature of features; track feature.id) {
-                <div class="card">
-                    <mat-icon class="card-icon">{{ feature.icon }}</mat-icon>
-                    <h4 class="card-title">{{ feature.title }}</h4>
-                    <p class="card-description">{{ feature.description }}</p>
-                </div>
-            }
+  <div class="wrapper">
+    <header class="head">
+      <h2 class="title">Why Waste Hours When AI Can Do It Better?</h2>
+      <p class="sub-title">Powerful AI tools to accelerate your career</p>
+    </header>
+    <div class="features-cards" #features_list>
+      @for (feature of features; track feature.id) {
+        <div class="card">
+          <mat-icon class="card-icon">{{ feature.icon }}</mat-icon>
+          <div class="feature-text">
+            <h4 class="card-title">{{ feature.title }}</h4>
+            <p class="card-description">{{ feature.description }}</p>
+          </div>
         </div>
+      }
     </div>
+
+    <app-landing-cta
+      class="section-cta"
+      [link]="['/application/dashboard']"
+      icon="bolt"
+      label="Build My Resume with AI"
+      [helperTexts]="ctaHelperTexts"
+      ariaLabel="Build My Resume with AI"
+    ></app-landing-cta>
+  </div>
 </section>

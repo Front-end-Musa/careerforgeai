@@ -58,6 +58,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   previewTemplate: ResumeTemplateId = 'basic';
   preview$!: ReturnType<ResumesCreate['resumeGroupValueChanges']>;
   showTailoring = false;
+  loadedMeta: Resume['meta'] | null = null;
 
   constructor() {
     this.resumeGroup = new FormGroup({
@@ -192,6 +193,7 @@ export class ResumesCreate implements OnInit, OnChanges {
       skills: this.normalizeSkills(raw.skills),
       templateId: this.previewTemplate,
       meta: {
+        ...(this.loadedMeta ?? {}),
         ...(raw.meta ?? {}),
         updatedAt: new Date().toISOString(),
       },
@@ -323,7 +325,7 @@ export class ResumesCreate implements OnInit, OnChanges {
             experience: this.normalizeExperience(raw.experience),
             education: this.normalizeEducation(raw.education),
             skills: this.normalizeSkills(raw.skills),
-      templateId: this.previewTemplate,
+            templateId: this.previewTemplate,
           }) as Partial<Resume>,
       ),
     );
@@ -564,6 +566,7 @@ export class ResumesCreate implements OnInit, OnChanges {
       skills: this.normalizeSkills(raw.skills),
       templateId: this.previewTemplate,
       meta: {
+        ...(this.loadedMeta ?? {}),
         ...(raw.meta ?? {}),
         updatedAt: new Date().toISOString(),
       },
@@ -670,6 +673,7 @@ export class ResumesCreate implements OnInit, OnChanges {
         });
 
         this.previewTemplate = resume.templateId ?? this.previewTemplate;
+        this.loadedMeta = resume.meta ?? null;
 
 
         this.experienceArray.clear();

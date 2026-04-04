@@ -1,9 +1,9 @@
 .contact-section {
-  background-color: #ffffff;
+  background-color: var(--section-bg, transparent);
 }
 
 .contact-us {
-  width: 40vw;
+  width: min(100%, 760px);
   background: var(--surface-card);
   padding: 40px;
   border-radius: 16px;
@@ -11,19 +11,13 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 
-  @media (max-width: 1400px) {
-    width: 50vw;
-  }
-
-  @media (max-width: 1024px) {
-    width: 60vw;
-  }
   @media (max-width: 768px) {
-    width: 80vw;
+    padding: 28px 20px;
   }
   @media (max-width: 600px) {
-    width: 90vw;
+    padding: 22px 14px;
   }
 }
 
@@ -76,7 +70,7 @@ mat-error {
 .send-btn {
   width: 100%;
   padding: 14px 0;
-  background: var(--brand-600);
+  background: var(--mat-sys-primary);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -98,7 +92,7 @@ mat-error {
   margin-top: 10px;
 
   a {
-    color: var(--brand-600);
+    color: var(--mat-sys-primary);
     text-decoration: none;
     font-weight: 600;
   }

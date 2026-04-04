@@ -442,44 +442,20 @@ mat-form-field {
         gap: 12px;
 
         .template-info {
-        text-align: right;
-        min-width: 160px;
-      }
-
-      .template-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: var(--text-muted);
-      }
-
-      .template-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-      }
-
-      .change-template {
-        background: transparent;
-        border: none;
-        color: #2563eb;
-        font-weight: 600;
-        cursor: pointer;
-        padding: 6px 10px;
-        border-radius: 999px;
-
-        &:hover {
-          background: rgba(37, 99, 235, 0.1);
+          text-align: left;
+          min-width: auto;
         }
-      }
 
-      .template-toggle {
+        .change-template {
+          padding-left: 0;
+        }
+
+        .template-toggle {
           width: 100%;
           display: flex;
           flex-wrap: wrap;
-          gap: 6px;
+          gap: 12px;
           justify-content: space-between;
-      gap: 12px;
 
           mat-button-toggle {
             flex: 1 1 auto;

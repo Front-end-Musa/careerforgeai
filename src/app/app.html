@@ -1,2 +1,11 @@
-<router-outlet></router-outlet>
+@defer (on viewport) {
+    <router-outlet></router-outlet>
+} @loading (after 100ms; minimum 500ms) {
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="50"
+  ></mat-progress-spinner>
+} @placeholder {
+  <div>Loading preview...</div>
+}
 <app-notifications></app-notifications>

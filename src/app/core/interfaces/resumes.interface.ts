@@ -77,6 +77,12 @@ export interface ResumeMeta {
 
   source: 'ai' | 'manual'; // how it was created
   version: number; // increment on major changes
+  tailoring?: {
+    source: 'job-description';
+    companyName: string;
+    position: string;
+    tailoredAt: string;
+  };
 }
 
 // Resume template tone

@@ -351,7 +351,11 @@
         <h2 class="preview-title">Preview</h2>
         <p class="preview-subtitle">Live as you type</p>
       </div>
-      <div class="template-info">`r`n        <div class="template-label">Template</div>`r`n        <div class="template-name">{{ getTemplateLabel(previewTemplate) }}</div>`r`n      </div>`r`n      <button type="button" class="change-template" (click)="requestTemplateChange()">Change template</button>
+      <div class="template-info">
+        <div class="template-label">Template</div>
+        <div class="template-name">{{ getTemplateLabel(previewTemplate) }}</div>
+      </div>
+      <button type="button" class="change-template" (click)="requestTemplateChange()">Change template</button>
     </div>
     <div class="preview-content">
       <app-resume-preview

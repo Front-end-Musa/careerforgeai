@@ -77,6 +77,30 @@ export class ResumeEffects {
     ),
   );
 
+  tailorResumeEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.tailorResume),
+      switchMap(({ resumeId, resume, companyName, position, jobDescription }) =>
+        this.aiService.tailorResumeToJob(resume, companyName, position, jobDescription).pipe(
+          switchMap((tailoredResume) => {
+            const { id: _, ...resumeChanges } = tailoredResume;
+            return [
+              resumesActions.tailorResumeSuccess({ resumeId, tailoredResume }),
+              resumesActions.saveResume({ resume: resumeChanges, resumeId }),
+            ];
+          }),
+          catchError((error) =>
+            of(
+              resumesActions.tailorResumeFailure({
+                error: error instanceof Error ? error.message : String(error),
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
   deleteResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.deleteResume),

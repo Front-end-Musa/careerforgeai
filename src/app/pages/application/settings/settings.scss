@@ -20,13 +20,13 @@
   padding: 1.5rem;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 
-    .section-title {
+  .section-title {
     margin-top: 0;
     margin-bottom: 1.25rem;
     font-size: 1.1rem;
     font-weight: 600;
-      color: var(--text);
-    }
+    color: var(--text);
+  }
 }
 
 // Profile Form Specifics
@@ -84,7 +84,7 @@
 
 // Button Styling
 .primary-btn {
-  background-color: var(--brand-600) !important;
+  background-color: var(--mat-sys-primary) !important;
   color: white !important;
   border-radius: 6px;
   font-weight: 500;
@@ -92,7 +92,7 @@
 }
 
 .manage-btn {
-  background-color: var(--brand-600) !important;
+  background-color: var(--mat-sys-primary) !important;
   color: white !important;
   border-radius: 6px;
 }

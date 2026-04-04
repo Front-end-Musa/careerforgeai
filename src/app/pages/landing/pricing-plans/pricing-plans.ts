@@ -3,6 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { PricingCard } from './pricing-card/pricing-card';
 import { BillingFacade } from './data/billing.facade';
 import { PaidPlan } from './data/billing.actions';
+import { LandingCta } from '../landing-cta/landing-cta';
 
 interface Plan {
   name: string;
@@ -82,7 +83,7 @@ function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Pla
 
 @Component({
   selector: 'app-pricing-plans',
-  imports: [PricingCard, AsyncPipe],
+  imports: [PricingCard, AsyncPipe, LandingCta],
   templateUrl: './pricing-plans.html',
   styleUrl: './pricing-plans.scss',
 })
@@ -149,4 +150,6 @@ export class PricingPlans {
       planSlug: 'premium',
     },
   ];
+
+  ctaHelperTexts: string[] = ['No hidden fees', 'Upgrade whenever you are ready'];
 }

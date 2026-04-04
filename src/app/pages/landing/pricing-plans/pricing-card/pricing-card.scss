@@ -8,7 +8,9 @@
   position: relative;
   background: #ffffff;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
   height: 100%;
 
   .card-content {
@@ -88,8 +90,8 @@
 }
 
 .btn-filled {
-  background: var(--brand-600);
-  border-color: var(--brand-600);
+  background: var(--mat-sys-primary);
+  border-color: var(--mat-sys-primary);
   color: white;
 }
 
@@ -102,7 +104,7 @@
 }
 
 .popular {
-  border: 2px solid var(--brand-600);
+  border: 2px solid var(--mat-sys-primary);
 }
 
 .badge {
@@ -110,11 +112,10 @@
   top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--brand-600);
+  background: var(--mat-sys-primary);
   color: white;
   padding: 6px 18px;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
 }
-

@@ -1,0 +1,20 @@
+<section class="simple-steps" id="simple-steps" #simpleStepsRef>
+  <div class="wrapper">
+    <header class="head">
+      <h2 class="title">How It Works</h2>
+      <p class="sub-title">3 Simple Steps to Get You Hired Faster</p>
+    </header>
+    <div class="steps-grid">
+        @for (step of steps; track step.id) {
+            <app-step [step]="step"></app-step>
+        }
+    </div>
+    <app-landing-cta
+      class="section-cta"
+      [link]="['/application/dashboard']"
+      icon="arrow_forward"
+      label="Get Started Now - It's Free"
+      ariaLabel="Get Started Now - It's Free"
+      ></app-landing-cta>
+  </div>
+</section>

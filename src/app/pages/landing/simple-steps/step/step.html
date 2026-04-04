@@ -1,0 +1,15 @@
+<div class="step">
+  <div
+    class="step-sign"
+    [ngClass]="{
+      'first-step': step.id === 0,
+      'second-step': step.id === 1,
+      'third-step': step.id === 2,
+    }"
+  >
+    <span class="material-symbols-outlined">{{ step.stepIcon }}</span>
+  </div>
+  <div class="step-number"><span>{{ step.id + 1 }}</span></div>
+  <h3 class="step-title">{{ step.title }}</h3>
+  <p class="step-description">{{ step.description }}</p>
+</div>

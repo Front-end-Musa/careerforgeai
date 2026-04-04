@@ -84,6 +84,27 @@ export const saveResumeFailure = createAction(
   props<{ error: string }>()
 );
 
+export const tailorResume = createAction(
+  '[Resume Tailor] Request',
+  props<{
+    resumeId: string;
+    resume: Resume;
+    companyName: string;
+    position: string;
+    jobDescription: string;
+  }>()
+);
+
+export const tailorResumeSuccess = createAction(
+  '[Resume Tailor] Success',
+  props<{ resumeId: string; tailoredResume: Resume }>()
+);
+
+export const tailorResumeFailure = createAction(
+  '[Resume Tailor] Failure',
+  props<{ error: string }>()
+);
+
 export const exportResumeToPdf = createAction(
   '[Resume] Export To PDF',
   props<{ formGroup: any }>()

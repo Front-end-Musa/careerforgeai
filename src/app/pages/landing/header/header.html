@@ -7,8 +7,9 @@
         <ul class="nav-list">
           <li><a (click)="scrollTo('hero')">Home</a></li>
           <li><a (click)="scrollTo('features')">Features</a></li>
+          <li><a (click)="scrollTo('simple-steps')">How It Works</a></li>
           <li><a (click)="scrollTo('about')">About</a></li>
-          <li><a (click)="scrollTo('pricing')">Pricing</a></li>
+          <!-- <li><a (click)="scrollTo('pricing')">Pricing</a></li> -->
           <li><a (click)="scrollTo('contact')">Contact</a></li>
         </ul>
       </nav>
@@ -16,14 +17,14 @@
       <!-- Right: Auth -->
       @if (status$ | async; as status) {
         @if (status === authStatus.Loaded) {
-          <div class="auth-btn primary desktop-dashboard" routerLink="application/dashboard">
+          <button mat-flat-button class="desktop-dashboard" routerLink="application/dashboard">
             Dashboard
-          </div>
+          </button>
         } @else if (status === authStatus.Loading) {
           <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
         } @else {
           <div class="auth-group">
-            <button mat-stroked-button class="auth-link" routerLink="auth/login">Login</button>
+            <button mat-stroked-button class="auth-link" routerLink="auth/login">Log In</button>
             <button mat-flat-button class="auth-btn primary" routerLink="auth/signup">
               Sign Up
             </button>
@@ -74,15 +75,24 @@
                   </button>
                 </li>
                 <li>
+                  <button
+                    type="button"
+                    class="menu-link"
+                    (click)="onMobileSectionClick('simple-steps')"
+                  >
+                    How It Works
+                  </button>
+                </li>
+                <li>
                   <button type="button" class="menu-link" (click)="onMobileSectionClick('about')">
                     About
                   </button>
                 </li>
-                <li>
+                <!-- <li>
                   <button type="button" class="menu-link" (click)="onMobileSectionClick('pricing')">
                     Pricing
                   </button>
-                </li>
+                </li> -->
                 <li>
                   <button type="button" class="menu-link" (click)="onMobileSectionClick('contact')">
                     Contact

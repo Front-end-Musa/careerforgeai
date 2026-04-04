@@ -14,12 +14,11 @@ import { About } from './about/about';
 import { PricingPlans } from './pricing-plans/pricing-plans';
 import { Faq } from './faq/faq';
 import { Contact } from './contact/contact';
-import { AuthFacade } from '../auth/data/auth.facade';
-import { AsyncPipe } from '@angular/common';
+import { SimpleSteps } from './simple-steps/simple-steps';
 
 @Component({
   selector: 'app-landing',
-  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer],
+  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer, SimpleSteps],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
   encapsulation: ViewEncapsulation.None,

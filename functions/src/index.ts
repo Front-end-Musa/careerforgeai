@@ -13,9 +13,36 @@ const polarToken = defineSecret("POLAR_ACCESS_TOKEN");
 const polarWebhookSecret = defineSecret("POLAR_WEBHOOK_SECRET");
 initializeApp();
 
+type TailorExperienceEntry = {
+  company?: string;
+  role?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string[];
+};
+
+type TailorResumeInput = {
+  summary?: string;
+  skills?: string[];
+  experience?: TailorExperienceEntry[];
+  meta?: {
+    createdAt?: string;
+    updatedAt?: string;
+    source?: "ai" | "manual";
+    version?: number;
+    tailoring?: {
+      source?: "job-description";
+      companyName?: string;
+      position?: string;
+      tailoredAt?: string;
+    };
+  };
+  [key: string]: unknown;
+};
+
 export const polarWebhook = onRequest({secrets: [polarWebhookSecret], invoker: "public"}, async (req, res) => {
   if (req.method !== "POST") {
-    res.status(405).send("Method Not Allowed");
+    res.status(405).send("Method Not Allowed Man... Only POST requests are accepted");
     return;
   }
 
@@ -76,7 +103,7 @@ export const polarWebhook = onRequest({secrets: [polarWebhookSecret], invoker: "
   }
 });
 
-export const createCheckout = onCall({secrets: [polarToken]}, async (req) => {
+export const createCheckout = onCall({secrets: [polarToken], invoker: "public"}, async (req) => {
   const polar = new Polar({
     accessToken: polarToken.value(),
   });
@@ -132,7 +159,7 @@ export const createCheckout = onCall({secrets: [polarToken]}, async (req) => {
   }
 });
 
-export const createPortalSession = onCall({secrets: [polarToken]}, async (req) => {
+export const createPortalSession = onCall({secrets: [polarToken], invoker: "public"}, async (req) => {
   const polar = new Polar({
     accessToken: polarToken.value(),
   });
@@ -179,7 +206,7 @@ export const createPortalSession = onCall({secrets: [polarToken]}, async (req) =
   }
 });
 
-export const generateResume = onCall({secrets: [openaiSecret]}, async (request) => {
+export const generateResume = onCall({secrets: [openaiSecret], invoker: "public"}, async (request) => {
   const {resumeText} = request.data as { resumeText?: string };
 
   if (!resumeText) {
@@ -210,7 +237,7 @@ export const generateResume = onCall({secrets: [openaiSecret]}, async (request) 
   };
 });
 
-export const generateCoverLetter = onCall({secrets: [openaiSecret]}, async (request) => {
+export const generateCoverLetter = onCall({secrets: [openaiSecret], invoker: "public"}, async (request) => {
   const {resumeText} = request.data as { resumeText?: string };
 
   if (!resumeText) {
@@ -240,6 +267,141 @@ export const generateCoverLetter = onCall({secrets: [openaiSecret]}, async (requ
   return {
     text: responseText,
   };
+});
+
+export const tailorResumeToJob = onCall({secrets: [openaiSecret], invoker: "public"}, async (request) => {
+  const {
+    resume,
+    companyName,
+    position,
+    jobDescription,
+  } = request.data as {
+    resume?: TailorResumeInput;
+    companyName?: string;
+    position?: string;
+    jobDescription?: string;
+  };
+
+  if (!resume || typeof resume !== "object") {
+    throw new HttpsError("invalid-argument", "A valid resume payload is required.");
+  }
+
+  if (!companyName?.trim() || !position?.trim() || !jobDescription?.trim()) {
+    throw new HttpsError(
+      "invalid-argument",
+      "companyName, position, and jobDescription are required.",
+    );
+  }
+
+  const openaiApiKey = await openaiSecret.value();
+  const client = new OpenAI({apiKey: openaiApiKey});
+  const experience = Array.isArray(resume.experience) ? resume.experience : [];
+  const skills = Array.isArray(resume.skills) ? resume.skills : [];
+
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o",
+    temperature: 0.2,
+    messages: [
+      {
+        role: "system",
+        content: [
+          "You are an expert resume tailoring assistant.",
+          "Rewrite only these fields for better relevance to the target job:",
+          "1) summary",
+          "2) experience bullet descriptions",
+          "3) skills list",
+          "Do not invent employers, dates, degrees, or tools that are not supported by the resume/job description.",
+          "Return valid JSON only.",
+        ].join(" "),
+      },
+      {
+        role: "user",
+        content: JSON.stringify(
+          {
+            task: "Tailor this resume to the job while preserving identity/history fields.",
+            targetJob: {
+              companyName,
+              position,
+              jobDescription,
+            },
+            resume: {
+              summary: resume.summary ?? "",
+              skills,
+              experience: experience.map((item) => ({
+                company: item.company ?? "",
+                role: item.role ?? "",
+                startDate: item.startDate ?? "",
+                endDate: item.endDate ?? "",
+                description: Array.isArray(item.description) ? item.description : [],
+              })),
+            },
+            outputSchema: {
+              summary: "string",
+              skills: ["string"],
+              experienceDescriptions: [["string"]],
+            },
+          },
+          null,
+          2,
+        ),
+      },
+    ],
+  });
+
+  const responseText = completion.choices[0].message?.content;
+  if (!responseText) {
+    throw new HttpsError("internal", "No tailoring response from AI.");
+  }
+
+  let parsed: {
+    summary?: unknown;
+    skills?: unknown;
+    experienceDescriptions?: unknown;
+  };
+
+  try {
+    parsed = JSON.parse(responseText);
+  } catch (error) {
+    logger.error("Failed to parse tailoring response", {responseText, error});
+    throw new HttpsError("internal", "Failed to parse tailoring response.");
+  }
+
+  const summary = typeof parsed.summary === "string" ? parsed.summary.trim() : resume.summary ?? "";
+  const tailoredSkills = Array.isArray(parsed.skills) ?
+    parsed.skills.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean) :
+    skills;
+  const descriptions = Array.isArray(parsed.experienceDescriptions) ? parsed.experienceDescriptions : [];
+
+  const tailoredResume: TailorResumeInput = {
+    ...resume,
+    summary,
+    skills: tailoredSkills,
+    experience: experience.map((item, index) => {
+      const rawDescriptions = descriptions[index];
+      const nextDescriptions = Array.isArray(rawDescriptions) ?
+        rawDescriptions.filter((desc): desc is string => typeof desc === "string").map((desc) => desc.trim()).filter(Boolean) :
+        item.description ?? [];
+
+      return {
+        ...item,
+        description: nextDescriptions,
+      };
+    }),
+    meta: {
+      createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      source: resume.meta?.source === "ai" ? "ai" : "manual",
+      version: resume.meta?.version ?? 1,
+      tailoring: {
+        source: "job-description",
+        companyName: companyName.trim(),
+        position: position.trim(),
+        tailoredAt: new Date().toISOString(),
+      },
+    },
+  };
+
+  return {resume: tailoredResume};
 });
 
 export const downloadResume = onCall(async (request) => {

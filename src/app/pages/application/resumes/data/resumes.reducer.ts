@@ -20,6 +20,8 @@ export interface ResumesState extends EntityState<Resume> {
   generatedText?: string;
   saving: boolean;
   saveSucceeded: boolean;
+  tailoring: boolean;
+  tailorError: string | null;
 }
 
 export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
@@ -38,6 +40,8 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   generating: false,
   saving: false,
   saveSucceeded: false,
+  tailoring: false,
+  tailorError: null,
 });
 
 
@@ -126,5 +130,23 @@ export const resumesReducer = createReducer(
     saving: false,
     saveSucceeded: false,
     error,
+  })),
+
+  on(ResumesActions.tailorResume, (state) => ({
+    ...state,
+    tailoring: true,
+    tailorError: null,
+  })),
+
+  on(ResumesActions.tailorResumeSuccess, (state) => ({
+    ...state,
+    tailoring: false,
+    tailorError: null,
+  })),
+
+  on(ResumesActions.tailorResumeFailure, (state, { error }) => ({
+    ...state,
+    tailoring: false,
+    tailorError: error,
   })),
 );

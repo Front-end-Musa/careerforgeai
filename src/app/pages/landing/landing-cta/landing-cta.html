@@ -1,0 +1,20 @@
+<div class="buttons">
+  <button
+    color="primary"
+    class="primary start-btn"
+    [routerLink]="link"
+    [attr.aria-label]="ariaLabel"
+    type="button"
+  >
+    <span class="ai-sign material-symbols-outlined">{{ icon }}</span>
+    <span class="button-text">{{ label }}</span>
+  </button>
+
+  @if (helperTexts.length > 0) {
+    <div class="benefits">
+      @for (helperText of helperTexts; track helperText) {
+        <span>{{ helperText }}</span>
+      }
+    </div>
+  }
+</div>

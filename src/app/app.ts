@@ -7,10 +7,11 @@ import { SeoMetadata, SeoService } from './core/services/seo.service';
 import { filter, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Notifications } from './lib/notifications/notifications';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, Notifications],
+  imports: [RouterOutlet, CommonModule, Notifications, MatProgressSpinnerModule],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
 })

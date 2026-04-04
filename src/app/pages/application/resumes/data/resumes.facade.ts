@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Store, createFeatureSelector } from '@ngrx/store';
-import { createResume, deleteResume, loadResumes, saveResume } from './resumes.actions';
+import { createResume, deleteResume, loadResumes, saveResume, tailorResume } from './resumes.actions';
 import { selectAll, resumesAdapter } from './resumes.reducer';
 import { startWith } from 'rxjs';
 import { ResumesState } from './resumes.reducer';
@@ -10,6 +10,8 @@ import {
   selectResumesError,
   selectResumesStatus,
   selectSaveSucceeded,
+  selectIsTailoring,
+  selectTailorError,
 } from './resumes.selectors';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { ResumeService } from '../../../../core/services/resume.service';
@@ -29,6 +31,8 @@ export class ResumesFacade {
   loading$ = this.store.select(selectIsLoading);
   saving$ = this.store.select(selectIsSaving);
   saveSucceeded$ = this.store.select(selectSaveSucceeded);
+  tailoring$ = this.store.select(selectIsTailoring);
+  tailorError$ = this.store.select(selectTailorError);
   status$ = this.store.select(selectResumesStatus);
   error$ = this.store.select(selectResumesError);
 
@@ -42,6 +46,16 @@ export class ResumesFacade {
 
   saveResumeData(resume: Partial<Resume>, resumeId?: string | null) {
     this.store.dispatch(saveResume({ resume, resumeId }));
+  }
+
+  tailorResumeData(
+    resumeId: string,
+    resume: Resume,
+    companyName: string,
+    position: string,
+    jobDescription: string,
+  ) {
+    this.store.dispatch(tailorResume({ resumeId, resume, companyName, position, jobDescription }));
   }
 
   getResumeById(id: string) {

@@ -134,6 +134,20 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'application/resume-generator',
+    loadComponent: () =>
+      import('./pages/application/resumes/resumes-create/resumes-create').then((c) => c.ResumesCreate),
+    data: {
+      seo: {
+        title: 'Resume Generator | ResumeCrafts AI',
+        description: 'Generate a resume with AI without signing in.',
+        robots: 'noindex, nofollow',
+        canonicalPath: '/application/resume-generator',
+        ogType: 'website',
+      },
+    },
+  },
+  {
     path: 'application',
     loadChildren: () =>
       import('./pages/application/application.routes').then((r) => r.APPLICATION_ROUTES),

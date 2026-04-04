@@ -4,6 +4,32 @@
   overflow: clip;
 }
 
+/* Landing section background order map.
+   Change these values if you want to reorder the white / transparent pattern. */
+.landing app-hero {
+  --section-bg: #ffffff;
+}
+
+.landing app-features {
+  --section-bg: transparent;
+}
+
+.landing app-simple-steps {
+  --section-bg: #ffffff;
+}
+
+.landing app-about {
+  --section-bg: transparent;
+}
+
+.landing app-faq {
+  --section-bg: #ffffff;
+}
+
+.landing app-contact {
+  --section-bg: transparent;
+}
+
 .landing .reveal-item {
   opacity: 0;
   transform: translate3d(0, 36px, 0) scale(0.98);

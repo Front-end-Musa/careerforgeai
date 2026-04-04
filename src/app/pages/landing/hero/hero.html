@@ -1,33 +1,37 @@
 <section class="hero" id="hero" #hero>
   <div class="wrapper">
-    <!-- TEXT BLOCK -->
-    <div class="text">
+    <div class="main-text">
       <h1 class="title">
-        Land Your Dream Job
-        <span class="blue-text">Using AI</span>
+        Create Your Perfect Resume <br>
+        <span class="blue-text">In Just 5 Minutes</span>
       </h1>
 
       <p class="description">
-        AI-powered resumes and cover letters with a simple job-tracking workflow. Get hired faster
-        with ResumeCrafts AI.
+        Stop struggling with blank pages. Let AI write your resume based on your experience and
+        target job. Get more interviews, guaranteed.
       </p>
-
-      <div class="buttons">
-        <button
-          mat-flat-button
-          color="primary"
-          class="primary start-free"
-          routerLink="application/dashboard"
-        >
-          Start Free
-        </button>
-        <a mat-stroked-button class="see-plans" (click)="scrollTo('pricing')">See Plans</a>
-      </div>
     </div>
 
-    <!-- IMAGE CARD -->
+    <app-landing-cta
+      [link]="['/application/dashboard']"
+      icon="auto_awesome"
+      label="Create My Resume Now"
+      [helperTexts]="['No Credit Card Required', 'Ready in 5 Minutes']"
+      ariaLabel="Create My Resume Now"
+    ></app-landing-cta>
+
     <div class="picture">
       <img src="assets/photo-1586281380349-632531db7ed4.jpg" alt="resume" />
     </div>
   </div>
+
+  <button
+    type="button"
+    class="scroll-down-btn"
+    (click)="scrollTo('features')"
+    aria-label="Scroll down to features section"
+  >
+    <span class="scroll-down-text">Scroll down!</span>
+    <span class="scroll-down-arrow" aria-hidden="true">v</span>
+  </button>
 </section>

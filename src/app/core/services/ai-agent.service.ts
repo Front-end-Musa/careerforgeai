@@ -56,4 +56,16 @@ export class AiAgentService {
     const fn = httpsCallable(this.functions, 'generateCoverLetter');
     return from(fn({ resumeText, jobDescription, companyName, position, tone }).then((res: any) => res.data.text));
   }
+
+  tailorResumeToJob(
+    resume: Resume,
+    companyName: string,
+    position: string,
+    jobDescription: string,
+  ): Observable<Resume> {
+    const fn = httpsCallable(this.functions, 'tailorResumeToJob');
+    return from(
+      fn({ resume, companyName, position, jobDescription }).then((res: any) => res.data.resume as Resume),
+    );
+  }
 }

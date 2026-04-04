@@ -47,3 +47,13 @@ export const selectSaveSucceeded = createSelector(
   selectResumesFeature,
   (state: ResumesState) => state.saveSucceeded,
 );
+
+export const selectIsTailoring = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.tailoring,
+);
+
+export const selectTailorError = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.tailorError,
+);

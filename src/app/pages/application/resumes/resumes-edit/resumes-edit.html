@@ -1,2 +1,14 @@
-<app-resumes-create mode="edit" [resumeId]="resumeId"></app-resumes-create>
+<app-resume-template-modal
+  #templateModal
+  [plan]="(plan$ | async) || 'free'"
+  [selectedTemplateId]="selectedTemplateId ?? null"
+  (templateSelected)="onTemplateSelected($event)"
+></app-resume-template-modal>
 
+<app-resumes-create
+  mode="edit"
+  [resumeId]="resumeId"
+  [templateId]="selectedTemplateId"
+  [plan]="(plan$ | async) || 'free'"
+  (changeTemplate)="openTemplateModal()"
+></app-resumes-create>
