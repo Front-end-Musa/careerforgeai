@@ -14,17 +14,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { JobsFacade } from './data/jobs.facade';
 import { ClickOutsideDirective } from '../../../lib/directives/click-outside.directive';
 import { MatDialog } from '@angular/material/dialog';
+import { JobCard } from './job-card/job-card';
 
 @Component({
   selector: 'app-job-tracker',
-  imports: [DirName, DatePipe, DragDropModule, CommonModule, ClickOutsideDirective],
+  imports: [DirName, DatePipe, DragDropModule, CommonModule, ClickOutsideDirective, JobCard],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
-  private dialog = inject(MatDialog)
+  private dialog = inject(MatDialog);
   private jobsFacade = inject(JobsFacade);
 
   jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
@@ -38,7 +39,6 @@ export class JobTracker implements OnInit {
   rejectedJobs: Signal<Job[]> = computed(() =>
     this.jobs().filter((job) => job.status === 'rejected'),
   );
-  showActions: WritableSignal<boolean> = signal<boolean>(false);
 
   constructor(private sanitizer: DomSanitizer) {
     this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(
@@ -51,10 +51,6 @@ export class JobTracker implements OnInit {
 
   @ViewChild('actionsMenu') actionsMenu!: any;
 
-  toggleActions() {
-    this.showActions.set(!this.showActions());
-  }
-
   openAddJobModal() {
     const dialogRef = this.dialog.open(AddJobModal, {
       data: { modalMode: 'add' },
@@ -65,20 +61,6 @@ export class JobTracker implements OnInit {
 
       if (result.action === 'save') {
         this.handleJobAdded(result.data);
-      }
-    });
-  }
-
-  openEditJobModal(job: Job) {
-    const dialogRef = this.dialog.open(AddJobModal, {
-      data: { modalMode: 'edit', existingJob: job },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-
-      if (result.action === 'save') {
-        this.handleJobUpdated(result.data);
       }
     });
   }
@@ -95,10 +77,6 @@ export class JobTracker implements OnInit {
     };
 
     this.jobsFacade.addJob(jobPayload);
-  }
-
-  handleJobUpdated(updatedJob: Partial<Job> & { id: string }) {
-    this.jobsFacade.updateJob(updatedJob.id, updatedJob);
   }
 
   drop(event: CdkDragDrop<Job[]>) {
@@ -168,12 +146,6 @@ export class JobTracker implements OnInit {
     }
 
     return updates;
-  }
-
-  deleteJob(job: Job) {
-    if (job.id) {
-      this.jobsFacade.deleteJob(job.id);
-    }
   }
 
   ngOnInit() {

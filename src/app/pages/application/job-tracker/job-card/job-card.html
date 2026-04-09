@@ -1,0 +1,66 @@
+<div class="interviewing job-item" cdkDrag>
+  <h4 class="job-title">
+    {{ job.title }}
+  </h4>
+  <p class="job-company">
+    {{ job.company }}
+  </p>
+  <p class="job-date">
+    {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+  </p>
+
+  <div class="job-item_actions">
+    <div
+      class="menu-trigger"
+      cdkDragHandle
+      (click)="toggleActions()"
+      aria-label="Toggle job actions"
+    >
+      <span class="material-symbols-outlined">more_vert</span>
+    </div>
+    <div class="menu" *ngIf="showActions()" appClickOutside (clickOutside)="toggleActions()">
+      <button class="btn edit-btn" (click)="openEditJobModal(job)">
+        <span class="material-symbols-outlined">edit</span>
+        <p class="action-text">Edit</p>
+      </button>
+      <button class="btn delete-btn" (click)="deleteJob(job)">
+        <span class="material-symbols-outlined">delete</span>
+        <p class="action-text">Delete</p>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template cdkDragPreview>
+  <div class="job-item preview">
+    <h4 class="job-title">
+      {{ job.title }}
+    </h4>
+    <p class="job-company">
+      {{ job.company }}
+    </p>
+    <p class="job-date">
+      {{ job.dateApplied | date: 'yyyy-mm-dd' }}
+    </p>
+    <div class="job-item_actions">
+      <div
+        class="menu-trigger"
+        cdkDragHandle
+        (click)="toggleActions()"
+        aria-label="Toggle job actions"
+      >
+        <span class="material-symbols-outlined">more_vert</span>
+      </div>
+      <div class="menu" *ngIf="showActions()" appClickOutside (clickOutside)="toggleActions()">
+        <button class="btn edit-btn" (click)="openEditJobModal(job)">
+          <span class="material-symbols-outlined">edit</span>
+          <p class="action-text">Edit</p>
+        </button>
+        <button class="btn delete-btn" (click)="deleteJob(job)">
+          <span class="material-symbols-outlined">delete</span>
+          <p class="action-text">Delete</p>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
