@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, map, of, switchMap, take } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 
 @Injectable()
@@ -14,7 +14,6 @@ export class ResumeEffects {
   createResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.createResume),
-      take(1),
       switchMap(({ resumeText }) =>
         this.aiService.generateResume(resumeText).pipe(
           map((resume) => resumesActions.createResumeSuccess({ resume })),

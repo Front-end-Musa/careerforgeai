@@ -41,6 +41,13 @@ export function defaultSpecProviders(): Array<Provider | EnvironmentProviders> {
         notifications: {
           notifications: [],
         },
+        jobs: {
+          ids: [],
+          entities: {},
+          status: 'init',
+          error: null,
+          saving: false,
+        },
       },
     }),
     provideRouter([]),

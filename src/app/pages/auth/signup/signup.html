@@ -9,7 +9,7 @@
       </header>
 
       <mat-card class="card login-card">
-        <form class="login-form form-group" [formGroup]="signupForm">
+        <form class="login-form form-group" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
           <div class="form-field full-width">
             <mat-label>Full Name</mat-label>
             <input
@@ -21,75 +21,143 @@
                 signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched
               "
               placeholder="John Doe"
-              />
-              @if (signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched) {
-                <mat-error
-                  >
-                  Full Name is required
-                </mat-error>
-              }
-            </div>
-            <div class="form-field full-width">
-              <mat-label>Email</mat-label>
-              <input
-                matInput
-                type="email"
-                required
-                formControlName="email"
-                [class.invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
-                placeholder="you@example.com"
-                />
-                @if (signupForm.get('email')?.invalid && signupForm.get('email')?.touched) {
-                  <mat-error>
-                    Email is required
-                  </mat-error>
-                }
-              </div>
+            />
+            @if (
+              signupForm.get('fullName')?.touched && signupForm.get('fullName')?.hasError('required')
+            ) {
+              <mat-error>Full name is required</mat-error>
+            }
+            @if (
+              signupForm.get('fullName')?.touched &&
+              signupForm.get('fullName')?.hasError('minlength')
+            ) {
+              <mat-error>Full name must be at least 2 characters</mat-error>
+            }
+            @if (
+              signupForm.get('fullName')?.touched &&
+              signupForm.get('fullName')?.hasError('whitespace')
+            ) {
+              <mat-error>Full name cannot be empty spaces</mat-error>
+            }
+          </div>
+          <div class="form-field full-width">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              required
+              formControlName="email"
+              [class.invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+              placeholder="you@example.com"
+            />
+            @if (signupForm.get('email')?.touched && signupForm.get('email')?.hasError('required')) {
+              <mat-error>Email is required</mat-error>
+            }
+            @if (signupForm.get('email')?.touched && signupForm.get('email')?.hasError('email')) {
+              <mat-error>Enter a valid email address</mat-error>
+            }
+          </div>
 
-              <div class="form-field full-width">
-                <mat-label>Password</mat-label>
-                <input
-                  matInput
-                  type="password"
-                  required
-                  formControlName="password"
+          <div class="form-field full-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              required
+              formControlName="password"
               [class.invalid]="
                 signupForm.get('password')?.invalid && signupForm.get('password')?.touched
               "
-                  placeholder="••••••"
-                  />
-                  @if (signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
-                    <mat-error
-                      >
-                      Password is required
-                    </mat-error>
-                  }
-                </div>
-                <button mat-button color="primary" class="send-btn" (click)="onSubmit($event)">Sign Up</button>
-              </form>
-
-              <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
-
-              <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
-                <button mat-anchor class="social-btn google-btn">
-                  <span class="material-symbols-outlined">mail_outline</span>
-                  Google
-                </button>
-                <button mat-anchor class="social-btn github-btn">
-                  <span class="material-symbols-outlined">code</span> Github
-                </button>
-              </div>
-
-              <p class="signup" style="text-align: center; margin-top: 14px">
-                Already have an account? <a routerLink="/auth/login">Log in</a>
-              </p>
-              <p class="support-text">
-                By creating an account, you agree to our
-                <a routerLink="/terms-of-service">Terms of Service</a>
-                and
-                <a routerLink="/privacy-policy">Privacy Policy</a>.
-              </p>
-            </mat-card>
+              placeholder="••••••"
+            />
+            @if (
+              signupForm.get('password')?.touched && signupForm.get('password')?.hasError('required')
+            ) {
+              <mat-error>Password is required</mat-error>
+            }
+            @if (
+              signupForm.get('password')?.touched && signupForm.get('password')?.hasError('pattern')
+            ) {
+              <mat-error>
+                Password must be 8+ characters and include uppercase, lowercase, number, and special character
+              </mat-error>
+            }
           </div>
+
+          <div class="form-field full-width">
+            <mat-label>Repeat Password</mat-label>
+            <input
+              matInput
+              type="password"
+              required
+              formControlName="repeatPassword"
+              [class.invalid]="
+                (signupForm.get('repeatPassword')?.invalid &&
+                  signupForm.get('repeatPassword')?.touched) ||
+                (signupForm.hasError('passwordMismatch') &&
+                  signupForm.get('repeatPassword')?.touched)
+              "
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢"
+            />
+            @if (
+              signupForm.get('repeatPassword')?.touched &&
+              signupForm.get('repeatPassword')?.hasError('required')
+            ) {
+              <mat-error>Repeat password is required</mat-error>
+            }
+            @if (
+              signupForm.get('repeatPassword')?.touched &&
+              signupForm.hasError('passwordMismatch') &&
+              !signupForm.get('repeatPassword')?.hasError('required')
+            ) {
+              <mat-error>Passwords do not match</mat-error>
+            }
+          </div>
+          <button
+            mat-button
+            color="primary"
+            class="send-btn"
+            type="submit"
+            [class.loading]="(status$ | async) === authStatus.Loading"
+            [disabled]="signupForm.invalid || (status$ | async) === authStatus.Loading"
+          >
+            @if ((status$ | async) === authStatus.Loading) {
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span>Creating account...</span>
+            } @else {
+              <span>Sign Up</span>
+            }
+          </button>
+        </form>
+
+        @if (error$ | async; as error) {
+          <div class="form-error">
+            {{ error }}
+          </div>
+        }
+
+        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+
+        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+          <button mat-anchor class="social-btn google-btn">
+            <span class="material-symbols-outlined">mail_outline</span>
+            Google
+          </button>
+          <button mat-anchor class="social-btn github-btn">
+            <span class="material-symbols-outlined">code</span> Github
+          </button>
         </div>
-      </div>
+
+        <p class="signup" style="text-align: center; margin-top: 14px">
+          Already have an account? <a routerLink="/auth/login">Log in</a>
+        </p>
+        <p class="support-text">
+          By creating an account, you agree to our
+          <a routerLink="/terms-of-service">Terms of Service</a>
+          and
+          <a routerLink="/privacy-policy">Privacy Policy</a>.
+        </p>
+      </mat-card>
+    </div>
+  </div>
+</div>

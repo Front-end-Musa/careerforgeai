@@ -9,7 +9,7 @@
       </header>
 
       <mat-card class="card login-card">
-        <form class="login-form form-group" [formGroup]="loginForm">
+        <form class="login-form form-group" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="form-field full-width">
             <mat-label>Email</mat-label>
             <input
@@ -20,8 +20,11 @@
               [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
               placeholder="you@example.com"
             />
-            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-              <mat-error> Email is required </mat-error>
+            @if (loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')) {
+              <mat-error>Email is required</mat-error>
+            }
+            @if (loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')) {
+              <mat-error>Enter a valid email address</mat-error>
             }
           </div>
 
@@ -37,28 +40,28 @@
               "
               placeholder="••••••"
             />
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-              <mat-error> Password is required </mat-error>
+            @if (
+              loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')
+            ) {
+              <mat-error>Password is required</mat-error>
             }
           </div>
 
-          <!-- <button mat-button class="full-width submit-btn" (click)="onSubmit()">Login</button> -->
-        </form>
-        <button
-          mat-button
-          color="primary"
-          class="send-btn"
-          (click)="onSubmit()"
-          routerLink="/application/dashboard"
-        >
-          @if (status$ | async; as status) {
-            @if (status === authStatus.Loading) {
-              <mat-progress-spinner diameter="24" mode="indeterminate" class="custom-color-spinner" color="accent"></mat-progress-spinner>
-            } @else {
-              Login
+          <button mat-button color="primary" class="send-btn" type="submit">
+            @if (status$ | async; as status) {
+              @if (status === authStatus.Loading) {
+                <mat-progress-spinner
+                  diameter="24"
+                  mode="indeterminate"
+                  class="custom-color-spinner"
+                  color="accent"
+                ></mat-progress-spinner>
+              } @else {
+                Login
+              }
             }
-          }
-        </button>
+          </button>
+        </form>
 
         <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
 

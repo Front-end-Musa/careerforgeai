@@ -4,28 +4,17 @@ import {
   Auth,
   authState,
   createUserWithEmailAndPassword,
+  deleteUser,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
   User,
 } from '@angular/fire/auth';
-import {
-  Observable,
-  from,
-  of,
-  switchMap,
-  tap,
-  map,
-  catchError,
-  shareReplay,
-  throwError,
-  EMPTY,
-  take,
-  filter,
-} from 'rxjs';
+import { Observable, from, of, switchMap, catchError, EMPTY, take, filter, firstValueFrom } from 'rxjs';
 import { AppUser, LoginUser } from '../interfaces/user.interface';
-import { doc, docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
+import { deleteDoc, doc, docData, DocumentReference, Firestore, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { CallableService } from './callable.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +23,10 @@ export class AuthService {
   private auth = inject(Auth);
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
+  private callableService = inject(CallableService);
+  private ensurePolarCustomerFn = this.callableService.callable<void, { providerCustomerId: string }>(
+    'ensurePolarCustomer',
+  );
 
   constructor(private firestore: Firestore) {}
 
@@ -55,32 +48,7 @@ export class AuthService {
   }
 
   registerUser(user: AppUser): Observable<any> {
-    return from(
-      createUserWithEmailAndPassword(this.auth, user.email, user.password ? user.password : ''),
-    ).pipe(
-      switchMap((userCredential) => {
-        const uid = userCredential.user.uid;
-        const userRef = doc(this.firestore, 'users', uid);
-
-        return from(
-          setDoc(userRef, {
-            name: user.name,
-            email: user.email,
-            createdAt: new Date(),
-            role: user.role,
-            profileViews: 0,
-            plan: 'free',
-            subscriptionStatus: 'none',
-            currentPeriodEnd: null,
-            providerCustomerId: '',
-            providerSubscriptionId: '',
-            providerVariantId: '',
-            freeGenerationsUsed: 0,
-            emailVerified: false,
-            entitlementsUpdatedAt: null,
-          }),
-        ).pipe(switchMap(() => this.getUser$(uid).pipe(map((user) => user))));
-      }),
+    return from(this.registerUserStrict(user)).pipe(
       catchError((err) => {
         console.error('Firebase error:', err.code, err.message);
         throw err;
@@ -123,5 +91,61 @@ export class AuthService {
       return from(sendEmailVerification(currentUser));
     }
     throw new Error('No user logged in');
+  }
+
+  private async registerUserStrict(user: AppUser): Promise<AppUser> {
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth,
+      user.email,
+      user.password ? user.password : '',
+    );
+    const uid = userCredential.user.uid;
+    const userRef = doc(this.firestore, 'users', uid);
+
+    await setDoc(userRef, {
+      name: user.name,
+      email: user.email,
+      createdAt: new Date(),
+      role: user.role,
+      profileViews: 0,
+      plan: 'free',
+      subscriptionStatus: 'none',
+      currentPeriodEnd: null,
+      providerCustomerId: '',
+      providerSubscriptionId: '',
+      providerVariantId: '',
+      freeGenerationsUsed: 0,
+      emailVerified: false,
+      entitlementsUpdatedAt: null,
+    });
+
+    try {
+      await this.ensurePolarCustomerFn();
+    } catch (error) {
+      await this.compensateFailedRegistration(userRef, userCredential.user);
+      throw new Error(
+        'Unable to complete signup because billing setup failed. Please try again in a moment.',
+      );
+    }
+
+    return await firstValueFrom(this.getUser$(uid));
+  }
+
+  private async compensateFailedRegistration(userRef: DocumentReference, firebaseUser: User | null) {
+    try {
+      await deleteDoc(userRef);
+    } catch (error) {
+      console.error('Signup rollback failed to delete Firestore user document', error);
+    }
+
+    if (!firebaseUser) {
+      return;
+    }
+
+    try {
+      await deleteUser(firebaseUser);
+    } catch (error) {
+      console.error('Signup rollback failed to delete Firebase Auth user', error);
+    }
   }
 }

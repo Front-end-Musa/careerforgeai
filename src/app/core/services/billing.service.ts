@@ -13,15 +13,20 @@ export class BillingService {
   private callableService = inject(CallableService);
   private proPlanId = 'ac58d79e-1d84-4322-bef6-05147be57cc7';
   private premiumPlanId = '7ad22fce-484d-472c-ad6e-f08e09e3e264';
-  private createCheckoutFn = this.callableService.callable<{ plan: PaidPlan; priceId: string }, string>(
-    'createCheckout',
-  );
+  private createCheckoutFn = this.callableService.callable<
+    { plan: PaidPlan; priceId: string },
+    string
+  >('createCheckout');
   private createPortalFn = this.callableService.callable<void, string>('createPortalSession');
   private syncEntitlementsFn = this.callableService.callable<
     void,
     {
       plan: PlanTier;
       subscriptionStatus: SubscriptionStatus;
+      providerCustomerId: string;
+      providerSubscriptionId: string;
+      providerVariantId: string;
+      currentPeriodEnd: number | null;
       entitlementsUpdatedAt: number;
     }
   >('syncEntitlements');
@@ -55,7 +60,7 @@ export class BillingService {
     try {
       const result = await this.createPortalFn();
       if (typeof result.data !== 'string' || !result.data.trim()) {
-        throw new Error('Checkout URL was not returned by the server.');
+        throw new Error('Portal URL was not returned by the server.');
       }
       return result.data;
     } catch (err: unknown) {
@@ -91,7 +96,7 @@ export class BillingService {
           return new Error('You reached your monthly AI limit for your current plan.');
         case 'functions/failed-precondition':
           return new Error(
-            'Your billing profile is not ready yet. Please make sure your account has an email and try again.',
+            'Your billing profile is not ready yet. Please update your account details and try again.',
           );
         default:
           return new Error(`Checkout failed (${error.code}).`);

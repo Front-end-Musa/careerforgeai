@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../core/services/auth.service';
-import { catchError, exhaustMap, from, map, of, switchMap, take, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import {
   authResolvedNoUser,
   initUser,
@@ -17,7 +17,6 @@ import {
   registerUserFailure,
   registerUserSuccess,
 } from './auth.actions';
-import { Auth, User } from '@angular/fire/auth';
 import { FirebaseError } from '@angular/fire/app';
 import { Router } from '@angular/router';
 
@@ -25,7 +24,6 @@ import { Router } from '@angular/router';
 export class AuthEffects {
   actions$ = inject(Actions);
   authService$ = inject(AuthService);
-  auth = inject(Auth);
   router = inject(Router);
 
   signupEffect = createEffect(() =>
@@ -60,6 +58,15 @@ export class AuthEffects {
     { dispatch: false },
   );
 
+  registerSuccessNavigate$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(registerUserSuccess),
+        tap(() => this.router.navigate(['/application/dashboard'])),
+      ),
+    { dispatch: false },
+  );
+
   logoutEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(logout),
@@ -72,11 +79,12 @@ export class AuthEffects {
     ),
   );
 
-  logoutSuccessEffect = createEffect(() =>
-    this.actions$.pipe(
-      ofType(logoutSuccess),
-      tap(() => this.authService$.noUserRedirect()),
-    ),
+  logoutSuccessEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(logoutSuccess),
+        tap(() => this.authService$.noUserRedirect()),
+      ),
     { dispatch: false },
   );
 

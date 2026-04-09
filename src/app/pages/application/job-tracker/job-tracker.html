@@ -16,11 +16,11 @@
         class="applied-items list"
         cdkDropList
         #appliedList="cdkDropList"
-        [cdkDropListData]="appliedJobs"
+        [cdkDropListData]="appliedJobs()"
         [cdkDropListConnectedTo]="[interviewingList, offerList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of appliedJobs(); track $index) {
+        @for (job of appliedJobs(); track job.id) {
           <div class="applied job-item" cdkDrag>
             <h4 class="job-title">
               {{ job.title }}
@@ -56,11 +56,11 @@
         class="interviewing-items list"
         cdkDropList
         #interviewingList="cdkDropList"
-        [cdkDropListData]="interviewingJobs"
+        [cdkDropListData]="interviewingJobs()"
         [cdkDropListConnectedTo]="[appliedList, offerList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of interviewingJobs(); track $index) {
+        @for (job of interviewingJobs(); track job.id) {
           <div class="interviewing job-item" cdkDrag>
             <h4 class="job-title">
               {{ job.title }}
@@ -96,11 +96,11 @@
         class="offer-items list"
         cdkDropList
         #offerList="cdkDropList"
-        [cdkDropListData]="offerJobs"
+        [cdkDropListData]="offerJobs()"
         [cdkDropListConnectedTo]="[appliedList, interviewingList, rejectedList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of offerJobs(); track $index) {
+        @for (job of offerJobs(); track job.id) {
           <div class="offer job-item" cdkDrag>
             <h4 class="job-title">
               {{ job.title }}
@@ -136,11 +136,11 @@
         class="rejected-items list"
         cdkDropList
         #rejectedList="cdkDropList"
-        [cdkDropListData]="rejectedJobs"
+        [cdkDropListData]="rejectedJobs()"
         [cdkDropListConnectedTo]="[appliedList, interviewingList, offerList]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (job of rejectedJobs(); track $index) {
+        @for (job of rejectedJobs(); track job.id) {
           <div class="rejected job-item" cdkDrag>
             <h4 class="job-title">
               {{ job.title }}

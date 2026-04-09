@@ -12,9 +12,8 @@ import {
 import { MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe, isPlatformBrowser } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
-import { AppUser } from '../../../core/interfaces/user.interface';
 import { AuthStatus } from '../data/auth.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -39,7 +38,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class Login {
   loginForm: FormGroup;
-  router = inject(Router);
   authFacade = inject(AuthFacade);
   authStatus = AuthStatus;
   status$ = this.authFacade.status$;
@@ -52,12 +50,13 @@ export class Login {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const email = this.loginForm.get('email')?.value;
-      const password = this.loginForm.get('password')?.value;
-      this.authFacade.login({ email, password });
-    } else {
-      console.log('Form is invalid');
+    if (!this.loginForm.valid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const email = this.loginForm.get('email')?.value;
+    const password = this.loginForm.get('password')?.value;
+    this.authFacade.login({ email, password });
   }
 }

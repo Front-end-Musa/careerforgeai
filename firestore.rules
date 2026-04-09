@@ -32,5 +32,10 @@ service cloud.firestore {
       allow create: if isOwnerField();
       allow read, update, delete: if ownerFieldMatches();
     }
+
+    match /jobs/{jobId} {
+      allow create: if isOwnerField();
+      allow read, update, delete: if ownerFieldMatches();
+    }
   }
 }

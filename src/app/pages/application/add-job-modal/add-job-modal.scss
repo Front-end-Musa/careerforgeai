@@ -67,7 +67,7 @@
         font-size: 0.95rem;
     }
 
-    input,
+    input:not([type='date']):not([type='month']),
     select,
     textarea {
         width: 100%;
@@ -90,6 +90,40 @@
 
     textarea {
         resize: vertical;
+    }
+}
+
+:host ::ng-deep .date-picker-field {
+    width: 100%;
+
+    .mat-mdc-text-field-wrapper {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+        border-color: #d6dfec;
+    }
+
+    &.mat-focused {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: #2563eb;
+        }
+
+        .mat-mdc-text-field-wrapper {
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.16),
+                0 8px 20px rgba(37, 99, 235, 0.16);
+        }
+    }
+
+    .mat-mdc-icon-button {
+        border-radius: 8px;
     }
 }
 

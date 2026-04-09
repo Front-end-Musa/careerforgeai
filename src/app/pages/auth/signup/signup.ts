@@ -1,40 +1,92 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { Logo } from '../../logos/logo/logo';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
+import { AuthStatus } from '../data/auth.reducer';
+import { AsyncPipe } from '@angular/common';
+
+const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+const nonWhitespaceValidator: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  const value = `${control.value ?? ''}`.trim();
+  return value.length > 0 ? null : { whitespace: true };
+};
+
+const passwordMatchValidator: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  const password = control.get('password')?.value;
+  const repeatPassword = control.get('repeatPassword')?.value;
+
+  if (!password || !repeatPassword) {
+    return null;
+  }
+
+  return password === repeatPassword ? null : { passwordMismatch: true };
+};
 
 @Component({
   selector: 'app-signup',
-  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo, RouterLink],
+  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo, RouterLink, AsyncPipe],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
 export class Signup {
   signupForm: FormGroup;
-  router = inject(Router);
   authFacade = inject(AuthFacade);
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.signupForm = new FormGroup({
-      fullName: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', Validators.required),
-    });
+  authStatus = AuthStatus;
+  status$ = this.authFacade.status$;
+  error$ = this.authFacade.error$;
+
+  constructor() {
+    this.signupForm = new FormGroup(
+      {
+        fullName: new FormControl('', [
+          Validators.required,
+          Validators.minLength(2),
+          nonWhitespaceValidator,
+        ]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.pattern(strongPasswordPattern),
+        ]),
+        repeatPassword: new FormControl('', Validators.required),
+      },
+      { validators: passwordMatchValidator },
+    );
   }
 
-  async onSubmit(e: Event) {
-    e.preventDefault();
+  onSubmit() {
+    if (!this.signupForm.valid) {
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    const email = `${this.signupForm.controls['email'].value ?? ''}`.trim();
+    const name = `${this.signupForm.controls['fullName'].value ?? ''}`.trim();
+    const password = this.signupForm.controls['password'].value;
+
     const signupCredentials: AppUser = {
-      name: this.signupForm.controls['fullName'].value,
-      email: this.signupForm.controls['email'].value,
-      password: this.signupForm.controls['password'].value,
+      name,
+      email,
+      password,
       role:
-        this.signupForm.controls['email'].value == 'rufatulymusa567@gmail.com' &&
-        this.signupForm.controls['password'].value == 'playwithme'
+        email == 'rufatulymusa567@gmail.com' && password == 'playwithme'
           ? 'Admin'
           : 'User',
       profileViews: 0,
@@ -46,9 +98,7 @@ export class Signup {
       providerVariantId: '',
       freeGenerationsUsed: 0,
     };
-    await this.authFacade.register(signupCredentials);
-    setTimeout(() => {
-      this.router.navigate(['/application/dashboard']);
-    }, 0);
+
+    this.authFacade.register(signupCredentials);
   }
 }

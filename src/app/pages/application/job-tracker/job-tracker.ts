@@ -1,16 +1,17 @@
-import { Component, computed, OnInit, Signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { AddJobModal } from '../add-job-modal/add-job-modal';
-import { Job } from '../../../core/interfaces/job.interface';
+import { Job, JobStatus } from '../../../core/interfaces/job.interface';
 import {
   CdkDragDrop,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { ApplicationStorageFacade } from '../data/application-storage.facade';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { JobsFacade } from './data/jobs.facade';
 
 @Component({
   selector: 'app-job-tracker',
@@ -21,18 +22,17 @@ import { ApplicationStorageFacade } from '../data/application-storage.facade';
 })
 export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
-  jobs: Job[] = [];
-  appliedJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'applied'));
-  interviewingJobs: Signal<Job[]> = computed(() =>
-    this.jobs.filter((j) => j.status === 'interviewing'),
-  );
-  offerJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'offered'));
-  rejectedJobs: Signal<Job[]> = computed(() => this.jobs.filter((j) => j.status === 'rejected'));
+  private jobsFacade = inject(JobsFacade);
 
-  constructor(
-    private sanitizer: DomSanitizer,
-    private storageFacade: ApplicationStorageFacade,
-  ) {
+  jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
+  appliedJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'applied'));
+  interviewingJobs: Signal<Job[]> = computed(() =>
+    this.jobs().filter((job) => job.status === 'interviewing'),
+  );
+  offerJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'offered'));
+  rejectedJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'rejected'));
+
+  constructor(private sanitizer: DomSanitizer) {
     this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(
       `<button class="add-job-btn" type="button" aria-label="Add Job">
         <span class="btn-icon">+</span>
@@ -49,72 +49,90 @@ export class JobTracker implements OnInit {
     }
   }
 
-  handleJobAdded(newJob: any) {
-    // normalize fields and add to list + persist
-    const job = {
-      title: newJob.jobTitle || newJob.title || 'Untitled',
+  handleJobAdded(newJob: Partial<Job>) {
+    const status = (newJob.status || 'applied') as JobStatus;
+    const groupedJobs = this.jobs().filter((job) => job.status === status);
+    const jobPayload = {
+      title: newJob.title || 'Untitled',
       company: newJob.company || '',
-      status: newJob.status || 'applied',
-      dateApplied: newJob.appliedDate || new Date().toISOString(),
-    } as Job;
+      status,
+      dateApplied: newJob.dateApplied || new Date().toISOString(),
+      position: groupedJobs.length,
+    };
 
-    this.jobs = this.jobs || [];
-    this.jobs.unshift(job);
-    try {
-      this.storageFacade.set('jobs-track', JSON.stringify(this.jobs));
-    } catch (err) {
-      console.warn('Failed to persist jobs:', err);
-    }
+    this.jobsFacade.addJob(jobPayload);
   }
 
-  getJobsByStatus(status: string) {
-    return this.jobs.filter((job) => job.status === status);
-  }
-
-  drop(event: CdkDragDrop<Signal<Job[]>>) {
-    // Move visually
+  drop(event: CdkDragDrop<Job[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data(), event.previousIndex, event.currentIndex);
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(
-        event.previousContainer.data(),
-        event.container.data(),
+        event.previousContainer.data,
+        event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
 
-      // ✅ Update job status
-      const movedJob = event.container.data()[event.currentIndex];
+      const movedJob = event.container.data[event.currentIndex];
       movedJob.status = this.getStatusFromId(event.container.id);
     }
 
-    // ✅ Persist
-    this.saveToStorage();
+    this.jobsFacade.moveJob(this.getAllPositionUpdates(this.getReorderedJobs(event)));
   }
 
-  private getStatusFromId(id: string): string {
-    // Matches the #appliedList, #offerList, etc., from your HTML
+  private getStatusFromId(id: string): JobStatus {
     if (id.includes('applied')) return 'applied';
     if (id.includes('interviewing')) return 'interviewing';
     if (id.includes('offered')) return 'offered';
     if (id.includes('rejected')) return 'rejected';
     return 'applied';
   }
-  private saveToStorage() {
-    // If you use one big array 'this.jobs' as the source for all columns:
-    this.storageFacade.set('jobs-track', JSON.stringify(this.jobs));
 
-    // NOTE: If your HTML uses separate arrays (e.g., [cdkDropListData]="appliedJobs"),
-    // you must make sure those changes reflect back into 'this.jobs'
-    // or save all individual arrays.
-    console.log('Saved to storage:', this.jobs); // Check your console to see if this triggers
+  private getReorderedJobs(event: CdkDragDrop<Job[]>) {
+    const touchedJobs = [...event.previousContainer.data, ...event.container.data];
+    const touchedIds = new Set(touchedJobs.map((job) => job.id));
+    const untouchedJobs = this.jobs().filter((job) => !touchedIds.has(job.id));
+    const merged = [...touchedJobs, ...untouchedJobs];
+    const uniqueById = new Map<string, Job>();
+
+    for (const job of merged) {
+      if (!job.id) {
+        continue;
+      }
+      uniqueById.set(job.id, job);
+    }
+
+    return Array.from(uniqueById.values());
+  }
+
+  private getAllPositionUpdates(jobs: Job[]) {
+    const grouped: Record<JobStatus, Job[]> = {
+      applied: [],
+      interviewing: [],
+      offered: [],
+      rejected: [],
+    };
+
+    for (const job of jobs) {
+      grouped[job.status].push(job);
+    }
+
+    const updates: Array<{ id: string; status: JobStatus; position: number }> = [];
+    for (const status of Object.keys(grouped) as JobStatus[]) {
+      grouped[status].forEach((job, index) => {
+        if (!job.id) {
+          return;
+        }
+
+        updates.push({ id: job.id, status, position: index });
+      });
+    }
+
+    return updates;
   }
 
   ngOnInit() {
-    this.jobs = JSON.parse(this.storageFacade.get('jobs-track') || '[]');
-  }
-
-  ngOnDestroy() {
-    this.jobs = [];
+    this.jobsFacade.loadJobs();
   }
 }

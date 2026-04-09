@@ -5,11 +5,11 @@ export const APPLICATION_ROUTES: Routes = [
   {
     path: '',
     loadComponent: () => import('./application').then((c) => c.Application),
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',
         loadComponent: () => import('./dashboard/dashboard').then((c) => c.Dashboard),
-        canActivate: [AuthGuard],
         data: {
           seo: {
             title: 'Dashboard | ResumeCrafts AI',

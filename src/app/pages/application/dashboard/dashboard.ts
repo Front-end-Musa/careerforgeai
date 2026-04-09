@@ -6,7 +6,7 @@ import { AuthFacade } from '../../auth/data/auth.facade';
 import { RouterLink } from '@angular/router';
 import { ResumesFacade } from '../resumes/data/resumes.facade';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ApplicationStorageFacade } from '../data/application-storage.facade';
+import { JobsFacade } from '../job-tracker/data/jobs.facade';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +17,7 @@ import { ApplicationStorageFacade } from '../data/application-storage.facade';
 export class Dashboard {
   authFacade = inject(AuthFacade);
   resumesFacade = inject(ResumesFacade);
-  storageFacade = inject(ApplicationStorageFacade);
+  jobsFacade = inject(JobsFacade);
   private destroyRef = inject(DestroyRef);
 
   user: WritableSignal<AppUser | null> = signal(null);
@@ -27,9 +27,8 @@ export class Dashboard {
   offers = signal<Job[]>([]);
 
   ngOnInit() {
-    console.log('Dashboard initialized');
     this.resumesFacade.loadResumes();
-    console.log('Resumes loaded');
+    this.jobsFacade.loadJobs();
     this.resumesFacade.resumes$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((resumes) => {
       this.resumes.set(resumes);
     });
@@ -38,11 +37,10 @@ export class Dashboard {
         this.user.set(user);
       },
     });
-    const jobTracks: Job[] = JSON.parse(this.storageFacade.get('jobs-track')!);
-    if (jobTracks != null) {
-      this.applications.set(jobTracks.filter((job) => job.status === 'applied'));
-      this.interviews.set(jobTracks.filter((job) => job.status === 'interviewing'));
-      this.offers.set(jobTracks.filter((job) => job.status === 'offered'));
-    }
+    this.jobsFacade.jobs$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((jobs) => {
+      this.applications.set(jobs.filter((job) => job.status === 'applied'));
+      this.interviews.set(jobs.filter((job) => job.status === 'interviewing'));
+      this.offers.set(jobs.filter((job) => job.status === 'offered'));
+    });
   }
 }

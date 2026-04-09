@@ -23,12 +23,11 @@ export class Faq {
     {
       question: 'Does ResumeCrafts AI help with cover letters?',
       answer:
-        'Yes. You can generate a cover letter by providing a job description, company name, position, and your preferred tone.',
+        'Yes. You can generate a cover letter by providing a resume, job description, company name, position, and your preferred tone.',
     },
     {
-      question: 'Is there a free plan?',
-      answer:
-        'Yes. The Free plan includes the resume builder, templates, job tracker, limited AI generations per month, and PDF export.',
+      question: 'Can I cancel my subscription anytime?',
+      answer: 'Yes, you can cancel anytime. No questions asked, no hidden fees.',
     },
   ];
 }

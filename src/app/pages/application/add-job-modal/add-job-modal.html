@@ -43,7 +43,18 @@
 
         <div class="form-group">
           <label for="dateApplied">Applied Date</label>
-          <input id="dateApplied" type="date" formControlName="dateApplied" required />
+          <mat-form-field appearance="outline" class="date-picker-field">
+            <input
+              id="dateApplied"
+              matInput
+              [matDatepicker]="datePicker"
+              formControlName="dateApplied"
+              required
+              placeholder="Select date"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker [touchUi]="true" panelClass="cf-date-picker-panel"></mat-datepicker>
+          </mat-form-field>
         </div>
       </div>
 

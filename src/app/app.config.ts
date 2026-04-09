@@ -27,8 +27,8 @@ import { billingReducer } from './pages/landing/pricing-plans/data/billing.reduc
 import { BillingEffects } from './pages/landing/pricing-plans/data/billing.effects';
 import { notificationsReducer } from './core/state/notifications/notifications.reducer';
 import { NotificationsEffects } from './core/state/notifications/notifications.effects';
-
-const LOCAL_FUNCTIONS_HOSTNAMES = new Set(['localhost', '127.0.0.1', '[::1]']);
+import { jobsReducer } from './pages/application/job-tracker/data/jobs.reducer';
+import { JobsEffects } from './pages/application/job-tracker/data/jobs.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,14 +43,7 @@ export const appConfig: ApplicationConfig = {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideFunctions(() => {
-      const functions = getFunctions(undefined, 'us-central1');
-      if (typeof window !== 'undefined' && LOCAL_FUNCTIONS_HOSTNAMES.has(window.location.hostname)) {
-        const emulatorHost = window.location.hostname === '[::1]' ? '127.0.0.1' : window.location.hostname;
-        connectFunctionsEmulator(functions, emulatorHost, 5001);
-      }
-      return functions;
-    }),
+    provideFunctions(() => getFunctions(undefined, 'us-central1')),
 
     // HTTP
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -62,8 +55,16 @@ export const appConfig: ApplicationConfig = {
       coverLetters: coverLetterReducer,
       billing: billingReducer,
       notifications: notificationsReducer,
+      jobs: jobsReducer,
     }),
-    provideEffects([AuthEffects, ResumeEffects, CoverLetterEffects, BillingEffects, NotificationsEffects]),
+    provideEffects([
+      AuthEffects,
+      ResumeEffects,
+      CoverLetterEffects,
+      BillingEffects,
+      NotificationsEffects,
+      JobsEffects,
+    ]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,
