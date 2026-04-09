@@ -63,7 +63,7 @@ export class JobsEffects {
       ofType(JobsActions.deleteJob),
       switchMap(({ id }) =>
         this.jobsService.deleteJob(id).pipe(
-          map(() => JobsActions.deleteJobSuccess()),
+          map((id) => JobsActions.deleteJobSuccess( { id } )),
           catchError((error) => of(JobsActions.deleteJobFailure({ error: this.toError(error) }))),
         ),
       ),

@@ -1,8 +1,8 @@
-import { Component, computed, inject, OnInit, Signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, Signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
-import { AddJobModal } from '../add-job-modal/add-job-modal';
+import { CommonModule, DatePipe } from '@angular/common';
+import { AddJobModal } from './add-job-modal/add-job-modal';
 import { Job, JobStatus } from '../../../core/interfaces/job.interface';
 import {
   CdkDragDrop,
@@ -12,25 +12,33 @@ import {
 } from '@angular/cdk/drag-drop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobsFacade } from './data/jobs.facade';
+import { ClickOutsideDirective } from '../../../lib/directives/click-outside.directive';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-job-tracker',
-  imports: [DirName, DatePipe, AddJobModal, DragDropModule],
+  imports: [DirName, DatePipe, DragDropModule, CommonModule, ClickOutsideDirective],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
+  private dialog = inject(MatDialog)
   private jobsFacade = inject(JobsFacade);
 
   jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
-  appliedJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'applied'));
+  appliedJobs: Signal<Job[]> = computed(() =>
+    this.jobs().filter((job) => job.status === 'applied'),
+  );
   interviewingJobs: Signal<Job[]> = computed(() =>
     this.jobs().filter((job) => job.status === 'interviewing'),
   );
   offerJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'offered'));
-  rejectedJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'rejected'));
+  rejectedJobs: Signal<Job[]> = computed(() =>
+    this.jobs().filter((job) => job.status === 'rejected'),
+  );
+  showActions: WritableSignal<boolean> = signal<boolean>(false);
 
   constructor(private sanitizer: DomSanitizer) {
     this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(
@@ -41,12 +49,38 @@ export class JobTracker implements OnInit {
     );
   }
 
-  @ViewChild('addJobModal') addJobModal!: AddJobModal;
+  @ViewChild('actionsMenu') actionsMenu!: any;
+
+  toggleActions() {
+    this.showActions.set(!this.showActions());
+  }
 
   openAddJobModal() {
-    if (this.addJobModal) {
-      this.addJobModal.openModal();
-    }
+    const dialogRef = this.dialog.open(AddJobModal, {
+      data: { modalMode: 'add' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      if (result.action === 'save') {
+        this.handleJobAdded(result.data);
+      }
+    });
+  }
+
+  openEditJobModal(job: Job) {
+    const dialogRef = this.dialog.open(AddJobModal, {
+      data: { modalMode: 'edit', existingJob: job },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      if (result.action === 'save') {
+        this.handleJobUpdated(result.data);
+      }
+    });
   }
 
   handleJobAdded(newJob: Partial<Job>) {
@@ -61,6 +95,10 @@ export class JobTracker implements OnInit {
     };
 
     this.jobsFacade.addJob(jobPayload);
+  }
+
+  handleJobUpdated(updatedJob: Partial<Job> & { id: string }) {
+    this.jobsFacade.updateJob(updatedJob.id, updatedJob);
   }
 
   drop(event: CdkDragDrop<Job[]>) {
@@ -130,6 +168,12 @@ export class JobTracker implements OnInit {
     }
 
     return updates;
+  }
+
+  deleteJob(job: Job) {
+    if (job.id) {
+      this.jobsFacade.deleteJob(job.id);
+    }
   }
 
   ngOnInit() {

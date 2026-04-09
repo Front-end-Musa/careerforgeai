@@ -36,7 +36,7 @@ export const updateJobFailure = createAction('[Jobs] Update Failure', props<{ er
 
 export const deleteJob = createAction('[Jobs] Delete', props<{ id: string }>());
 
-export const deleteJobSuccess = createAction('[Jobs] Delete Success');
+export const deleteJobSuccess = createAction('[Jobs] Delete Success', props<{ id: string }>());
 
 export const deleteJobFailure = createAction('[Jobs] Delete Failure', props<{ error: string }>());
 
