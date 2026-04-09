@@ -1,4 +1,4 @@
-<div class="interviewing job-item" cdkDrag>
+<div class="interviewing job-item" cdkDrag cdkDragHandle>
   <h4 class="job-title">
     {{ job.title }}
   </h4>
@@ -10,12 +10,7 @@
   </p>
 
   <div class="job-item_actions">
-    <div
-      class="menu-trigger"
-      cdkDragHandle
-      (click)="toggleActions()"
-      aria-label="Toggle job actions"
-    >
+    <div class="menu-trigger" (click)="toggleActions()" aria-label="Toggle job actions">
       <span class="material-symbols-outlined">more_vert</span>
     </div>
     <div class="menu" *ngIf="showActions()" appClickOutside (clickOutside)="toggleActions()">
@@ -31,7 +26,7 @@
   </div>
 </div>
 
-<ng-template cdkDragPreview>
+<ng-template cdkDragPreview cdkDragHandle>
   <div class="job-item preview">
     <h4 class="job-title">
       {{ job.title }}
@@ -45,7 +40,6 @@
     <div class="job-item_actions">
       <div
         class="menu-trigger"
-        cdkDragHandle
         (click)="toggleActions()"
         aria-label="Toggle job actions"
       >

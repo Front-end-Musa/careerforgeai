@@ -4,10 +4,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { AddJobModal } from '../add-job-modal/add-job-modal';
 import { MatDialog } from '@angular/material/dialog';
 import { JobsFacade } from '../data/jobs.facade';
+import { ClickOutsideDirective } from '../../../../lib/directives/click-outside.directive';
+import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-job-card',
-  imports: [DatePipe, CommonModule],
+  imports: [DatePipe, CommonModule, ClickOutsideDirective, CdkDrag, DragDropModule],
   templateUrl: './job-card.html',
   styleUrl: './job-card.scss',
 })

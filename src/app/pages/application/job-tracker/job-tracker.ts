@@ -1,7 +1,17 @@
-import { Component, computed, inject, OnInit, signal, Signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  Signal,
+  ViewChild,
+  ViewEncapsulation,
+  WritableSignal,
+} from '@angular/core';
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AddJobModal } from './add-job-modal/add-job-modal';
 import { Job, JobStatus } from '../../../core/interfaces/job.interface';
 import {
@@ -12,13 +22,12 @@ import {
 } from '@angular/cdk/drag-drop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobsFacade } from './data/jobs.facade';
-import { ClickOutsideDirective } from '../../../lib/directives/click-outside.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { JobCard } from './job-card/job-card';
 
 @Component({
   selector: 'app-job-tracker',
-  imports: [DirName, DatePipe, DragDropModule, CommonModule, ClickOutsideDirective, JobCard],
+  imports: [DirName, DragDropModule, CommonModule, JobCard],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
   encapsulation: ViewEncapsulation.None,
