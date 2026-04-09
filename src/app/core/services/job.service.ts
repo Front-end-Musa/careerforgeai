@@ -6,6 +6,7 @@ import {
   collectionData,
   deleteDoc,
   doc,
+  docData,
   Firestore,
   orderBy,
   query,
@@ -89,15 +90,16 @@ export class JobService {
     });
   }
 
-  updateJob(id: string, changes: Partial<Job>): Observable<void> {
+  updateJob(id: string, changes: Partial<Job>): Observable<Job> {
     const jobDoc = doc(this.firestore, 'jobs', id);
-    const updatePayload: Record<string, unknown> = {
+
+    const updatePayload = {
       ...changes,
       updatedAt: serverTimestamp(),
     };
 
     return from(updateDoc(jobDoc, updatePayload)).pipe(
-      map(() => undefined),
+      switchMap(() => docData(jobDoc) as Observable<Job>),
       catchError((error) => {
         console.error('Error updating job:', error);
         return throwError(() => error);
@@ -105,10 +107,10 @@ export class JobService {
     );
   }
 
-  deleteJob(id: string): Observable<void> {
+  deleteJob(id: string): Observable<string> {
     const jobDoc = doc(this.firestore, 'jobs', id);
     return from(deleteDoc(jobDoc)).pipe(
-      map(() => undefined),
+      map(() => id),
       catchError((error) => {
         console.error('Error deleting job:', error);
         return throwError(() => error);

@@ -74,4 +74,19 @@ export const jobsReducer = createReducer(
     }),
   ),
   on(JobsActions.clearJobsState, () => initialState),
+  on(JobsActions.deleteJob, (state) => ({
+    ...state,
+    status: JobsStatus.Loading,
+    error: null,
+  })),
+  on(JobsActions.deleteJobSuccess, (state, { id }) => jobsAdapter.removeOne(id, {
+    ...state,
+    status: JobsStatus.Loaded,
+    error: null,
+  })),
+  on(JobsActions.deleteJobFailure, (state, { error }) => ({
+    ...state,
+    status: JobsStatus.Error,
+    error,
+  })),
 );
