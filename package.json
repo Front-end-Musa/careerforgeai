@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "start": "nx serve",
+    "build": "nx build",
+    "watch": "nx build --watch --configuration development",
+    "test": "nx test",
     "serve:ssr:application": "node dist/application/server/server.mjs",
     "smoke:functions:local": "node scripts/functions-callable-smoke.mjs"
   },
@@ -56,9 +56,14 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
+    "@angular-devkit/core": "20.3.22",
+    "@angular-devkit/schematics": "20.3.22",
     "@angular/build": "20.3.22",
     "@angular/cli": "20.3.22",
     "@angular/compiler-cli": "20.3.18",
+    "@nx/angular": "22.6.4",
+    "@nx/workspace": "22.6.4",
+    "@schematics/angular": "20.3.22",
     "@types/express": "^5.0.6",
     "@types/jasmine": "~6.0.0",
     "@types/node": "^25.5.2",
@@ -68,6 +73,7 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.2.0",
+    "nx": "22.6.4",
     "typescript": "5.9"
   }
 }

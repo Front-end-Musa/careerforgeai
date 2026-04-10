@@ -2,6 +2,9 @@ import { AppUser } from '../../../core/interfaces/user.interface';
 import { createReducer, on } from '@ngrx/store';
 import {
   authResolvedNoUser,
+  deleteAccount,
+  deleteAccountFailure,
+  deleteAccountSuccess,
   initUser,
   initUserFailure,
   initUserSuccess,
@@ -100,6 +103,20 @@ export const authReducer = createReducer(
     status: AuthStatus.Init,
   })),
   on(logoutFailure, (state, { error }) => ({
+    ...state,
+    status: AuthStatus.Error,
+    error,
+  })),
+  on(deleteAccount, (state) => ({
+    ...state,
+    status: AuthStatus.Loading,
+    error: null,
+  })),
+  on(deleteAccountSuccess, () => ({
+    ...initialState, // Reset to initial state on success
+    status: AuthStatus.Init,
+  })),
+  on(deleteAccountFailure, (state, { error }) => ({
     ...state,
     status: AuthStatus.Error,
     error,

@@ -45,3 +45,8 @@ Thumbs.db
 # Evironment files
 environment*.ts
 .env
+
+
+
+.nx/cache
+.nx/workspace-data

@@ -1,0 +1,106 @@
+{
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "name": "application",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "options": {
+        "browser": "src/main.ts",
+        "tsConfig": "tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "public"
+          },
+          "src/favicon.ico",
+          "src/assets"
+        ],
+        "styles": [
+          "src/styles.scss"
+        ],
+        "server": "src/main.server.ts",
+        "outputMode": "server",
+        "ssr": {
+          "entry": "src/server.ts"
+        },
+        "prerender": false,
+        "outputPath": "dist/application"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "1.20MB",
+              "maximumError": "1.60MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "10kB",
+              "maximumError": "12kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production",
+      "outputs": [
+        "{options.outputPath}"
+      ]
+    },
+    "serve": {
+      "options": {
+        "allowedHosts": [
+          "127.0.0.1:5000",
+          "https://resume-crafts.com",
+          "https://www.resume-crafts.com"
+        ]
+      },
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "application:build:production"
+        },
+        "development": {
+          "buildTarget": "application:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n"
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "tsConfig": "tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "public"
+          },
+          "src/favicon.ico",
+          "src/assets"
+        ],
+        "styles": [
+          "src/styles.scss"
+        ]
+      }
+    }
+  }
+}
