@@ -100,7 +100,8 @@ export class JobTracker implements OnInit {
       );
 
       const movedJob = event.container.data[event.currentIndex];
-      movedJob.status = this.getStatusFromId(event.container.id);
+      const updatedJob = { ...movedJob, status: this.getStatusFromId(event.container.id) };
+      event.container.data[event.currentIndex] = updatedJob;
     }
 
     this.jobsFacade.moveJob(this.getAllPositionUpdates(this.getReorderedJobs(event)));

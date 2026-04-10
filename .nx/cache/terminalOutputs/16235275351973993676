@@ -1,0 +1,143 @@
+[1m[33mThe "prerender" option is not considered when "outputMode" is specified.[39m[22m
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37m[35mBrowser bundles[37m     
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-E7Z7URHS.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.41 MB[37m[2m | [22m
+[32mchunk-OFJZEGRZ.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.01 MB[37m[2m | [22m
+[32mchunk-U4YT2HSO.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m399.42 kB[37m[2m | [22m
+[32mchunk-GTOMM46D.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m393.95 kB[37m[2m | [22m
+[32mchunk-4QIJMJL3.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m216.26 kB[37m[2m | [22m
+[32mchunk-DNRS4C6J.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m181.62 kB[37m[2m | [22m
+[32mchunk-5DFGQV6T.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m153.07 kB[37m[2m | [22m
+[32mchunk-UIUNXKUC.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m109.09 kB[37m[2m | [22m
+[32mmain.js[37m             [2m | [22m[2mmain[22m            [2m | [22m[36m102.45 kB[37m[2m | [22m
+[32mchunk-G2253GUZ.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m42.77 kB[37m[2m | [22m
+[32mstyles.css[37m          [2m | [22m[2mstyles[22m          [2m | [22m [36m28.61 kB[37m[2m | [22m
+[32mchunk-JO7F5BXY.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m23.52 kB[37m[2m | [22m
+[32mchunk-TIJC3XQI.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m13.98 kB[37m[2m | [22m
+[32mchunk-4TREYFXK.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m5.78 kB[37m[2m | [22m
+[32mchunk-5VXP3HLW.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m5.34 kB[37m[2m | [22m
+[32mchunk-436PNFTE.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m4.37 kB[37m[2m | [22m
+[32mchunk-466HBO3F.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.48 kB[3[39m[37m9m[2m | [22m
+[32mchunk-SDTOOSX3.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.12 kB[37m[2m | [22m
+[32mchunk-EYC2LAWI.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m2.78 kB[37m[2m | [22m
+[32mchunk-46DXP6YY.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m2.63 kB[37m[2m | [22m
+[32mchunk-NSBTMR5D.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m574 bytes[37m[2m | [22m
+[32mchunk-7YWLATDR.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m459 bytes[37m[2m | [22m
+
+[1m [22m                   [2m | [22m[1mInitial total[22m   [2m | [22m  [1m4.11 MB[22m
+
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-5VIH7257.js[37m   [2m | [22m[2mjob-tracker[22m     [2m | [22m[36m715.91 kB[37m[2m | [22m
+[32mchunk-R2M67BLD.js[37m   [2m | [22m[2mindex-es[22m        [2m | [22m[36m368.54 kB[37m[2m | [22m
+[32mchunk-6MBOXXHD.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m363.25 kB[37m[2m | [22m
+[32mchunk-6SWMCCFI.js[37m   [2m | [22m[2mlanding[22m         [2m | [22m[36m205.89 kB[37m[2m | [22m
+[32mchunk-D7OOZPSD.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m147.32 kB[37m[2m | [22m
+[32mchunk-IPHUA2QQ.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m144.47 kB[37m[2m | [22m
+[32mchunk-OIA5LSTA.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m60.62 kB[37m[2m | [22m
+[32mchunk-27QUUIJC.js[37m   [2m | [22m[2mpurify-es[22m       [2m | [22m [36m46.49 kB[37m[2m | [22m
+[32mchunk-IVMNBVY2.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m37.91 kB[37m[2m | [22m
+[32mchunk-6VSCT3KV.js[37m   [2m | [22m[2mresumes[22m         [2m | [22m [36m36.49 kB[37m[2m | [22m
+[32mchunk-BL4FRIRM.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m35.62 kB[37m[2m | [22m
+[32mchunk-TP[39m[37mWAKPUQ.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m26.00 kB[37m[2m | [22m
+[32mchunk-64RSDO76.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m25.58 kB[37m[2m | [22m
+[32mchunk-N3KXQB46.js[37m   [2m | [22m[2mapplication[22m     [2m | [22m [36m24.78 kB[37m[2m | [22m
+[32mchunk-IET2DVZU.js[37m   [2m | [22m[2mcover-letter[22m    [2m | [22m [36m24.53 kB[37m[2m | [22m
+[2m...and 26 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+
+[35mServer bundles[37m      
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-6M7PM7DW.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.49 MB[37m[2m | [22m
+[32mserver.mjs[37m          [2m | [22m[2mserver[22m          [2m | [22m  [36m2.00 MB[37m[2m | [22m
+[32mmain.server.mjs[37m     [2m | [22m[2mmain.server[22m     [2m | [22m  [36m1.04 MB[37m[2m | [22m
+[32mchunk-AU5YAMHR.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m990.96 kB[37m[2m | [22m
+[32mpolyfills.server.mjs[37m[2m | [22m[2mpolyfills.server[22m[2m | [22m[36m493.23 kB[37m[2m | [22m
+[32mchunk-XZHX3JZA.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m309.54 kB[37m[2m | [22m
+[32mchunk-WXPEJFQQ.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m216.31 kB[37m[2m | [22m
+[32mchunk-OUT5J3VW.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m176.95 kB[37m[2m | [22m
+[32mchunk-QML36CFQ.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m154.30 kB[37m[2m | [22m
+[32mchunk-DZ6AZZHK.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m109.13 kB[37m[2m | [22m
+[32mchunk-CAWULYCF.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m42.80 kB[37m[2m | [22m
+[32mchunk-WJZJLIEA.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m23.56 kB[37m[2m | [22m
+[32mchunk-NFQVK2VL.mjs[[39m[37m39m  [2m | [22m[2m-[22m               [2m | [22m [36m14.02 kB[37m[2m | [22m
+[32mchunk-R7FA7WRQ.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m5.81 kB[37m[2m | [22m
+[32mchunk-CKPBQAC6.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m5.38 kB[37m[2m | [22m
+[32mchunk-KVHSG5ZY.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m4.41 kB[37m[2m | [22m
+[32mchunk-TPAJ455B.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.52 kB[37m[2m | [22m
+[32mchunk-TB3YAHZW.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.42 kB[37m[2m | [22m
+[32mchunk-MLQ7EDYX.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.16 kB[37m[2m | [22m
+[32mchunk-3II4UTYF.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.81 kB[37m[2m | [22m
+[32mchunk-N5ETFSPS.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.81 kB[37m[2m | [22m
+[32mchunk-IRWBBLYU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m609 bytes[37m[2m | [22m
+
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-4MLETA7Z.mjs[37m  [2m | [22m[2mjob-tracker[22m     [2m | [22m[36m715.96 kB[37m[2m | [22m
+[32mchunk-JAPC22RM.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m363.29 kB[37m[2m | [22m
+[32mchunk-UAKZ6VKG.mjs[37m  [2m | [22m[2mlanding[22m         [2m | [22m[36m205.94 kB[37m[2m | [22m
+[32mchunk-2L7GWOUP.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m147.35 kB[37m[2m | [22m
+[32mchunk-2NJHEA7X.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m144.56 kB[37m[2m | [22m
+[32mchunk-RIEUPLK3.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m60.66 kB[37m[2m | [22m
+[32mchunk-F5FD6IK3.mjs[37m  [2m | [22m[2mxhr2[22m            [2m | [22m [36m40.11 kB[37m[2m | [22m
+[32mchunk-FPDZ2CKT.mjs[37m  [2m | [2[39m[37m2m[2mxhr2[22m            [2m | [22m [36m40.04 kB[37m[2m | [22m
+[32mchunk-PCDTW74P.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m37.94 kB[37m[2m | [22m
+[32mchunk-ZEVXUNBH.mjs[37m  [2m | [22m[2mresumes[22m         [2m | [22m [36m36.49 kB[37m[2m | [22m
+[32mchunk-ULUIH5QE.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m35.66 kB[37m[2m | [22m
+[32mchunk-NY67JGEI.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m26.03 kB[37m[2m | [22m
+[32mchunk-XA5SUZAD.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m25.61 kB[37m[2m | [22m
+[32mchunk-7JJINJV7.mjs[37m  [2m | [22m[2mapplication[22m     [2m | [22m [36m24.83 kB[37m[2m | [22m
+[32mchunk-EAOIJNWT.mjs[37m  [2m | [22m[2mcover-letter[22m    [2m | [22m [36m24.52 kB[37m[2m | [22m
+[2m...and 25 more lazy chunks files. Use "--verbose" to show all the files.[22m
+
+[35mPrerendered 6 static routes.[37m
+Application bundle generation complete. [10.653 seconds] - 2026-04-10T16:25:37.587Z
+[39m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.html:29:40:
+[37m      29 │                   @if (exp.description?.[32mlength[37m) {
+         ╵                                         [32m~~~~~~[0m
+
+  Warning occurs in the template of component ResumePreview.
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.ts:10:15:
+[37m      10 │   templateUrl: [32m'./resume-preview.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.html:106:44:
+[37m      106 │                       @if (exp.description?.[32mlength[37m) {
+          ╵                                             [32m~~~~~~[0m
+
+  Warning occurs in the template of component ResumePreview.
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.ts:10:15:
+[37m      10 │   templateUrl: [32m'./resume-preview.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.html:174:40:
+[37m      174 │                   @if (exp.description?.[32mlength[37m) {
+          ╵                                     [39m[22m[1m[33m    [32m~~~~~~[0m
+
+  Warning occurs in the template of component ResumePreview.
+
+    src/app/pages/application/resumes/resume-preview/resume-preview.ts:10:15:
+[37m      10 │   templateUrl: [32m'./resume-preview.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PricingPlans is not used within the template of Landing[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/landing/landing.ts:21:43:
+[37m      21 │ ...r, Hero, Features, About, [32mPricingPlans[37m, Faq, Contact, Footer, S...
+         ╵                              [32m~~~~~~~~~~~~[0m
+
+[39m[22m
+[37mOutput location: C:\Users\frontend_coder\Documents\projects\ai-job-seek-helper\app\careerforgeai\dist\application
+[39m

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/application/resumes/resumes-list/resumes-list.scss"],
+  "sourcesContent": [".resumes-list-wrapper {\r\n  display: flex;\r\n  gap: 16px;\r\n  flex-direction: row;\r\n  justify-content: space-around;\r\n\r\n  .viewport {\r\n    height: 70vh; // or fixed px/calc(...)\r\n    width: 100%;\r\n  }\r\n  .resume-card-wrapper {\r\n    height: 200px; // must match itemSize\r\n  }\r\n\r\n  .resume-card {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.resumes-empty {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  text-align: center;\r\n  padding: 60px 24px;\r\n  background: #f8fafc;\r\n  border: 1px dashed #cbd5f5;\r\n  border-radius: 16px;\r\n  color: #1f2937;\r\n\r\n  h3 {\r\n    font-size: 20px;\r\n    margin: 0 0 8px;\r\n  }\r\n\r\n  p {\r\n    margin: 0 0 18px;\r\n    color: #6b7280;\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,OAAA;AACA,kBAAA;AACA,mBAAA;;AAEA,CANF,qBAME,CAAA;AACE,UAAA;AACA,SAAA;;AAEF,CAVF,qBAUE,CAAA;AACE,UAAA;;AAGF,CAdF,qBAcE,CAAA;AACE,cAAA;;AAIJ,CAAA;AACE,WAAA;AACA,kBAAA;AACA,eAAA;AACA,cAAA;AACA,WAAA,KAAA;AACA,cAAA;AACA,UAAA,IAAA,OAAA;AACA,iBAAA;AACA,SAAA;;AAEA,CAXF,cAWE;AACE,aAAA;AACA,UAAA,EAAA,EAAA;;AAGF,CAhBF,cAgBE;AACE,UAAA,EAAA,EAAA;AACA,SAAA;;",
+  "names": []
+}
