@@ -17,6 +17,15 @@ module.exports = {
     project: ["./tsconfig.json", "./tsconfig.dev.json"],
     sourceType: "module",
   },
+  overrides: [
+    {
+      files: ["node_modules/@types/eslint-scope/**/*.d.ts"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+      },
+    },
+  ],
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
     "/generated/**/*", // Ignore generated files.

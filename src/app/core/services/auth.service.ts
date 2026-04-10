@@ -47,6 +47,10 @@ export class AuthService {
     { providerCustomerId: string }
   >('ensurePolarCustomer');
 
+  private deletePolarCustomerFn = this.callableService.callable<void, { success: boolean }>(
+    'deletePolarCustomer',
+  );
+
   constructor(private firestore: Firestore) {}
 
   noUserRedirect() {
@@ -94,7 +98,17 @@ export class AuthService {
 
     console.trace('deleteAccount called');
 
-    return from(deleteUser(currentUser)).pipe(
+    const userRef = doc(this.firestore, 'users', currentUser.uid);
+
+    return from(deleteDoc(userRef)).pipe(
+      switchMap(() => {
+        console.log('Firestore document deleted, now deleting Polar customer');
+        return this.deletePolarCustomerFn();
+      }),
+      switchMap(() => {
+        console.log('Polar customer deleted, now deleting Firebase Auth user');
+        return from(deleteUser(currentUser));
+      }),
       catchError((err) => {
         console.error('delete account error:', err.message);
         return throwError(() => err);

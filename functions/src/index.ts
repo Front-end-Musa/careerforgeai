@@ -153,7 +153,10 @@ function resolvePlanFromProduct(productName: unknown): PlanTier {
  * @param {Polar} polar Polar SDK client.
  * @return {Promise<{customerId: string}>} Linked Polar customer id.
  */
-async function ensurePolarCustomerForUid(uid: string, polar: Polar): Promise<{ customerId: string }> {
+async function ensurePolarCustomerForUid(
+  uid: string,
+  polar: Polar,
+): Promise<{ customerId: string }> {
   const db = getFirestore();
   const userRef = db.collection("users").doc(uid);
   const userSnapshot = await userRef.get();
@@ -227,18 +230,21 @@ async function applySubscriptionState(uid: string, data: unknown) {
   const currentPeriodEnd =
     toNullableDate(subscription.currentPeriodEnd) ?? toNullableDate(subscription.endsAt);
 
-  await db.collection("users").doc(uid).set(
-    {
-      plan,
-      subscriptionStatus: status,
-      providerCustomerId: subscription.customer?.id ?? "",
-      providerSubscriptionId: subscription.id ?? "",
-      providerVariantId: subscription.productId ?? subscription.product?.id ?? "",
-      currentPeriodEnd,
-      entitlementsUpdatedAt: now,
-    },
-    {merge: true},
-  );
+  await db
+    .collection("users")
+    .doc(uid)
+    .set(
+      {
+        plan,
+        subscriptionStatus: status,
+        providerCustomerId: subscription.customer?.id ?? "",
+        providerSubscriptionId: subscription.id ?? "",
+        providerVariantId: subscription.productId ?? subscription.product?.id ?? "",
+        currentPeriodEnd,
+        entitlementsUpdatedAt: now,
+      },
+      {merge: true},
+    );
 }
 
 /**
@@ -254,13 +260,16 @@ async function applyCustomerState(uid: string, data: unknown) {
   };
 
   const db = getFirestore();
-  await db.collection("users").doc(uid).set(
-    {
-      providerCustomerId: customer.id ?? "",
-      entitlementsUpdatedAt: Date.now(),
-    },
-    {merge: true},
-  );
+  await db
+    .collection("users")
+    .doc(uid)
+    .set(
+      {
+        providerCustomerId: customer.id ?? "",
+        entitlementsUpdatedAt: Date.now(),
+      },
+      {merge: true},
+    );
 }
 
 /**
@@ -313,8 +322,8 @@ export const polarWebhook = onRequest(
 
       const hasRequiredSignatureHeaders = Boolean(
         signatureHeaders["webhook-id"] &&
-          signatureHeaders["webhook-signature"] &&
-          signatureHeaders["webhook-timestamp"],
+        signatureHeaders["webhook-signature"] &&
+        signatureHeaders["webhook-timestamp"],
       );
       if (!hasRequiredSignatureHeaders) {
         logger.warn("polarWebhook missing signature headers", {
@@ -503,6 +512,50 @@ export const createPortalSession = onCall(
   },
 );
 
+export const deletePolarCustomer = onCall(
+  {secrets: [polarToken], invoker: "public"},
+  async (req) => {
+    const uid = req.auth?.uid;
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
+    }
+
+    const polar = getPolarClient();
+    try {
+      const customerState = await polar.customers.getStateExternal({
+        externalId: uid,
+      });
+
+      if (customerState.id) {
+        await polar.customers.delete({
+          id: customerState.id,
+        });
+
+        logger.info("deletePolarCustomer succeeded", {
+          uid,
+          customerId: customerState.id,
+        });
+      } else {
+        logger.info("deletePolarCustomer skipped: no customer found", {uid});
+      }
+
+      return {success: true};
+    } catch (error) {
+      logger.error("deletePolarCustomer failed", error);
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+
+      if (isApiErrorWithStatus(error, 404)) {
+        logger.info("deletePolarCustomer: customer already deleted", {uid});
+        return {success: true};
+      }
+
+      throw new HttpsError("internal", "Unable to delete billing customer.");
+    }
+  },
+);
+
 export const syncEntitlements = onCall(
   {secrets: [polarToken], invoker: "public"},
   async (req) => {
@@ -552,21 +605,18 @@ export const syncEntitlements = onCall(
       }
 
       const entitlementsUpdatedAt = Date.now();
-      await getFirestore()
-        .collection("users")
-        .doc(uid)
-        .set(
-          {
-            plan,
-            subscriptionStatus,
-            providerCustomerId: customerState.id,
-            providerSubscriptionId,
-            providerVariantId,
-            currentPeriodEnd,
-            entitlementsUpdatedAt,
-          },
-          {merge: true},
-        );
+      await getFirestore().collection("users").doc(uid).set(
+        {
+          plan,
+          subscriptionStatus,
+          providerCustomerId: customerState.id,
+          providerSubscriptionId,
+          providerVariantId,
+          currentPeriodEnd,
+          entitlementsUpdatedAt,
+        },
+        {merge: true},
+      );
 
       return {
         plan,
@@ -856,7 +906,7 @@ export const tailorResumeToJob = onCall(
   },
 );
 
-export const downloadResume = onCall(async (request) => {
+export const downloadResume = onCall({secrets: [], invoker: "public"}, async (request) => {
   const uid = request.auth?.uid;
   const {resumeId} = request.data as { resumeId?: string };
 
