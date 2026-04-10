@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/landing/pricing-plans/checkouts/checkouts.ts", "src/app/pages/landing/pricing-plans/checkouts/checkouts.html"],
+  "sourcesContent": ["import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\n\r\n@Component({\r\n  selector: 'app-checkouts',\r\n  imports: [RouterOutlet],\r\n  templateUrl: './checkouts.html',\r\n  styleUrl: './checkouts.scss',\r\n})\r\nexport class Checkouts {}\r\n", "<router-outlet></router-outlet>\r\n"],
+  "mappings": ";;;;;;;;;;;;;;;AASM,IAAO,YAAP,MAAO,WAAS;;qCAAT,YAAS;EAAA;yEAAT,YAAS,WAAA,CAAA,CAAA,eAAA,CAAA,GAAA,OAAA,GAAA,MAAA,GAAA,UAAA,SAAA,mBAAA,IAAA,KAAA;AAAA,QAAA,KAAA,GAAA;ACTtB,MAAA,oBAAA,GAAA,eAAA;;oBDKY,YAAY,GAAA,eAAA,EAAA,CAAA;;;sEAIX,WAAS,CAAA;UANrB;uBACW,iBAAe,SAChB,CAAC,YAAY,GAAC,UAAA,sCAAA,CAAA;;;;6EAIZ,WAAS,EAAA,WAAA,aAAA,UAAA,8DAAA,YAAA,GAAA,CAAA;AAAA,GAAA;",
+  "names": []
+}

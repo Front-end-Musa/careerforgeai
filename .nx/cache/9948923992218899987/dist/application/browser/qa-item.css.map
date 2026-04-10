@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/landing/faq/qa-item/qa-item.scss"],
+  "sourcesContent": [".faq-accordion {\r\n  mat-expansion-panel {\r\n    border-radius: 12px;\r\n    border: 1px solid var(--border);\r\n    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);\r\n    margin-bottom: 12px;\r\n    background-color: var(--surface-card);\r\n  }\r\n\r\n  mat-expansion-panel-header {\r\n    padding: 24px 28px;\r\n    font-size: 1.3em;\r\n  }\r\n\r\n  p {\r\n    padding: 0 20px 20px;\r\n    line-height: 1.6;\r\n    color: var(--text-muted);\r\n  }\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  .faq-accordion {\r\n    mat-expansion-panel-header {\r\n      padding: 18px 16px;\r\n      font-size: 1.05em;\r\n      min-height: 64px;\r\n    }\r\n\r\n    p {\r\n      padding: 0 16px 16px;\r\n    }\r\n  }\r\n}\r\n"],
+  "mappings": ";AACE,CAAA,cAAA;AACE,iBAAA;AACA,UAAA,IAAA,MAAA,IAAA;AACA,cAAA,EAAA,KAAA,KAAA,KAAA,EAAA,EAAA,EAAA,EAAA,EAAA,EAAA;AACA,iBAAA;AACA,oBAAA,IAAA;;AAGF,CARA,cAQA;AACE,WAAA,KAAA;AACA,aAAA;;AAGF,CAbA,cAaA;AACE,WAAA,EAAA,KAAA;AACA,eAAA;AACA,SAAA,IAAA;;AAIJ,OAAA,CAAA,SAAA,EAAA;AAEI,GAtBF,cAsBE;AACE,aAAA,KAAA;AACA,eAAA;AACA,gBAAA;;AAGF,GA5BF,cA4BE;AACE,aAAA,EAAA,KAAA;;;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/landing/pricing-plans/checkouts/success/success.scss"],
+  "sourcesContent": [".success {\r\n  margin: 2rem auto;\r\n  max-width: 40rem;\r\n  padding: 1.5rem;\r\n  border: 1px solid #d7dbe2;\r\n  border-radius: 0.75rem;\r\n  background: #fff;\r\n}\r\n\r\n.error {\r\n  color: #c0392b;\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,UAAA,KAAA;AACA,aAAA;AACA,WAAA;AACA,UAAA,IAAA,MAAA;AACA,iBAAA;AACA,cAAA;;AAGF,CAAA;AACE,SAAA;;",
+  "names": []
+}

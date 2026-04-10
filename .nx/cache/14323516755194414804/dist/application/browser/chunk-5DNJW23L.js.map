@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/application/linkedin/linkedin.ts", "src/app/pages/application/linkedin/linkedin.html"],
+  "sourcesContent": ["import { Component } from '@angular/core';\r\n\r\n@Component({\r\n  selector: 'app-linkedin',\r\n  imports: [],\r\n  templateUrl: './linkedin.html',\r\n  styleUrl: './linkedin.scss',\r\n})\r\nexport class Linkedin {\r\n\r\n}\r\n", "<h1 class=\"coming-soon\">Coming soon...</h1>\r\n"],
+  "mappings": ";;;;;;;;;;;;AAQM,IAAO,WAAP,MAAO,UAAQ;;qCAAR,WAAQ;EAAA;yEAAR,WAAQ,WAAA,CAAA,CAAA,cAAA,CAAA,GAAA,OAAA,GAAA,MAAA,GAAA,QAAA,CAAA,CAAA,GAAA,aAAA,CAAA,GAAA,UAAA,SAAA,kBAAA,IAAA,KAAA;AAAA,QAAA,KAAA,GAAA;ACRrB,MAAA,4BAAA,GAAA,MAAA,CAAA;AAAwB,MAAA,iBAAA,GAAA,gBAAA;AAAc,MAAA,0BAAA;;;;;sEDQzB,UAAQ,CAAA;UANpB;uBACW,gBAAc,SACf,CAAA,GAAE,UAAA,mDAAA,QAAA,CAAA,sPAAA,EAAA,CAAA;;;;6EAIA,UAAQ,EAAA,WAAA,YAAA,UAAA,kDAAA,YAAA,EAAA,CAAA;AAAA,GAAA;",
+  "names": []
+}

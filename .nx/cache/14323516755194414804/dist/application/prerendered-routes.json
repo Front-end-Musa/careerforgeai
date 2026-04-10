@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/": {},
+    "/checkouts": {},
+    "/checkouts/failure": {},
+    "/checkouts/success": {},
+    "/privacy-policy": {},
+    "/terms-of-service": {}
+  }
+}

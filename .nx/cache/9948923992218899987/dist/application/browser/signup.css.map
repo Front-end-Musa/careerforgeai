@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/auth/signup/signup.scss"],
+  "sourcesContent": [".signup {\n  height: 100%;\n}\n\n.send-btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  min-width: 140px;\n}\n\n.send-btn.loading {\n  cursor: wait;\n}\n\n.btn-spinner {\n  width: 14px;\n  height: 14px;\n  border: 2px solid currentColor;\n  border-right-color: transparent;\n  border-radius: 50%;\n  display: inline-block;\n  animation: signup-spin 0.8s linear infinite;\n}\n\n@keyframes signup-spin {\n  to {\n    transform: rotate(360deg);\n  }\n}\n"],
+  "mappings": ";AAAA,CAAA;AACE,UAAA;;AAGF,CAAA;AACE,WAAA;AACA,eAAA;AACA,mBAAA;AACA,OAAA;AACA,aAAA;;AAGF,CARA,QAQA,CAAA;AACE,UAAA;;AAGF,CAAA;AACE,SAAA;AACA,UAAA;AACA,UAAA,IAAA,MAAA;AACA,sBAAA;AACA,iBAAA;AACA,WAAA;AACA,aAAA,YAAA,KAAA,OAAA;;AAGF,WAHE;AAIA;AACE,eAAA,OAAA;;;",
+  "names": []
+}

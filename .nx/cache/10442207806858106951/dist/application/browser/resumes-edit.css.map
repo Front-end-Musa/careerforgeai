@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/application/resumes/resumes-edit/resumes-edit.scss"],
+  "sourcesContent": [":host {\r\n  display: block;\r\n}\r\n\r\n"],
+  "mappings": ";AAAA;AACE,WAAA;;",
+  "names": []
+}
