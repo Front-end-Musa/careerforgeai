@@ -94,13 +94,34 @@ export class AuthEffects {
   deleteAccountEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteAccount),
-      tap(() =>
+      switchMap(() =>
         this.authService$.deleteAccount().pipe(
           map(() => deleteAccountSuccess()),
           catchError((error: FirebaseError) => of(deleteAccountFailure({ error: error.message }))),
-        )
+        ),
       ),
     ),
+  );
+
+  deleteAccountSuccessEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(deleteAccountSuccess),
+        tap(() => this.authService$.noUserRedirect()),
+      ),
+    { dispatch: false },
+  );
+
+  deleteAccountFailureEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(deleteAccountFailure),
+        tap(({ error }) => {
+          console.error('Delete account failed:', error);
+          // You could inject a notification service here if needed
+        }),
+      ),
+    { dispatch: false },
   );
 
   initUserEffect = createEffect(() =>
