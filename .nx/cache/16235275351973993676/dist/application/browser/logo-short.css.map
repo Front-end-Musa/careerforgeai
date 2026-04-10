@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/logos/logo-short/logo-short.scss"],
-  "sourcesContent": [".logo {\r\n    width: 50px;\r\n    height: 50px;\r\n\r\n    .lightning {\r\n        font-size: 30px;\r\n    }\r\n}\r\n\r\n@media (max-width: 576px) {\r\n    .logo {\r\n        width: 40px;\r\n        height: 40px;\r\n\r\n        .lightning {\r\n            font-size: 20px;\r\n        }\r\n    }\r\n}"],
-  "mappings": ";AAAA,CAAA;AACI,SAAA;AACA,UAAA;;AAEA,CAJJ,KAII,CAAA;AACI,aAAA;;AAIR,OAAA,CAAA,SAAA,EAAA;AACI,GAVJ;AAWQ,WAAA;AACA,YAAA;;AAEA,GAdR,KAcQ,CAVJ;AAWQ,eAAA;;;",
-  "names": []
-}

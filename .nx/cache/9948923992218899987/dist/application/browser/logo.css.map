@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/logos/logo/logo.scss"],
-  "sourcesContent": ["@use '@angular/material' as mat;\r\n\r\n.brand {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  justify-content: center;\r\n\r\n  .brand-name {\r\n    font-size: 20px;\r\n    font-weight: 600;\r\n    margin: 0;\r\n  }\r\n}\r\n\r\n* {\r\n  -webkit-touch-callout: none;\r\n  -webkit-user-select: none;\r\n  -khtml-user-select: none;\r\n  -moz-user-select: none;\r\n  -ms-user-select: none;\r\n  user-select: none;\r\n}\r\n"],
-  "mappings": ";AAEA,CAAA;AACE,WAAA;AACA,eAAA;AACA,OAAA;AACA,mBAAA;;AAEA,CANF,MAME,CAAA;AACE,aAAA;AACA,eAAA;AACA,UAAA;;AAIJ;AACE,yBAAA;AACA,uBAAA;AACA,sBAAA;AACA,oBAAA;AACA,mBAAA;AACA,eAAA;;",
-  "names": []
-}

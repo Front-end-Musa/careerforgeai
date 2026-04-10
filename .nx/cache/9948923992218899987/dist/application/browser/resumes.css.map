@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/application/resumes/resumes.scss"],
-  "sourcesContent": ["button {\r\n  border-radius: 8px;\r\n}"],
-  "mappings": ";AAAA;AACE,iBAAA;;",
-  "names": []
-}

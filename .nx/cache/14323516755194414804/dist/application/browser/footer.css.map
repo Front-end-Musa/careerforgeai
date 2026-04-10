@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/landing/footer/footer.scss"],
-  "sourcesContent": [".footer {\r\n  background-color: #0f172a;\r\n  padding: 40px 0;\r\n}\r\n\r\n.wrapper {\r\n  gap: 10px;\r\n  color: #ffffff;\r\n  text-align: center;\r\n}\r\n\r\n.footer a {\r\n  text-decoration: none;\r\n  color: #ffffff;\r\n}\r\n\r\n.footer a:hover {\r\n  text-decoration: underline;\r\n}\r\n\r\n.footer * {\r\n  box-sizing: border-box;\r\n  color: #ffffff;\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,oBAAA;AACA,WAAA,KAAA;;AAGF,CAAA;AACE,OAAA;AACA,SAAA;AACA,cAAA;;AAGF,CAXA,OAWA;AACE,mBAAA;AACA,SAAA;;AAGF,CAhBA,OAgBA,CAAA;AACE,mBAAA;;AAGF,CApBA,OAoBA;AACE,cAAA;AACA,SAAA;;",
-  "names": []
-}

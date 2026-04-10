@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/landing/pricing-plans/data/billing.actions.ts"],
-  "sourcesContent": ["import { createAction, props } from '@ngrx/store';\r\n\r\nexport type PaidPlan = 'pro' | 'premium';\r\n\r\nexport const startCheckout = createAction(\r\n  '[Billing] Start Checkout',\r\n  props<{ plan: PaidPlan }>(),\r\n);\r\n\r\nexport const startCheckoutSuccess = createAction(\r\n  '[Billing] Start Checkout Success',\r\n  props<{ checkoutUrl: string }>(),\r\n);\r\n\r\nexport const startCheckoutFailure = createAction(\r\n  '[Billing] Start Checkout Failure',\r\n  props<{ error: string }>(),\r\n);\r\n\r\nexport const clearBillingError = createAction('[Billing] Clear Error');\r\n"],
-  "mappings": ";;;;;;;AAIO,IAAM,gBAAgB,aAC3B,4BACA,MAAK,CAAsB;AAGtB,IAAM,uBAAuB,aAClC,oCACA,MAAK,CAA2B;AAG3B,IAAM,uBAAuB,aAClC,oCACA,MAAK,CAAqB;AAGrB,IAAM,oBAAoB,aAAa,uBAAuB;",
-  "names": []
-}

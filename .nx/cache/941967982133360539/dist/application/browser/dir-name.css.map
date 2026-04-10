@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/application/dir-name/dir-name.scss"],
-  "sourcesContent": [".dir-name-container {\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  font-size: 1.5rem;\r\n  font-weight: bold;\r\n  border-bottom: 1px solid #e0e0e0;\r\n  background-color: #fff;\r\n  width: 100%;\r\n  height: 80px;\r\n\r\n  .app-section {\r\n    display: flex;\r\n    flex-direction: row;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n\r\n    .additional-items {\r\n      display: flex;\r\n      align-items: center;\r\n    }\r\n  }\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,kBAAA;AACA,eAAA;AACA,mBAAA;AACA,aAAA;AACA,eAAA;AACA,iBAAA,IAAA,MAAA;AACA,oBAAA;AACA,SAAA;AACA,UAAA;;AAEA,CAZF,mBAYE,CAAA;AACE,WAAA;AACA,kBAAA;AACA,eAAA;AACA,mBAAA;;AAEA,CAlBJ,mBAkBI,CANF,YAME,CAAA;AACE,WAAA;AACA,eAAA;;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/pages/application/interview-coach/interview-coach.ts", "src/app/pages/application/interview-coach/interview-coach.html"],
-  "sourcesContent": ["import { Component } from '@angular/core';\r\n\r\n@Component({\r\n  selector: 'app-interview-coach',\r\n  imports: [],\r\n  templateUrl: './interview-coach.html',\r\n  styleUrl: './interview-coach.scss',\r\n})\r\nexport class InterviewCoach {\r\n\r\n}\r\n", "<h1 class=\"coming-soon\">Coming soon...</h1>\r\n"],
-  "mappings": ";;;;;;;;;;;;AAQM,IAAO,iBAAP,MAAO,gBAAc;;qCAAd,iBAAc;EAAA;yEAAd,iBAAc,WAAA,CAAA,CAAA,qBAAA,CAAA,GAAA,OAAA,GAAA,MAAA,GAAA,QAAA,CAAA,CAAA,GAAA,aAAA,CAAA,GAAA,UAAA,SAAA,wBAAA,IAAA,KAAA;AAAA,QAAA,KAAA,GAAA;ACR3B,MAAA,4BAAA,GAAA,MAAA,CAAA;AAAwB,MAAA,iBAAA,GAAA,gBAAA;AAAc,MAAA,0BAAA;;;;;sEDQzB,gBAAc,CAAA;UAN1B;uBACW,uBAAqB,SACtB,CAAA,GAAE,UAAA,kDAAA,CAAA;;;;6EAIA,gBAAc,EAAA,WAAA,kBAAA,UAAA,gEAAA,YAAA,EAAA,CAAA;AAAA,GAAA;",
-  "names": []
-}
