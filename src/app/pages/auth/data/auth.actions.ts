@@ -39,3 +39,10 @@ export const logoutFailure = createAction(
 );
 
 export const authResolvedNoUser = createAction('[Users] Auth Resolved No User');
+
+export const deleteAccount = createAction('[Users] Delete Account');
+export const deleteAccountSuccess = createAction('[Users] Delete Account Success');
+export const deleteAccountFailure = createAction(
+  '[Users] Delete Account Failure',
+  props<{ error: string }>(),
+);

@@ -4,6 +4,9 @@ import { AuthService } from '../../../core/services/auth.service';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import {
   authResolvedNoUser,
+  deleteAccount,
+  deleteAccountFailure,
+  deleteAccountSuccess,
   initUser,
   initUserFailure,
   initUserSuccess,
@@ -86,6 +89,18 @@ export class AuthEffects {
         tap(() => this.authService$.noUserRedirect()),
       ),
     { dispatch: false },
+  );
+
+  deleteAccountEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteAccount),
+      tap(() =>
+        this.authService$.deleteAccount().pipe(
+          map(() => deleteAccountSuccess()),
+          catchError((error: FirebaseError) => of(deleteAccountFailure({ error: error.message }))),
+        )
+      ),
+    ),
   );
 
   initUserEffect = createEffect(() =>

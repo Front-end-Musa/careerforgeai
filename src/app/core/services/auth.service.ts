@@ -10,9 +10,27 @@ import {
   signOut,
   User,
 } from '@angular/fire/auth';
-import { Observable, from, of, switchMap, catchError, EMPTY, take, filter, firstValueFrom } from 'rxjs';
+import {
+  Observable,
+  from,
+  of,
+  switchMap,
+  catchError,
+  EMPTY,
+  take,
+  filter,
+  firstValueFrom,
+  throwError,
+} from 'rxjs';
 import { AppUser, LoginUser } from '../interfaces/user.interface';
-import { deleteDoc, doc, docData, DocumentReference, Firestore, setDoc } from '@angular/fire/firestore';
+import {
+  deleteDoc,
+  doc,
+  docData,
+  DocumentReference,
+  Firestore,
+  setDoc,
+} from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CallableService } from './callable.service';
 
@@ -24,9 +42,10 @@ export class AuthService {
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
   private callableService = inject(CallableService);
-  private ensurePolarCustomerFn = this.callableService.callable<void, { providerCustomerId: string }>(
-    'ensurePolarCustomer',
-  );
+  private ensurePolarCustomerFn = this.callableService.callable<
+    void,
+    { providerCustomerId: string }
+  >('ensurePolarCustomer');
 
   constructor(private firestore: Firestore) {}
 
@@ -61,6 +80,24 @@ export class AuthService {
       catchError((err) => {
         console.error('logout error:', err.message);
         throw err;
+      }),
+    );
+  }
+
+  deleteAccount(): Observable<void> {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) {
+      return of(undefined);
+    }
+
+    console.log('Attempting to delete account for user:', currentUser.uid);
+
+    console.trace('deleteAccount called');
+
+    return from(deleteUser(currentUser)).pipe(
+      catchError((err) => {
+        console.error('delete account error:', err.message);
+        return throwError(() => err);
       }),
     );
   }
@@ -131,7 +168,10 @@ export class AuthService {
     return await firstValueFrom(this.getUser$(uid));
   }
 
-  private async compensateFailedRegistration(userRef: DocumentReference, firebaseUser: User | null) {
+  private async compensateFailedRegistration(
+    userRef: DocumentReference,
+    firebaseUser: User | null,
+  ) {
     try {
       await deleteDoc(userRef);
     } catch (error) {
