@@ -3,33 +3,8 @@
     <button class="add-job-btn" type="button" aria-label="Add Job" (click)="openAddJobModal()">
       <span class="btn-icon">+</span>
       Add Job
-    </button></app-dir-name
-  >
-  <div class="app-section">
-    <div class="applied-list jobs-list">
-      <h2>Applied</h2>
-      <div
-        id="applied"
-        class="applied-items list"
-        cdkDropList
-        #appliedList="cdkDropList"
-        [cdkDropListData]="appliedJobs()"
-        [cdkDropListConnectedTo]="[interviewingList, offerList, rejectedList]"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (job of appliedJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
-        }
-      </div>
-    </div>
-    <div class="interviewing-list jobs-list">
-      <h2>Interviewing</h2><div class="job-tracker container">
-  <app-dir-name title="Job Application Tracker" (additionalElemClicked)="openAddJobModal()">
-    <button class="add-job-btn" type="button" aria-label="Add Job" (click)="openAddJobModal()">
-      <span class="btn-icon">+</span>
-      Add Job
-    </button></app-dir-name
-  >
+    </button>
+  </app-dir-name>
   <div class="app-section">
     <div class="applied-list jobs-list">
       <h2>Applied</h2>
@@ -49,55 +24,6 @@
     </div>
     <div class="interviewing-list jobs-list">
       <h2>Interviewing</h2>
-      <div
-        id="interviewing"
-        class="interviewing-items list"
-        cdkDropList
-        #interviewingList="cdkDropList"
-        [cdkDropListData]="interviewingJobs()"
-        [cdkDropListConnectedTo]="[appliedList, offerList, rejectedList]"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (job of interviewingJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
-        }
-      </div>
-    </div>
-    <div class="offer-list jobs-list">
-      <h2>Offer</h2>
-      <div
-        id="offered"
-        class="offer-items list"
-        cdkDropList
-        #offerList="cdkDropList"
-        [cdkDropListData]="offerJobs()"
-        [cdkDropListConnectedTo]="[appliedList, interviewingList, rejectedList]"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (job of offerJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
-        }
-      </div>
-    </div>
-    <div class="rejected-list jobs-list">
-      <h2>Rejected</h2>
-      <div
-        id="rejected"
-        class="rejected-items list"
-        cdkDropList
-        #rejectedList="cdkDropList"
-        [cdkDropListData]="rejectedJobs()"
-        [cdkDropListConnectedTo]="[appliedList, interviewingList, offerList]"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (job of rejectedJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
-        }
-      </div>
-    </div>
-  </div>
-</div>
-
       <div
         id="interviewing"
         class="interviewing-items list"
