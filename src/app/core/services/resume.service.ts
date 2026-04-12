@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
-  addDoc,
   collection,
   collectionData,
   query,
@@ -9,13 +8,12 @@ import {
   orderBy,
   doc,
   docData,
-  updateDoc,
-  serverTimestamp,
   deleteDoc,
 } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { FirebaseError } from 'firebase/app';
 import { Resume } from '../interfaces/resumes.interface';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -25,10 +23,23 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root',
 })
 export class ResumeService {
+  private functions = inject(Functions);
+  private createResumeFn = httpsCallable<{ resume: Partial<Resume> }, { resumeId: string }>(
+    this.functions,
+    'createResume',
+  );
+  private updateResumeFn = httpsCallable<
+    { resumeId: string; changes: Partial<Resume> },
+    { success: boolean }
+  >(this.functions, 'updateResume');
+  private downloadResumeFn = httpsCallable<
+    { resumeId: string },
+    { fileName: string; contentType: string; content: string }
+  >(this.functions, 'downloadResume');
+
   constructor(
     private firestore: Firestore,
     private auth: Auth,
-    private functions: Functions,
   ) {}
 
   getResumesForUser(): Observable<Resume[]> {
@@ -54,28 +65,13 @@ export class ResumeService {
   }
 
   createResume(resume: Partial<Resume>): Observable<string> {
-    const resumesRef = collection(this.firestore, 'resumes');
-    return new Observable<string>((observer) => {
-      const currentUser = this.auth.currentUser;
-      if (!currentUser) {
-        observer.error(new Error('User not authenticated'));
-        return;
-      }
-
-      addDoc(resumesRef, {
-        ...resume,
-        userId: currentUser.uid,
-        createdAt: serverTimestamp(),
-      })
-        .then((docRef) => {
-          observer.next(docRef.id);
-          observer.complete();
-        })
-        .catch((err) => {
-          console.error('Error creating resume:', err);
-          observer.error(err);
-        });
-    });
+    return from(this.createResumeFn({ resume })).pipe(
+      map((result) => result.data.resumeId),
+      catchError((err) => {
+        console.error('Error creating resume:', err);
+        return throwError(() => this.toResumeCallableError(err, 'create'));
+      }),
+    );
   }
 
   getResumeById(id: string): Observable<Resume | null> {
@@ -90,24 +86,21 @@ export class ResumeService {
   }
 
   updateResume(id: string, changes: Partial<Resume>): Observable<void> {
-    const resumeRef = doc(this.firestore, 'resumes', id);
-    return new Observable<void>((observer) => {
-      updateDoc(resumeRef, changes as Record<string, unknown>)
-        .then(() => {
-          observer.next();
-          observer.complete();
-        })
-        .catch((err) => {
-          console.error('Error updating resume:', err);
-          observer.error(err);
-        });
-    });
+    return from(this.updateResumeFn({ resumeId: id, changes })).pipe(
+      map(() => undefined),
+      catchError((err) => {
+        console.error('Error updating resume:', err);
+        return throwError(() => this.toResumeCallableError(err, 'update'));
+      }),
+    );
   }
 
-  async exportToPdf(formGroup: FormGroup): Promise<void> {
+  async exportToPdf(resumeId: string, formGroup: FormGroup): Promise<void> {
     if (typeof window === 'undefined') {
       return;
     }
+
+    await this.downloadResumeFn({ resumeId });
 
     const previewElement = document.querySelector(
       '.preview-content .resume-preview',
@@ -146,14 +139,50 @@ export class ResumeService {
     pdf.save(`${sanitizedName}.pdf`);
   }
 
+  downloadResume(resumeId: string) {
+    return from(this.downloadResumeFn({ resumeId })).pipe(map((result) => result.data));
+  }
+
   deleteResume(id: string): Observable<void> {
     const resumeRef = doc(this.firestore, 'resumes', id);
     return from(deleteDoc(resumeRef)).pipe(
       map(() => {}),
       catchError((err) => {
         console.error('Error deleting resume:', err);
-        throw err;
+        return throwError(() => err);
       }),
     );
+  }
+
+  private toResumeCallableError(error: unknown, action: 'create' | 'update') {
+    if (error instanceof FirebaseError) {
+      const actionLabel = action === 'create' ? 'save' : 'update';
+
+      if (error.code === 'functions/not-found') {
+        return new Error(
+          `Resume ${actionLabel} is unavailable because the deployed Cloud Function is missing. Rebuild and redeploy Firebase Functions.`,
+        );
+      }
+
+      if (error.code === 'functions/unauthenticated') {
+        return new Error('Sign in again before saving your resume.');
+      }
+
+      if (error.code === 'functions/internal') {
+        return new Error(
+          `Resume ${actionLabel} failed in Cloud Functions. Check the deployed function logs and confirm the backend matches the current source.`,
+        );
+      }
+
+      if (error.message) {
+        return new Error(error.message);
+      }
+    }
+
+    if (error instanceof Error) {
+      return error;
+    }
+
+    return new Error(`Unable to ${action} your resume.`);
   }
 }

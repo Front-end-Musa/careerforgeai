@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ResumesTailor } from './resumes-tailor';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { AuthFacade } from '../../../auth/data/auth.facade';
+import { BillingFacade } from '../../../landing/pricing-plans/data/billing.facade';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 
 describe('ResumesTailor', () => {
   let component: ResumesTailor;
@@ -13,6 +16,8 @@ describe('ResumesTailor', () => {
     tailoring$: BehaviorSubject<boolean>;
     tailorError$: BehaviorSubject<string | null>;
     saveSucceeded$: BehaviorSubject<boolean>;
+    resumes$: BehaviorSubject<Resume[]>;
+    loadResumes: jasmine.Spy;
     getResumeById: jasmine.Spy;
     tailorResumeData: jasmine.Spy;
   };
@@ -57,6 +62,8 @@ describe('ResumesTailor', () => {
       tailoring$: new BehaviorSubject(false),
       tailorError$: new BehaviorSubject<string | null>(null),
       saveSucceeded$: new BehaviorSubject(false),
+      resumes$: new BehaviorSubject<Resume[]>([resume]),
+      loadResumes: jasmine.createSpy('loadResumes'),
       getResumeById: jasmine.createSpy('getResumeById').and.returnValue(of(resume)),
       tailorResumeData: jasmine.createSpy('tailorResumeData'),
     };
@@ -75,6 +82,36 @@ describe('ResumesTailor', () => {
           },
         },
         { provide: ResumesFacade, useValue: facadeMock },
+        {
+          provide: AuthFacade,
+          useValue: {
+            user$: of({
+              name: 'Paid User',
+              email: 'paid@example.com',
+              role: 'user',
+              profileViews: 0,
+              plan: 'pro',
+              subscriptionStatus: 'active',
+              currentPeriodEnd: null,
+              providerCustomerId: 'cust_123',
+              providerSubscriptionId: 'sub_123',
+              providerVariantId: 'variant_123',
+              freeGenerationsUsed: 0,
+            }),
+          },
+        },
+        {
+          provide: BillingFacade,
+          useValue: jasmine.createSpyObj<BillingFacade>('BillingFacade', ['startCheckout'], {
+            loading$: of(false),
+            error$: of(null),
+            selectedPlan$: of(null),
+          }),
+        },
+        {
+          provide: ResumeUpgradeService,
+          useValue: { startUpgrade: jasmine.createSpy('startUpgrade') },
+        },
       ],
     }).compileComponents();
 

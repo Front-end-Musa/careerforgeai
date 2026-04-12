@@ -13,22 +13,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, 'us-central1');
 
-const emulatorHost = process.env.FUNCTIONS_EMULATOR_HOST ?? '127.0.0.1';
-const emulatorPort = Number(process.env.FUNCTIONS_EMULATOR_PORT ?? 5001);
-connectFunctionsEmulator(functions, emulatorHost, emulatorPort);
+const shouldUseEmulator =
+  process.argv.includes('--emulator') ||
+  (!process.argv.includes('--deployed') && process.env.USE_FUNCTIONS_EMULATOR !== 'false');
+
+if (shouldUseEmulator) {
+  const emulatorHost = process.env.FUNCTIONS_EMULATOR_HOST ?? '127.0.0.1';
+  const emulatorPort = Number(process.env.FUNCTIONS_EMULATOR_PORT ?? 5001);
+  connectFunctionsEmulator(functions, emulatorHost, emulatorPort);
+  console.log(`[INFO] Using Functions emulator at ${emulatorHost}:${emulatorPort}`);
+} else {
+  console.log('[INFO] Using deployed Functions in us-central1');
+}
 
 const checks = [
   { name: 'syncEntitlements', data: undefined, expectedCodes: ['functions/unauthenticated'] },
-  { name: 'generateResume', data: { resumeText: 'Test resume' }, expectedCodes: ['functions/unauthenticated'] },
   {
-    name: 'generateCoverLetter',
-    data: {
-      resumeText: 'Test resume',
-      jobDescription: 'Test job',
-      companyName: 'Test company',
-      position: 'Engineer',
-      tone: 'formal',
-    },
+    name: 'createResume',
+    data: { resume: { templateId: 'basic', personalInfo: { fullName: 'Smoke Test' } } },
+    expectedCodes: ['functions/unauthenticated'],
+  },
+  {
+    name: 'updateResume',
+    data: { resumeId: 'demo-resume-id', changes: { summary: 'Smoke test update' } },
     expectedCodes: ['functions/unauthenticated'],
   },
   { name: 'downloadResume', data: { resumeId: 'demo-resume-id' }, expectedCodes: ['functions/unauthenticated'] },

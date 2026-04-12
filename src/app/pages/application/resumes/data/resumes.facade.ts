@@ -62,8 +62,8 @@ export class ResumesFacade {
     return this.resumeService.getResumeById(id);
   }
 
-  exportResumeToPdf(formGroup: FormGroup) {
-    return this.resumeService.exportToPdf(formGroup);
+  exportResumeToPdf(resumeId: string, formGroup: FormGroup) {
+    return this.resumeService.exportToPdf(resumeId, formGroup);
   }
 
   deleteResume(resumeId: string) {

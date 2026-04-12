@@ -1,8 +1,11 @@
 <app-resume-template-modal
   #templateModal
   [plan]="(plan$ | async) || 'free'"
+  [user]="currentUser"
+  [resumeCount]="resumeCount"
   [selectedTemplateId]="selectedTemplateId ?? null"
   (templateSelected)="onTemplateSelected($event)"
+  (upgradeRequested)="handleTemplateUpgrade($event)"
 ></app-resume-template-modal>
 
 <app-resumes-create
@@ -10,5 +13,7 @@
   [resumeId]="resumeId"
   [templateId]="selectedTemplateId"
   [plan]="(plan$ | async) || 'free'"
+  [user]="currentUser"
+  [resumeCount]="resumeCount"
   (changeTemplate)="openTemplateModal()"
 ></app-resumes-create>

@@ -1,0 +1,58 @@
+@if (context$ | async; as context) {
+  <section class="upgrade-page">
+    <div class="upgrade-shell">
+      <div class="upgrade-header">
+        <a routerLink="/" class="back-link">Back</a>
+        <span class="eyebrow">Plan Selection</span>
+        <h1>{{ heading() }}</h1>
+        <p class="subtitle">{{ reasonMessage(context.reason) }}</p>
+      </div>
+
+      <div class="plan-grid">
+        @for (plan of plans; track plan.planSlug) {
+          <button
+            type="button"
+            class="plan-card"
+            [class.selected]="selectedPlan() === plan.planSlug"
+            [class.recommended]="plan.planSlug === context.recommendedPlan"
+            (click)="selectPlan(plan.planSlug)"
+          >
+            @if (plan.planSlug === context.recommendedPlan) {
+              <span class="badge">Recommended</span>
+            }
+            <div class="plan-top">
+              <div>
+                <h2>{{ plan.name }}</h2>
+                <p class="price">${{ plan.price }}<span>/month</span></p>
+              </div>
+              <span class="selector">{{ selectedPlan() === plan.planSlug ? 'Selected' : 'Choose' }}</span>
+            </div>
+
+            <ul class="feature-list">
+              @for (feature of plan.features; track feature.text) {
+                <li [class.included]="feature.included" [class.excluded]="!feature.included">
+                  {{ feature.text }}
+                </li>
+              }
+            </ul>
+          </button>
+        }
+      </div>
+
+      @if (error$ | async; as error) {
+        <p class="error-message">{{ error }}</p>
+      }
+
+      @if (loading$ | async) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+
+      <div class="actions">
+        <button type="button" mat-stroked-button routerLink="/">Keep Browsing</button>
+        <button type="button" mat-flat-button color="primary" (click)="continueToCheckout()">
+          Continue to Checkout
+        </button>
+      </div>
+    </div>
+  </section>
+}
