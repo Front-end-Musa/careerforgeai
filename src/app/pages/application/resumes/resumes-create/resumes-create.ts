@@ -11,11 +11,15 @@ import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
 import { ResumesFacade } from '../data/resumes.facade';
 import { Location } from '@angular/common';
 import { ResumePreview } from '../resume-preview/resume-preview';
-import { map, startWith, take, filter, skip } from 'rxjs';
+import { distinctUntilChanged, filter, map, skip, startWith, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { AppUser } from '../../../../core/interfaces/user.interface';
+import { FirebaseError } from 'firebase/app';
+import { getTemplateLabel } from '../data/resume-template-catalog';
+import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-resumes-create',
@@ -38,6 +42,8 @@ export class ResumesCreate implements OnInit, OnChanges {
   @Input() resumeId: string | null = null;
   @Input() templateId?: ResumeTemplateId;
   @Input() plan: 'free' | 'pro' | 'premium' = 'free';
+  @Input() user: AppUser | null = null;
+  @Input() resumeCount = 0;
   @Output() changeTemplate = new EventEmitter<void>();
 
   resumeGroup: FormGroup;
@@ -46,6 +52,9 @@ export class ResumesCreate implements OnInit, OnChanges {
   destroyRef = inject(DestroyRef);
   location = inject(Location);
   router = inject(Router);
+  resumeAccessPolicy = inject(ResumeAccessPolicyService);
+  resumeUpgrade = inject(ResumeUpgradeService);
+  notifications = inject(NotificationsService);
   isSaving$ = this.resumesFacade.saving$;
   currentStep = 0;
   progressPercent = 25;
@@ -102,6 +111,17 @@ export class ResumesCreate implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.router.navigate(['/application/resumes']);
+      });
+
+    this.resumesFacade.error$
+      .pipe(
+        skip(1),
+        filter((error): error is string => Boolean(error)),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((error) => {
+        this.notifications.showError(error);
       });
 
     if (!this.isEditMode || !this.resumeId) {
@@ -485,22 +505,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   getTemplateLabel(templateId: ResumeTemplateId) {
-    const labels: Record<ResumeTemplateId, string> = {
-      'basic': 'Basic',
-      'ats-simple': 'ATS-Friendly Simple',
-      'classic-one-column': 'Classic One-Column',
-      'pro-modern': 'Pro (Professional & Modern)',
-      'cascade': 'Cascade (Pro)',
-      'cubic-pro': 'Cubic (Pro)',
-      'tech-savvy': 'Tech-Savvy',
-      'modern-executive': 'Modern Executive',
-      'premium-executive': 'Premium (Executive & High-End)',
-      'executive-edge': 'Executive Edge',
-      'graphical-genius': 'Graphical Genius',
-      'elite-senior': 'Elite Senior',
-      'metamorphic-masterpiece': 'Metamorphic Masterpiece',
-    };
-    return labels[templateId] ?? 'Basic';
+    return getTemplateLabel(templateId);
   }
 
   requestTemplateChange() {
@@ -508,42 +513,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   isTemplateLocked(templateId: ResumeTemplateId) {
-    return this.planRank(this.plan) < this.planRank(this.requiredPlan(templateId));
-  }
-
-  private requiredPlan(templateId: ResumeTemplateId) {
-    const proTemplates: ResumeTemplateId[] = [
-      'pro-modern',
-      'cascade',
-      'cubic-pro',
-      'tech-savvy',
-      'modern-executive',
-    ];
-    const premiumTemplates: ResumeTemplateId[] = [
-      'premium-executive',
-      'executive-edge',
-      'graphical-genius',
-      'elite-senior',
-      'metamorphic-masterpiece',
-    ];
-
-    if (premiumTemplates.includes(templateId)) {
-      return 'premium';
-    }
-    if (proTemplates.includes(templateId)) {
-      return 'pro';
-    }
-    return 'free';
-  }
-
-  private planRank(plan: 'free' | 'pro' | 'premium') {
-    if (plan === 'premium') {
-      return 3;
-    }
-    if (plan === 'pro') {
-      return 2;
-    }
-    return 1;
+    return !this.resumeAccessPolicy.canUseTemplate(this.user, this.resumeCount, templateId);
   }
 
   goBack() {
@@ -555,6 +525,19 @@ export class ResumesCreate implements OnInit, OnChanges {
     if (this.resumeGroup.invalid) {
       console.log(this.resumeGroup);
       this.resumeGroup.markAllAsTouched();
+      return;
+    }
+
+    if (
+      !this.isEditMode &&
+      this.resumeAccessPolicy.requiresUpgrade('second_resume', this.user, this.resumeCount)
+    ) {
+      this.resumeUpgrade.startUpgrade({
+        reason: 'second_resume',
+        returnTo: '/application/resumes',
+        recommendedPlan: 'pro',
+        message: this.resumeAccessPolicy.upgradeMessage('second_resume'),
+      });
       return;
     }
 
@@ -601,39 +584,37 @@ export class ResumesCreate implements OnInit, OnChanges {
       return;
     }
 
-    const previewElement = document.querySelector('.preview-content .resume-preview') as HTMLElement | null;
-    if (!previewElement) {
+    if (!this.resumeId) {
+      this.notifications.showError('Save the resume before exporting it.');
       return;
     }
 
-    const canvas = await html2canvas(previewElement, {
-      scale: Math.max(window.devicePixelRatio, 2),
-      backgroundColor: '#ffffff',
-      useCORS: true,
-    });
-
-    const imageData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 0;
-    const contentWidth = pageWidth - margin * 2;
-    const imageHeight = (canvas.height * contentWidth) / canvas.width;
-    const pageContentHeight = pageHeight - margin * 2;
-
-    let renderedHeight = 0;
-    pdf.addImage(imageData, 'PNG', margin, margin, contentWidth, imageHeight);
-    renderedHeight += pageContentHeight;
-
-    while (renderedHeight < imageHeight) {
-      pdf.addPage();
-      pdf.addImage(imageData, 'PNG', margin, margin - renderedHeight, contentWidth, imageHeight);
-      renderedHeight += pageContentHeight;
+    if (this.resumeAccessPolicy.requiresUpgrade('download', this.user, this.resumeCount)) {
+      this.resumeUpgrade.startUpgrade({
+        reason: 'download',
+        returnTo: `/application/resumes/${this.resumeId}/edit`,
+        recommendedPlan: 'pro',
+        message: this.resumeAccessPolicy.upgradeMessage('download'),
+      });
+      return;
     }
 
-    const fullName = this.resumeGroup.get('personalInfo.fullName')?.value?.trim();
-    const sanitizedName = (fullName || 'resume').replace(/[^\w\-]+/g, '_');
-    pdf.save(`${sanitizedName}.pdf`);
+    try {
+      await this.resumesFacade.exportResumeToPdf(this.resumeId, this.resumeGroup);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError && error.code === 'functions/permission-denied') {
+        this.resumeUpgrade.startUpgrade({
+          reason: 'download',
+          returnTo: `/application/resumes/${this.resumeId}/edit`,
+          recommendedPlan: 'pro',
+          message: this.resumeAccessPolicy.upgradeMessage('download'),
+        });
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : 'Unable to export your resume.';
+      this.notifications.showError(message);
+    }
   }
 
   private loadResumeForEdit(id: string) {

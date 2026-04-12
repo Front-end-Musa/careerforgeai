@@ -4,7 +4,7 @@ import {onCall, onRequest, HttpsError} from "firebase-functions/v2/https";
 import {logger} from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
 import {getAuth} from "firebase-admin/auth";
-import {getFirestore} from "firebase-admin/firestore";
+import {Timestamp, getFirestore} from "firebase-admin/firestore";
 import {Polar} from "@polar-sh/sdk";
 import {validateEvent, WebhookVerificationError} from "@polar-sh/sdk/webhooks";
 
@@ -28,6 +28,9 @@ type AppUserDoc = {
   currentPeriodEnd?: Date | null;
   entitlementsUpdatedAt?: number | null;
 };
+
+type UpgradeReason = "second_resume" | "download" | "tailor" | "template_lock";
+type TemplatePlan = "free" | "pro" | "premium";
 
 type TailorExperienceEntry = {
   company?: string;
@@ -144,6 +147,172 @@ function resolvePlanFromProduct(productName: unknown): PlanTier {
     return "pro";
   }
   return "free";
+}
+
+/**
+ * Returns true when the user has an active paid subscription.
+ * @param {AppUserDoc} user App user billing state.
+ * @return {boolean} Whether paid resume features are enabled.
+ */
+function canUsePaidResumeFeatures(user: AppUserDoc): boolean {
+  const hasPaidPlan = user.plan === "pro" || user.plan === "premium";
+  return hasPaidPlan && user.subscriptionStatus === "active";
+}
+
+/**
+ * Returns the minimum plan required for a resume template.
+ * @param {unknown} templateId Requested template id.
+ * @return {TemplatePlan} Required template plan.
+ */
+function requiredPlanForTemplate(templateId: unknown): TemplatePlan {
+  if (
+    templateId === "premium-executive" ||
+    templateId === "executive-edge" ||
+    templateId === "graphical-genius" ||
+    templateId === "elite-senior" ||
+    templateId === "metamorphic-masterpiece"
+  ) {
+    return "premium";
+  }
+
+  if (
+    templateId === "pro-modern" ||
+    templateId === "cascade" ||
+    templateId === "cubic-pro" ||
+    templateId === "tech-savvy" ||
+    templateId === "modern-executive"
+  ) {
+    return "pro";
+  }
+
+  return "free";
+}
+
+/**
+ * Returns true when the user's plan can use the requested template.
+ * @param {AppUserDoc} user User billing state.
+ * @param {unknown} templateId Requested template id.
+ * @return {boolean} Whether template access is allowed.
+ */
+function canUseTemplate(user: AppUserDoc, templateId: unknown): boolean {
+  const requiredPlan = requiredPlanForTemplate(templateId);
+  const effectivePlan = canUsePaidResumeFeatures(user) ? user.plan ?? "free" : "free";
+  const rank: Record<TemplatePlan, number> = {free: 1, pro: 2, premium: 3};
+  return rank[effectivePlan] >= rank[requiredPlan];
+}
+
+/**
+ * Reads and validates the current user's profile document.
+ * @param {string} uid Firebase auth UID.
+ * @return {Promise<AppUserDoc>} User document data.
+ */
+async function getUserProfile(uid: string): Promise<AppUserDoc> {
+  const userSnapshot = await getFirestore().collection("users").doc(uid).get();
+  if (!userSnapshot.exists) {
+    throw new HttpsError("failed-precondition", "User profile does not exist.");
+  }
+
+  return userSnapshot.data() as AppUserDoc;
+}
+
+/**
+ * Counts the current user's resumes up to the provided limit.
+ * @param {string} uid Firebase auth UID.
+ * @param {number} limit Maximum number of resumes to scan.
+ * @return {Promise<number>} Resume count up to limit.
+ */
+async function countUserResumes(uid: string, limit = 2): Promise<number> {
+  const snapshot = await getFirestore()
+    .collection("resumes")
+    .where("userId", "==", uid)
+    .limit(limit)
+    .get();
+
+  return snapshot.size;
+}
+
+/**
+ * Throws when the user cannot create another resume.
+ * @param {string} uid Firebase auth UID.
+ * @return {Promise<void>} Resolves when creation is allowed.
+ */
+async function assertCanCreateResume(uid: string): Promise<void> {
+  const user = await getUserProfile(uid);
+  if (canUsePaidResumeFeatures(user)) {
+    return;
+  }
+
+  const resumeCount = await countUserResumes(uid);
+  if (user.plan === "free" && resumeCount === 0) {
+    return;
+  }
+
+  throw new HttpsError(
+    "permission-denied",
+    "Your free plan includes one saved resume. Upgrade to create another.",
+    {reason: "second_resume"},
+  );
+}
+
+/**
+ * Throws when the user cannot access paid resume actions.
+ * @param {string} uid Firebase auth UID.
+ * @param {UpgradeReason} reason Why access is being checked.
+ * @return {Promise<void>} Resolves when action is allowed.
+ */
+async function assertHasPaidResumeAccess(uid: string, reason: UpgradeReason): Promise<void> {
+  const user = await getUserProfile(uid);
+  if (canUsePaidResumeFeatures(user)) {
+    return;
+  }
+
+  const messages: Record<UpgradeReason, string> = {
+    second_resume: "Your free plan includes one saved resume. Upgrade to create another.",
+    download: "Resume downloads are available on paid plans.",
+    tailor: "AI tailoring is available on paid plans.",
+    template_lock: "Upgrade your plan to unlock this template.",
+  };
+
+  throw new HttpsError("permission-denied", messages[reason], {reason});
+}
+
+/**
+ * Throws when the requested template is not available on the user's plan.
+ * @param {string} uid Firebase auth UID.
+ * @param {unknown} templateId Requested template id.
+ * @return {Promise<void>} Resolves when template access is allowed.
+ */
+async function assertCanUseTemplate(uid: string, templateId: unknown): Promise<void> {
+  const user = await getUserProfile(uid);
+  if (canUseTemplate(user, templateId)) {
+    return;
+  }
+
+  throw new HttpsError(
+    "permission-denied",
+    "Upgrade your plan to unlock this template.",
+    {reason: "template_lock"},
+  );
+}
+
+/**
+ * Throws when the user tries to move a resume onto a locked template.
+ * Existing locked templates may remain unchanged after downgrade.
+ * @param {string} uid Firebase auth UID.
+ * @param {unknown} currentTemplateId Existing template id.
+ * @param {unknown} nextTemplateId Requested template id.
+ * @return {Promise<void>} Resolves when template transition is allowed.
+ */
+async function assertCanPersistTemplateChange(
+  uid: string,
+  currentTemplateId: unknown,
+  nextTemplateId: unknown,
+): Promise<void> {
+  if (currentTemplateId === nextTemplateId) {
+    return;
+  }
+
+  await assertCanUseTemplate(uid, nextTemplateId);
 }
 
 /**
@@ -729,6 +898,62 @@ export const generateResume = onCall(
   },
 );
 
+export const createResume = onCall({secrets: [], invoker: "public"}, async (request) => {
+  const uid = request.auth?.uid;
+  const {resume} = request.data as { resume?: Record<string, unknown> };
+
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Authentication is required.");
+  }
+
+  if (!resume || typeof resume !== "object") {
+    throw new HttpsError("invalid-argument", "A valid resume payload is required.");
+  }
+
+  await assertCanCreateResume(uid);
+  await assertCanPersistTemplateChange(uid, undefined, resume.templateId);
+
+  const docRef = await getFirestore().collection("resumes").add({
+    ...resume,
+    userId: uid,
+    createdAt: Timestamp.now(),
+  });
+
+  return {resumeId: docRef.id};
+});
+
+export const updateResume = onCall({secrets: [], invoker: "public"}, async (request) => {
+  const uid = request.auth?.uid;
+  const {resumeId, changes} = request.data as {
+    resumeId?: string;
+    changes?: Record<string, unknown>;
+  };
+
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Authentication is required.");
+  }
+
+  if (!resumeId || !changes || typeof changes !== "object") {
+    throw new HttpsError("invalid-argument", "resumeId and changes are required.");
+  }
+
+  const resumeRef = getFirestore().collection("resumes").doc(resumeId);
+  const resumeSnapshot = await resumeRef.get();
+  if (!resumeSnapshot.exists) {
+    throw new HttpsError("not-found", "Resume not found.");
+  }
+
+  const currentResume = resumeSnapshot.data() as {userId?: string; templateId?: unknown};
+  if (currentResume.userId !== uid) {
+    throw new HttpsError("permission-denied", "You do not have access to this resume.");
+  }
+
+  await assertCanPersistTemplateChange(uid, currentResume.templateId, changes.templateId ?? currentResume.templateId);
+  await resumeRef.update(changes);
+
+  return {success: true};
+});
+
 export const generateCoverLetter = onCall(
   {secrets: [openaiSecret], invoker: "public"},
   async (request) => {
@@ -767,12 +992,19 @@ export const generateCoverLetter = onCall(
 export const tailorResumeToJob = onCall(
   {secrets: [openaiSecret], invoker: "public"},
   async (request) => {
+    const uid = request.auth?.uid;
     const {resume, companyName, position, jobDescription} = request.data as {
       resume?: TailorResumeInput;
       companyName?: string;
       position?: string;
       jobDescription?: string;
     };
+
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
+    }
+
+    await assertHasPaidResumeAccess(uid, "tailor");
 
     if (!resume || typeof resume !== "object") {
       throw new HttpsError("invalid-argument", "A valid resume payload is required.");
@@ -930,6 +1162,8 @@ export const downloadResume = onCall({secrets: [], invoker: "public"}, async (re
   if (resume.userId !== uid) {
     throw new HttpsError("permission-denied", "You do not have access to this resume.");
   }
+
+  await assertHasPaidResumeAccess(uid, "download");
 
   const safeName = (resume.personalInfo?.fullName || "resume")
     .replace(/[^a-zA-Z0-9_-]+/g, "_")

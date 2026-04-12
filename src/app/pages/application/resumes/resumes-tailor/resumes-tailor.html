@@ -23,6 +23,12 @@
       </div>
 
       <form [formGroup]="tailorForm" (ngSubmit)="applyTailoring()" class="tailor-form">
+        @if (!canTailorResume) {
+          <div class="feedback error">
+            Upgrade to a paid plan to tailor resumes for specific jobs.
+          </div>
+        }
+
         <mat-form-field   class="full-width">
           <mat-label>Company Name</mat-label>
           <input matInput formControlName="companyName" placeholder="Acme Inc." />
@@ -58,7 +64,7 @@
         <div class="actions">
           <button type="button" mat-stroked-button routerLink="/application/resumes">Cancel</button>
           <button type="submit" mat-flat-button color="primary" [disabled]="submitting$ | async">
-            Apply Tailoring
+            {{ canTailorResume ? 'Apply Tailoring' : 'Upgrade to Tailor' }}
           </button>
         </div>
       </form>

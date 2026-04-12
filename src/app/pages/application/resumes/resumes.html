@@ -2,8 +2,11 @@
   <app-resume-template-modal
     #templateModal
     [plan]="(plan$ | async) || 'free'"
+    [user]="currentUser"
+    [resumeCount]="resumeCount"
     [selectedTemplateId]="selectedTemplateId ?? null"
     (templateSelected)="onTemplateSelected($event)"
+    (upgradeRequested)="handleTemplateUpgrade($event)"
     (closed)="handleTemplateModalClosed()"
   ></app-resume-template-modal>
   <app-dir-name title="AI Resume Generator">
@@ -17,6 +20,8 @@
       <app-resumes-create
         [templateId]="selectedTemplateId"
         [plan]="(plan$ | async) || 'free'"
+        [user]="currentUser"
+        [resumeCount]="resumeCount"
         (changeTemplate)="openTemplateModal()"
       ></app-resumes-create>
     } @else {

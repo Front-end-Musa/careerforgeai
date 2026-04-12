@@ -10,7 +10,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { combineLatest, filter, map, skip, take } from 'rxjs';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { AppUser } from '../../../../core/interfaces/user.interface';
+import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { ResumesFacade } from '../data/resumes.facade';
+import { AuthFacade } from '../../../auth/data/auth.facade';
 
 @Component({
   selector: 'app-resumes-tailor',
@@ -32,6 +36,9 @@ export class ResumesTailor {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private resumesFacade = inject(ResumesFacade);
+  private authFacade = inject(AuthFacade);
+  private resumeAccessPolicy = inject(ResumeAccessPolicyService);
+  private resumeUpgrade = inject(ResumeUpgradeService);
 
   readonly saving$ = this.resumesFacade.saving$;
   readonly tailoring$ = this.resumesFacade.tailoring$;
@@ -41,6 +48,8 @@ export class ResumesTailor {
   );
   readonly resume = signal<Resume | null>(null);
   readonly applySuccess = signal(false);
+  readonly currentUser = signal<AppUser | null>(null);
+  readonly resumeCount = signal(0);
 
   readonly tailorForm = new FormGroup({
     companyName: new FormControl('', [Validators.required, Validators.minLength(2)]),
@@ -67,6 +76,14 @@ export class ResumesTailor {
         this.resume.set(resume);
       });
 
+    this.resumesFacade.loadResumes();
+    combineLatest([this.authFacade.user$, this.resumesFacade.resumes$])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([user, resumes]) => {
+        this.currentUser.set(user);
+        this.resumeCount.set(resumes.length);
+      });
+
     this.resumesFacade.saveSucceeded$
       .pipe(
         skip(1),
@@ -79,12 +96,30 @@ export class ResumesTailor {
   }
 
   applyTailoring() {
+    const currentResume = this.resume();
+    if (
+      this.resumeAccessPolicy.requiresUpgrade(
+        'tailor',
+        this.currentUser(),
+        this.resumeCount(),
+      )
+    ) {
+      this.resumeUpgrade.startUpgrade({
+        reason: 'tailor',
+        returnTo: currentResume?.id
+          ? `/application/resumes/${currentResume.id}/tailor`
+          : '/application/resumes',
+        recommendedPlan: 'pro',
+        message: this.resumeAccessPolicy.upgradeMessage('tailor'),
+      });
+      return;
+    }
+
     if (this.tailorForm.invalid) {
       this.tailorForm.markAllAsTouched();
       return;
     }
 
-    const currentResume = this.resume();
     if (!currentResume?.id) {
       return;
     }
@@ -99,5 +134,9 @@ export class ResumesTailor {
       formValue.position ?? '',
       formValue.jobDescription ?? '',
     );
+  }
+
+  get canTailorResume() {
+    return this.resumeAccessPolicy.canTailorResume(this.currentUser());
   }
 }

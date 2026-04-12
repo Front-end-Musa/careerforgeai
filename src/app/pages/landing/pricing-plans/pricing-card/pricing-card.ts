@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { BillingFacade } from '../data/billing.facade';
 import { PaidPlan } from '../data/billing.actions';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 
 @Component({
   selector: 'app-pricing-card',
@@ -10,8 +10,8 @@ import { PaidPlan } from '../data/billing.actions';
   styleUrl: './pricing-card.scss',
 })
 export class PricingCard {
-  private readonly billingFacade = inject(BillingFacade);
   private readonly router = inject(Router);
+  private readonly resumeUpgrade = inject(ResumeUpgradeService);
 
   @Input() plan!: {
     name: string;
@@ -33,7 +33,10 @@ export class PricingCard {
       return;
     }
 
-    this.billingFacade.clearError();
-    this.billingFacade.startCheckout(this.planSlug);
+    this.resumeUpgrade.startUpgrade({
+      reason: 'pricing',
+      returnTo: '/application/resumes',
+      recommendedPlan: this.planSlug,
+    });
   }
 }
