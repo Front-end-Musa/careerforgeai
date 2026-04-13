@@ -1,17 +1,23 @@
 import { createAction, props } from '@ngrx/store';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { ResumeGenerationRequest, ResumeGenerationResult } from '../../../../core/interfaces/resume-generation.interface';
 
-export const createResume = createAction('[AI] Create', props<{ resumeText: string }>());
-
-export const createResumeSuccess = createAction(
-  '[AI] Create Success',
-  props<{ resume: string }>()
+export const generateResume = createAction(
+  '[AI] Generate Resume',
+  props<{ request: ResumeGenerationRequest }>()
 );
 
-export const createResumeFailure = createAction(
-  '[AI] Create Failure',
+export const generateResumeSuccess = createAction(
+  '[AI] Generate Resume Success',
+  props<{ result: ResumeGenerationResult }>()
+);
+
+export const generateResumeFailure = createAction(
+  '[AI] Generate Resume Failure',
   props<{ error: string }>()
 );
+
+export const clearResumeGenerationResult = createAction('[AI] Clear Resume Generation Result');
 
 export const deleteResume = createAction(
   '[Resume] Delete',
@@ -25,20 +31,6 @@ export const deleteResumeSuccess = createAction(
 
 export const deleteResumeFailure = createAction(
   '[Resume] Delete Failure',
-  props<{ error: string }>()
-);
-
-export const saveAIResult = createAction(
-  '[AI] Save Result',
-  props<{ userId: string; result: Resume }>()
-);
-
-export const saveAIResultSuccess = createAction(
-  '[AI] Save Result Success'
-);
-
-export const saveAIResultFailure = createAction(
-  '[AI] Save Result Failure',
   props<{ error: string }>()
 );
 

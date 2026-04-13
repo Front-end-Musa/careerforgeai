@@ -1,16 +1,44 @@
-<div class="resume-card">
-  <div class="resume-info-wrapper">
-    <span class="material-symbols-outlined icon-blue">description</span>
-    <div class="resume-info-text">
-      <div class="resume-title">{{ resume.personalInfo.jobTitle }}</div>
+<article class="resume-card">
+  <div class="resume-card__identity">
+    <div class="resume-card__icon" aria-hidden="true">
+      <span class="material-symbols-outlined">description</span>
+    </div>
+
+    <div class="resume-card__headline">
+      <p class="resume-card__title">{{ resume.personalInfo.jobTitle }}</p>
+      <div class="resume-card__subtitle">
+        <span>{{ displayName }}</span>
+        @if (templateLabel) {
+          <span class="resume-card__separator" aria-hidden="true">•</span>
+          <span>{{ templateLabel }}</span>
+        }
+      </div>
     </div>
   </div>
-  <div class="updatedat">Updated at {{ resume.meta.updatedAt | date : 'dd.MM.yyyy' }}</div>
-  <div class="resume-btns">
-    <button class="edit-btn" [routerLink]="['/application/resumes', resume.id, 'edit']">Edit</button>
-    <button class="tailor-btn" [routerLink]="['/application/resumes', resume.id, 'tailor']">AI Tailor</button>
-    <button class="delete-btn" (click)="deleteResume()">
-      <span class="material-symbols-outlined resume-mat delete-btn">Delete</span>
+
+  <div class="resume-card__meta" aria-label="Resume details">
+    <span class="resume-chip">Updated {{ resume.meta.updatedAt | date : 'dd MMM yyyy' }}</span>
+    <span class="resume-chip">{{ sourceLabel }}</span>
+    @if (hasTailoring) {
+      <span class="resume-chip resume-chip--accent">Tailored</span>
+    }
+  </div>
+
+  <div class="resume-card__actions">
+    <button
+      class="resume-card__btn resume-card__btn--primary"
+      [routerLink]="['/application/resumes', resume.id, 'edit']"
+    >
+      Edit
+    </button>
+    <button
+      class="resume-card__btn resume-card__btn--secondary"
+      [routerLink]="['/application/resumes', resume.id, 'tailor']"
+    >
+      AI Tailor
+    </button>
+    <button class="resume-card__icon-btn" type="button" aria-label="Delete resume" (click)="deleteResume()">
+      <span class="material-symbols-outlined">delete</span>
     </button>
   </div>
-</div>
+</article>

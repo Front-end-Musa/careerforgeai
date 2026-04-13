@@ -20,6 +20,18 @@
       <div class="plan-info">
         <div class="plan">
           <h4 class="plan-name">{{ user()?.plan }} plan</h4>
+          <p>
+            Resume generations:
+            {{ usage().resumeGenerationsRemaining }}/{{ entitlements().resumeGenerationsPerPeriod }}
+            left
+          </p>
+          <p>
+            Cover letters:
+            {{ usage().coverLettersRemaining }}/{{ entitlements().coverLettersPerPeriod }} left
+          </p>
+          <p>Job tracker: {{ entitlements().canUseJobTracker ? 'Included' : 'Premium only' }}</p>
+          <p>Resume downloads: {{ entitlements().canDownloadResume ? 'Included' : 'Upgrade required' }}</p>
+          <p>Usage resets {{ nextResetLabel() }}</p>
         </div>
         <button
           mat-button

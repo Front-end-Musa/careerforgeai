@@ -1,23 +1,14 @@
-import { Component, Output, EventEmitter, Input, inject, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatNativeDateModule } from '@angular/material/core';
-import { Job } from '../../../../core/interfaces/job.interface';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Job } from '../../../../core/interfaces/job.interface';
+import { parseIsoDate } from '../../../../core/utils/date-field.util';
+import { DateField } from '../../../../lib/date-field/date-field';
 
 @Component({
   selector: 'app-add-job-modal',
-  imports: [
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatNativeDateModule,
-  ],
+  imports: [ReactiveFormsModule, MatIconModule, DateField],
   templateUrl: './add-job-modal.html',
   styleUrl: './add-job-modal.scss',
 })
@@ -31,19 +22,10 @@ export class AddJobModal {
     title: new FormControl('', Validators.required),
     company: new FormControl('', Validators.required),
     status: new FormControl('', Validators.required),
-    dateApplied: new FormControl<Date | string | null>(null, Validators.required),
+    dateApplied: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    if (this.modalMode === 'edit' && this.existingJob) {
-      this.jobForm.patchValue({
-        title: this.existingJob.title,
-        company: this.existingJob.company,
-        status: this.existingJob.status,
-        dateApplied: this.existingJob.dateApplied,
-      });
-    }
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { modalMode: 'add' | 'edit'; existingJob?: Job }) {}
 
   ngOnInit() {
     this.modalMode = this.data.modalMode;
@@ -54,7 +36,7 @@ export class AddJobModal {
         title: this.existingJob.title,
         company: this.existingJob.company,
         status: this.existingJob.status,
-        dateApplied: this.existingJob.dateApplied,
+        dateApplied: this.normalizeIncomingDate(this.existingJob.dateApplied),
       });
     }
   }
@@ -64,19 +46,31 @@ export class AddJobModal {
   }
 
   onSubmit() {
-    if (this.jobForm.invalid) return;
+    if (this.jobForm.invalid) {
+      return;
+    }
+
     const rawValue = this.jobForm.getRawValue();
-    const dateApplied = rawValue.dateApplied;
-    const normalizedDate =
-      dateApplied instanceof Date ? dateApplied.toISOString().slice(0, 10) : (dateApplied ?? '');
 
     if (this.modalMode === 'add') {
-      this.dialogRef.close({ action: 'save', data: { ...rawValue, dateApplied: normalizedDate } });
-    } else if (this.modalMode === 'edit' && this.existingJob) {
+      this.dialogRef.close({ action: 'save', data: rawValue });
+      return;
+    }
+
+    if (this.existingJob?.id) {
       this.dialogRef.close({
         action: 'save',
-        data: { id: this.existingJob.id, ...rawValue, dateApplied: normalizedDate },
+        data: { id: this.existingJob.id, ...rawValue },
       });
     }
+  }
+
+  private normalizeIncomingDate(value?: string | null) {
+    if (!value) {
+      return '';
+    }
+
+    const isoDate = value.slice(0, 10);
+    return parseIsoDate(isoDate) ? isoDate : '';
   }
 }

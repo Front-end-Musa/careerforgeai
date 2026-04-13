@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { FirebaseError } from 'firebase/app';
 import { CallableService } from './callable.service';
+import { PlanEntitlements } from '../interfaces/entitlements.interface';
 
 type PaidPlan = 'pro' | 'premium';
 type PlanTier = 'free' | 'pro' | 'premium';
@@ -22,11 +23,17 @@ export class BillingService {
     void,
     {
       plan: PlanTier;
+      entitlements: PlanEntitlements;
       subscriptionStatus: SubscriptionStatus;
       providerCustomerId: string;
       providerSubscriptionId: string;
       providerVariantId: string;
       currentPeriodEnd: number | null;
+      usagePeriodKey: string | null;
+      usagePeriodStartedAt: number | null;
+      usagePeriodEndsAt: number | null;
+      resumeGenerationsUsed: number;
+      coverLettersUsed: number;
       entitlementsUpdatedAt: number;
     }
   >('syncEntitlements');

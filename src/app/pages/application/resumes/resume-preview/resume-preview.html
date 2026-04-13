@@ -1,215 +1,160 @@
-<div class="resume-preview" [attr.data-template]="templateId" [class.template-classic]="layoutType === 'classic'" [class.template-modern]="layoutType === 'modern'" [class.template-minimal]="layoutType === 'minimal'">
-  @switch (layoutType) {
-    @case ('classic') {
-      <div class="template template-classic">
-        <div class="header">
-          <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
-          <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
-          <div class="contact">
-            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
-            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
-          </div>
-        </div>
-
-        @if (resume?.summary) {
-          <div class="section">
-            <div class="section-title">Summary</div>
-            <div class="section-body">{{ resume?.summary }}</div>
-          </div>
+<div
+  class="resume-preview"
+  [attr.data-template]="templateId"
+  [class.template-classic]="layoutType === 'classic'"
+  [class.template-modern]="layoutType === 'modern'"
+  [class.template-minimal]="layoutType === 'minimal'"
+>
+  <div class="header">
+    <div>
+      <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
+      <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
+    </div>
+    @if (contactItems.length) {
+      <div class="contact">
+        @for (item of contactItems; track item) {
+          <span>{{ item }}</span>
         }
+      </div>
+    }
+  </div>
 
-        @if (resume?.experience?.length) {
-          <div class="section">
-            <div class="section-title">Experience</div>
-            <div class="section-body">
-              @for (exp of resume?.experience ?? []; track $index) {
-                <div class="item">
-                  <div class="item-title">{{ exp.role }}</div>
-                  <div class="item-subtitle">{{ exp.company }} · {{ exp.startDate }} — {{ exp.endDate }}</div>
-                  @if (exp.description?.length) {
-                    <ul>
-                      @for (point of exp.description; track $index) {
-                        <li>{{ point }}</li>
-                      }
-                    </ul>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        }
+  @for (section of visibleSections; track section.id) {
+    <div class="section" [attr.data-section]="section.type">
+      @if (hasSectionTitle(section)) {
+        <div class="section-title">{{ section.title }}</div>
+      }
 
-        @if (resume?.education?.length) {
-          <div class="section">
-            <div class="section-title">Education</div>
-            <div class="section-body">
-              @for (edu of resume?.education ?? []; track $index) {
-                <div class="item">
-                  <div class="item-title">{{ edu.degree }}</div>
-                  <div class="item-subtitle">{{ edu.school }} · {{ edu.startDate }} — {{ edu.endDate }}</div>
-                  @if (edu.description?.length) {
-                    <ul>
-                      @for (point of edu.description; track $index) {
-                        <li>{{ point }}</li>
-                      }
-                    </ul>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        }
+      <div class="section-body">
+        @switch (section.type) {
+          @case ('summary') {
+            <p class="summary-copy">{{ resume?.summary }}</p>
+          }
 
-        @if (resume?.skills?.length) {
-          <div class="section">
-            <div class="section-title">Skills</div>
-            <div class="section-body skills-list">
-              @for (skill of resume?.skills ?? []; track $index) {
+          @case ('experience') {
+            @for (entry of getExperienceEntries(); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.role }}</div>
+                <div class="item-subtitle">{{ getItemSubtitle(entry) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          }
+
+          @case ('education') {
+            @for (entry of getEducationEntries(); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.degree }}</div>
+                <div class="item-subtitle">{{ getItemSubtitle(entry) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          }
+
+          @case ('skills') {
+            <div class="skills-list">
+              @for (skill of getSkillEntries(); track skill) {
                 <span class="pill">{{ skill }}</span>
               }
             </div>
-          </div>
-        }
-      </div>
-    }
+          }
 
-    @case ('modern') {
-      <div class="template template-modern">
-        <div class="header">
-          <div>
-            <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
-            <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
-          </div>
-          <div class="contact">
-            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
-            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="primary">
-            @if (resume?.summary) {
-              <div class="section">
-                <div class="section-title">Profile</div>
-                <div class="section-body">{{ resume?.summary }}</div>
+          @case ('projects') {
+            @for (entry of getProjectEntries(section); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.name }}</div>
+                <div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
               </div>
             }
+          }
 
-            @if (resume?.experience?.length) {
-              <div class="section">
-                <div class="section-title">Experience</div>
-                <div class="section-body">
-                  @for (exp of resume?.experience ?? []; track $index) {
-                    <div class="item">
-                      <div class="item-title">{{ exp.role }}</div>
-                      <div class="item-subtitle">{{ exp.company }} · {{ exp.startDate }} — {{ exp.endDate }}</div>
-                      @if (exp.description?.length) {
-                        <ul>
-                          @for (point of exp.description; track $index) {
-                            <li>{{ point }}</li>
-                          }
-                        </ul>
-                      }
-                    </div>
-                  }
+          @case ('certifications') {
+            @for (entry of getCertificationEntries(section); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.name }}</div>
+                <div class="item-subtitle">
+                  {{ joinValues([entry.issuer, entry.issueDate, entry.credentialLink]) }}
                 </div>
               </div>
             }
-          </div>
-          <div class="secondary">
-            @if (resume?.skills?.length) {
-              <div class="section">
-                <div class="section-title">Skills</div>
-                <div class="section-body skills-list">
-                  @for (skill of resume?.skills ?? []; track $index) {
-                    <span class="pill">{{ skill }}</span>
-                  }
-                </div>
-              </div>
-            }
+          }
 
-            @if (resume?.education?.length) {
-              <div class="section">
-                <div class="section-title">Education</div>
-                <div class="section-body">
-                  @for (edu of resume?.education ?? []; track $index) {
-                    <div class="item">
-                      <div class="item-title">{{ edu.degree }}</div>
-                      <div class="item-subtitle">{{ edu.school }} · {{ edu.startDate }} — {{ edu.endDate }}</div>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    }
-
-    @case ('minimal') {
-      <div class="template template-minimal">
-        <div class="header">
-          <div class="name">{{ resume?.personalInfo?.fullName || 'Your Name' }}</div>
-          <div class="title">{{ resume?.personalInfo?.jobTitle || 'Job Title' }}</div>
-          <div class="contact">
-            @if (resume?.contact?.email) { <span>{{ resume?.contact?.email }}</span> }
-            @if (resume?.contact?.phone) { <span>{{ resume?.contact?.phone }}</span> }
-          </div>
-        </div>
-
-        @if (resume?.summary) {
-          <div class="section">
-            <div class="section-body">{{ resume?.summary }}</div>
-          </div>
-        }
-
-        @if (resume?.experience?.length) {
-          <div class="section">
-            <div class="section-title">Experience</div>
-            <div class="section-body">
-              @for (exp of resume?.experience ?? []; track $index) {
-                <div class="item">
-                  <div class="item-title">{{ exp.role }} · {{ exp.company }}</div>
-                  <div class="item-subtitle">{{ exp.startDate }} — {{ exp.endDate }}</div>
-                  @if (exp.description?.length) {
-                    <div class="inline-points">
-                      @for (point of exp.description; track $index) {
-                        <span>{{ point }}</span>
-                      }
-                    </div>
-                  }
-                </div>
+          @case ('languages') {
+            <div class="inline-items">
+              @for (entry of getLanguageEntries(section); track $index) {
+                <span>{{ joinValues([entry.language, entry.proficiency], ' - ') }}</span>
               }
             </div>
-          </div>
-        }
+          }
 
-        @if (resume?.education?.length) {
-          <div class="section">
-            <div class="section-title">Education</div>
-            <div class="section-body">
-              @for (edu of resume?.education ?? []; track $index) {
-                <div class="item">
-                  <div class="item-title">{{ edu.degree }} · {{ edu.school }}</div>
-                  <div class="item-subtitle">{{ edu.startDate }} — {{ edu.endDate }}</div>
-                </div>
-              }
-            </div>
-          </div>
-        }
+          @case ('awards') {
+            @for (entry of getAwardEntries(section); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.title }}</div>
+                <div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          }
 
-        @if (resume?.skills?.length) {
-          <div class="section">
-            <div class="section-title">Skills</div>
-            <div class="section-body skills-list">
-              @for (skill of resume?.skills ?? []; track $index) {
-                <span>{{ skill }}</span>
-              }
-            </div>
-          </div>
+          @case ('volunteer') {
+            @for (entry of getVolunteerEntries(section); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.role || entry.organization }}</div>
+                <div class="item-subtitle">{{ getItemSubtitle(entry) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          }
+
+          @case ('custom') {
+            @for (entry of getCustomEntries(section); track $index) {
+              <div class="item">
+                <div class="item-title">{{ entry.title }}</div>
+                <div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>
+                @if (hasDescription(entry.description)) {
+                  <ul>
+                    @for (point of entry.description; track $index) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          }
         }
       </div>
-    }
+    </div>
   }
 </div>
-

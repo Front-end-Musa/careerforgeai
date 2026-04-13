@@ -1,10 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Store, createFeatureSelector } from '@ngrx/store';
-import { createResume, deleteResume, loadResumes, saveResume, tailorResume } from './resumes.actions';
-import { selectAll, resumesAdapter } from './resumes.reducer';
+import { clearResumeGenerationResult, deleteResume, generateResume, loadResumes, saveResume, tailorResume } from './resumes.actions';
+import { resumesAdapter } from './resumes.reducer';
 import { startWith } from 'rxjs';
 import { ResumesState } from './resumes.reducer';
 import {
+  selectGeneratedResumeText,
+  selectResumesGenerating,
   selectIsLoading,
   selectIsSaving,
   selectResumesError,
@@ -15,8 +17,8 @@ import {
 } from './resumes.selectors';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { ResumeService } from '../../../../core/services/resume.service';
-import { NotificationsService } from '../../../../core/services/notifications.service';
 import { FormGroup } from '@angular/forms';
+import { ResumeGenerationRequest } from '../../../../core/interfaces/resume-generation.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -24,11 +26,12 @@ import { FormGroup } from '@angular/forms';
 export class ResumesFacade {
   private store = inject(Store);
   private resumeService = inject(ResumeService);
-  private notificationsService = inject(NotificationsService);
   private selectResumesState = createFeatureSelector<ResumesState>('resumes');
   private selectAllResumes = resumesAdapter.getSelectors(this.selectResumesState).selectAll;
   resumes$ = this.store.select(this.selectAllResumes).pipe(startWith([]));
   loading$ = this.store.select(selectIsLoading);
+  generating$ = this.store.select(selectResumesGenerating);
+  generatedResult$ = this.store.select(selectGeneratedResumeText);
   saving$ = this.store.select(selectIsSaving);
   saveSucceeded$ = this.store.select(selectSaveSucceeded);
   tailoring$ = this.store.select(selectIsTailoring);
@@ -40,8 +43,12 @@ export class ResumesFacade {
     this.store.dispatch(loadResumes());
   }
 
-  generateResume(resumeText: string) {
-    this.store.dispatch(createResume({ resumeText }));
+  generateResumeRequest(request: ResumeGenerationRequest) {
+    this.store.dispatch(generateResume({ request }));
+  }
+
+  clearGeneratedResult() {
+    this.store.dispatch(clearResumeGenerationResult());
   }
 
   saveResumeData(resume: Partial<Resume>, resumeId?: string | null) {

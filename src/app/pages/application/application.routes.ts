@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { premiumFeatureGuard } from '../auth/guards/premium-feature.guard';
 
 export const APPLICATION_ROUTES: Routes = [
   {
@@ -90,6 +91,7 @@ export const APPLICATION_ROUTES: Routes = [
       {
         path: 'job-tracker',
         loadComponent: () => import('./job-tracker/job-tracker').then((c) => c.JobTracker),
+        canActivate: [premiumFeatureGuard],
         data: {
           seo: {
             title: 'Job Tracker | ResumeCrafts AI',

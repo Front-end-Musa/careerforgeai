@@ -20,6 +20,7 @@ export class ResumesList implements OnInit {
   @Output() createRequested = new EventEmitter<void>();
   private resumesFacade = inject(ResumesFacade);
   private destroyRef = inject(DestroyRef);
+  readonly itemSize = 168;
   resumesStatus = ResumesStatus;
   status$: Observable<ResumesStatus> = this.resumesFacade.status$;
   resumes = signal<Resume[]>([]);

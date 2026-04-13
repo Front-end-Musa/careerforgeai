@@ -1,4 +1,9 @@
-import { Timestamp } from "@angular/fire/firestore";
+import { Timestamp } from '@angular/fire/firestore';
+import {
+  PlanEntitlements,
+  PlanTier,
+  SubscriptionStatus,
+} from './entitlements.interface';
 
 export interface AppUser {
   uid?: string;
@@ -7,16 +12,23 @@ export interface AppUser {
   password?: string;
   role: string;
   profileViews: number;
-  plan: 'free' | 'pro' | 'premium';
-  subscriptionStatus: 'none' | 'active' | 'past_due' | 'cancelled';
+  plan: PlanTier;
+  subscriptionStatus: SubscriptionStatus;
   currentPeriodEnd: Timestamp | null;
   providerCustomerId: string;
   providerSubscriptionId: string;
   providerVariantId: string;
-  freeGenerationsUsed: number;
+  entitlements?: PlanEntitlements;
+  resumeGenerationsUsed?: number;
+  coverLettersUsed?: number;
+  usagePeriodKey?: string | null;
+  usagePeriodStartedAt?: Timestamp | null;
+  usagePeriodEndsAt?: Timestamp | null;
+  freeGenerationsUsed?: number;
+  fullResumeGenerationsUsed?: number;
   emailVerified?: boolean;
   entitlementsUpdatedAt?: number | null;
-};
+}
 
 export interface LoginUser {
   email: string;

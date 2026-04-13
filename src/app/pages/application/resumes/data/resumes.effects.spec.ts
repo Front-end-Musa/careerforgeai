@@ -6,8 +6,9 @@ import * as resumesActions from './resumes.actions';
 import { ResumeService } from '../../../../core/services/resume.service';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { ResumeGenerationResult } from '../../../../core/interfaces/resume-generation.interface';
 
-describe('ResumeEffects (tailoring)', () => {
+describe('ResumeEffects', () => {
   let actions$: Observable<any>;
   let effects: ResumeEffects;
   let aiServiceMock: jasmine.SpyObj<AiAgentService>;
@@ -63,6 +64,63 @@ describe('ResumeEffects (tailoring)', () => {
     });
 
     effects = TestBed.inject(ResumeEffects);
+  });
+
+  it('should dispatch generate resume success with typed result', (done) => {
+    const result: ResumeGenerationResult = {
+      mode: 'summary',
+      summary: 'Generated summary',
+    };
+
+    aiServiceMock.generateResume.and.returnValue(of(result));
+
+    actions$ = of(
+      resumesActions.generateResume({
+        request: {
+          mode: 'summary',
+          resume: {
+            personalInfo: { fullName: 'Jane Doe', jobTitle: 'Frontend Engineer' },
+            skills: ['Angular'],
+          },
+        },
+      }),
+    );
+
+    effects.generateResumeEffect.subscribe({
+      next: (action) => {
+        expect(action).toEqual(resumesActions.generateResumeSuccess({ result }));
+        done();
+      },
+      error: done.fail,
+    });
+  });
+
+  it('should dispatch generate resume failure with a string error message', (done) => {
+    aiServiceMock.generateResume.and.returnValue(throwError(() => ({ code: 'functions/internal' })));
+
+    actions$ = of(
+      resumesActions.generateResume({
+        request: {
+          mode: 'summary',
+          resume: {
+            personalInfo: { fullName: 'Jane Doe', jobTitle: 'Frontend Engineer' },
+            skills: ['Angular'],
+          },
+        },
+      }),
+    );
+
+    effects.generateResumeEffect.subscribe({
+      next: (action) => {
+        expect(action).toEqual(
+          resumesActions.generateResumeFailure({
+            error: 'Failed to complete the request. Please try again.',
+          }),
+        );
+        done();
+      },
+      error: done.fail,
+    });
   });
 
   it('should dispatch tailor success and save on tailor success', (done) => {

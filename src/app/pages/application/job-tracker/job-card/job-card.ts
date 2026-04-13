@@ -26,6 +26,9 @@ export class JobCard {
   openEditJobModal(job: Job) {
     const dialogRef = this.dialog.open(AddJobModal, {
       data: { modalMode: 'edit', existingJob: job },
+      autoFocus: false,
+      width: 'min(560px, calc(100vw - 32px))',
+      panelClass: 'cf-app-dialog',
     });
 
     dialogRef.afterClosed().subscribe((result) => {

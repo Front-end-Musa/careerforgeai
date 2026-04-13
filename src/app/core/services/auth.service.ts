@@ -33,6 +33,7 @@ import {
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CallableService } from './callable.service';
+import { getPlanEntitlements } from './plan-entitlements';
 
 @Injectable({
   providedIn: 'root',
@@ -153,6 +154,8 @@ export class AuthService {
     const uid = userCredential.user.uid;
     const userRef = doc(this.firestore, 'users', uid);
 
+    const entitlements = getPlanEntitlements('free');
+
     await setDoc(userRef, {
       name: user.name,
       email: user.email,
@@ -165,7 +168,14 @@ export class AuthService {
       providerCustomerId: '',
       providerSubscriptionId: '',
       providerVariantId: '',
+      entitlements,
+      resumeGenerationsUsed: 0,
+      coverLettersUsed: 0,
+      usagePeriodKey: null,
+      usagePeriodStartedAt: null,
+      usagePeriodEndsAt: null,
       freeGenerationsUsed: 0,
+      fullResumeGenerationsUsed: 0,
       emailVerified: false,
       entitlementsUpdatedAt: null,
     });

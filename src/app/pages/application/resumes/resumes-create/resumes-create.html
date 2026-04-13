@@ -1,370 +1,549 @@
-<div class="resumes-create-wrapper">
-  <div class="form-container">
-    <!-- Header -->
-    <div class="header">
-      <button mat-icon-button class="back-btn" (click)="goBack()">
+<div class="resumes-create-shell">
+  <form [formGroup]="resumeGroup" class="builder-panel">
+    <div class="builder-header">
+      <button mat-icon-button class="icon-btn" type="button" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <div class="header-content">
-        <h1 class="title">{{ isEditMode ? 'Edit Resume' : 'Create New Resume' }}</h1>
-        <p class="subtitle">
-          {{
-            isEditMode ? 'Update details and save changes' : 'Fill in your details to get started'
-          }}
-        </p>
+
+      <div class="builder-intro">
+        <p class="eyebrow">{{ isEditMode ? 'Resume Editor' : 'Resume Builder' }}</p>
+        <h1>{{ isEditMode ? 'Edit Resume' : 'Create Resume' }}</h1>
+        <p>Arrange sections, fill details, and watch the preview update in real time.</p>
+        <p class="eyebrow">{{ resumeUsageLabel }} • Resets {{ nextResetLabel() }}</p>
+      </div>
+
+      <div class="builder-actions">
+        @if (!isEditMode) {
+          <app-generate-btn
+            class="header-generate"
+            [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+            (generate)="generateWithAI()"
+            label="Generate Full Resume"
+          ></app-generate-btn>
+        }
+        @if (canStoreCurrentResume) {
+          <button type="button" mat-flat-button color="primary" (click)="saveResume()">
+            {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
+          </button>
+        } @else {
+          <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
+            Upgrade To Save
+          </button>
+        }
       </div>
     </div>
 
-    <!-- Progress Bar -->
-    @if (!isEditMode) {
-      <mat-progress-bar
-        mode="determinate"
-        [value]="progressPercent"
-        class="progress-bar"
-      ></mat-progress-bar>
+    <div class="builder-status">
+      <div>
+        <span class="status-label">{{ completionLabel }}</span>
+        <mat-progress-bar mode="determinate" [value]="completionPercent"></mat-progress-bar>
+      </div>
+      <div class="status-pill">{{ activeSectionCount }} sections active</div>
+    </div>
+
+    @if (generationError$ | async; as generationError) {
+      <div class="generation-error">{{ generationError }}</div>
     }
 
-    <!-- Form -->
-    <form [formGroup]="resumeGroup" class="form-content">
-      <!-- Personal Information Section -->
-      <div class="form-section">
-        <div class="section-header" (click)="toggleSection('personal')">
-          <mat-icon [class.rotated]="showPersonal">expand_more</mat-icon>
-          <div>
-            <h2 class="section-title">Personal Information</h2>
-            <p class="section-subtitle">Complete personal information to improve your score</p>
-          </div>
+    @if (hasAiGeneratedDraft && !canStoreCurrentResume) {
+      <div class="generation-error">
+        Free plans can preview one AI-generated resume, but upgrading is required to save or download it.
+      </div>
+    }
+
+    <div class="add-section-bar">
+      <button type="button" mat-stroked-button (click)="toggleAddSectionMenu()">
+        <mat-icon>add</mat-icon>
+        Add Section
+      </button>
+
+      @if (showAddSectionMenu) {
+        <div class="add-section-menu">
+          @for (type of availableSectionTypes; track type) {
+            <button type="button" class="add-option" (click)="addSection(type)">
+              {{ sectionLabels[type] }}
+            </button>
+          }
+          <button type="button" class="add-option" (click)="addSection('custom')">Custom Section</button>
         </div>
+      }
+    </div>
 
-        @if (showPersonal) {
-          <div class="section-content">
-            <div formGroupName="personalInfo">
-              <div class="form-row">
-                <div class="form-field full-width">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Full Name*</mat-label>
-                    <input matInput formControlName="fullName" placeholder="John Smith" />
-                  </mat-form-field>
-                </div>
-              </div>
+    <div class="section-stack">
+      @for (section of orderedSectionControls; let i = $index; track getSectionId(section)) {
+        <div class="section-card" [class.section-card-open]="isSectionExpanded(section)">
+          <div class="section-card-header">
+            <button type="button" class="section-toggle" (click)="toggleSection(section)">
+              <mat-icon [class.rotated]="isSectionExpanded(section)">expand_more</mat-icon>
+            </button>
 
-              <div class="form-row">
-                <div class="form-field">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Job Title</mat-label>
-                    <input
-                      matInput
-                      formControlName="jobTitle"
-                      placeholder="Senior Software Engineer"
-                    />
-                  </mat-form-field>
-                </div>
-              </div>
+            <div class="section-meta">
+              <h2>{{ getSectionTitle(section) }}</h2>
+              <p>{{ getSectionCountLabel(section) }}</p>
             </div>
 
-            <div formGroupName="contact">
-              <div class="form-row">
-                <div class="form-field">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Email*</mat-label>
-                    <input matInput formControlName="email" placeholder="john@email.com" />
-                  </mat-form-field>
-                </div>
-                <div class="form-field">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Phone</mat-label>
-                    <input matInput formControlName="phone" placeholder="+1 (555) 123-4567" />
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-field">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Location</mat-label>
-                    <input matInput formControlName="location" placeholder="San Francisco, CA" />
-                  </mat-form-field>
-                </div>
-              </div>
+            <div class="section-toolbar">
+              <button
+                type="button"
+                class="toolbar-btn"
+                [disabled]="!canMoveSectionUp(i)"
+                (click)="moveSection(i, -1)"
+              >
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button
+                type="button"
+                class="toolbar-btn"
+                [disabled]="!canMoveSectionDown(i)"
+                (click)="moveSection(i, 1)"
+              >
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              @if (isRepeatableSection(getSectionType(section))) {
+                <button
+                  type="button"
+                  class="toolbar-btn add-entry"
+                  (click)="addEntry(getSectionType(section), getSectionId(section))"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              }
+              @if (canRemoveSection(section)) {
+                <button type="button" class="toolbar-btn remove" (click)="removeSection(section)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
             </div>
+          </div>
 
-            <div class="form-row">
-              <div class="form-field full-width">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Professional Summary</mat-label>
-                  <textarea
-                    matInput
-                    formControlName="summary"
-                    placeholder="Brief professional summary..."
-                    rows="3"
-                  ></textarea>
+          @if (isSectionExpanded(section)) {
+            <div class="section-card-body">
+              @switch (getSectionType(section)) {
+                @case ('personal') {
+                  <div formGroupName="personalInfo" class="field-grid">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Full Name*</mat-label>
+                      <input matInput formControlName="fullName" placeholder="John Smith" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Job Title</mat-label>
+                      <input matInput formControlName="jobTitle" placeholder="Senior Product Designer" />
+                    </mat-form-field>
+                  </div>
+
+                  <div formGroupName="contact" class="field-grid field-grid-wide">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Email*</mat-label>
+                      <input matInput formControlName="email" placeholder="john@email.com" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Phone</mat-label>
+                      <input matInput formControlName="phone" placeholder="+1 555 123 4567" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Location*</mat-label>
+                      <input matInput formControlName="location" placeholder="San Francisco, CA" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>LinkedIn</mat-label>
+                      <input matInput formControlName="linkedin" placeholder="linkedin.com/in/johnsmith" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>GitHub</mat-label>
+                      <input matInput formControlName="github" placeholder="github.com/johnsmith" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Website</mat-label>
+                      <input matInput formControlName="website" placeholder="johnsmith.dev" />
+                    </mat-form-field>
+                  </div>
+                }
+
+                @case ('summary') {
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Professional Summary</mat-label>
+                    <textarea matInput formControlName="summary" rows="5" placeholder="Describe your value, focus, and impact."></textarea>
+                    @if (!isEditMode) {
+                      <mat-hint>AI only uses the details you entered here.</mat-hint>
+                    }
+                  </mat-form-field>
+
                   @if (!isEditMode) {
-                    <mat-hint>AI uses only the info you provided. No invented details.</mat-hint>
-                  }
-                </mat-form-field>
-                @if (!isEditMode) {
-                  <app-generate-btn
-                    class="field-generate-btn"
-                    [disabled]="!canGenerateSummary() || isGenerating"
-                    (generate)="generateSummaryWithAI()"
-                    label="Generate with AI"
-                    [compact]="true"
-                  ></app-generate-btn>
-                  @if (!canGenerateSummary()) {
-                    <p class="summary-ai-note">
-                      Add your full name, job title, and skills before generating a summary.
-                    </p>
+                    <app-generate-btn
+                      [disabled]="!canGenerateSummary() || ((isGenerating$ | async) ?? false)"
+                      (generate)="generateSummaryWithAI()"
+                      label="Generate summary"
+                      [compact]="true"
+                    ></app-generate-btn>
                   }
                 }
-              </div>
-            </div>
-          </div>
-        }
-      </div>
 
-      <!-- Work Experience Section -->
-      <div class="form-section">
-        <div class="section-header" (click)="toggleSection('experience')">
-          <mat-icon [class.rotated]="showWorkExperience">expand_more</mat-icon>
-          <div class="section-header-content">
-            <h2 class="section-title">Work Experience</h2>
-            <span class="count">{{ workExperiences.length }} positions</span>
-          </div>
-          <button
-            type="button"
-            mat-icon-button
-            class="add-btn"
-            (click)="addWorkExperience(); $event.stopPropagation()"
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-
-        @if (showWorkExperience) {
-          <div class="section-content" formArrayName="experience">
-            @for (exp of workExperiences; let i = $index; track i) {
-              <div class="experience-item" [formGroupName]="i">
-                <div class="form-row">
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Company</mat-label>
-                      <input matInput formControlName="company" placeholder="Company name" />
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Role</mat-label>
-                      <input matInput formControlName="role" placeholder="Job title" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Start Date</mat-label>
-                      <input matInput type="month" formControlName="startDate" />
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>End Date</mat-label>
-                      <input matInput type="month" formControlName="endDate" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-field full-width">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Responsibilities & Achievements</mat-label>
-                      <textarea
-                        matInput
-                        formControlName="description"
-                        placeholder="Describe your responsibilities and achievements in this role"
-                        rows="4"
-                      ></textarea>
-                    </mat-form-field>
-                    @if (!isEditMode) {
-                      <app-generate-btn
-                        class="field-generate-btn"
-                        [disabled]="!canGenerateExperience(i) || isGenerating"
-                        (generate)="generateExperienceWithAI(i)"
-                        label="Generate with AI"
-                        [compact]="true"
-                      ></app-generate-btn>
+                @case ('experience') {
+                  <div formArrayName="experience" class="entry-stack">
+                    @for (entry of experienceArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Company</mat-label>
+                            <input matInput formControlName="company" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Role</mat-label>
+                            <input matInput formControlName="role" />
+                          </mat-form-field>
+                          <cf-date-field
+                            formControlName="startDate"
+                            mode="month"
+                            label="Start Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                          <cf-date-field
+                            formControlName="endDate"
+                            mode="month"
+                            label="End Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Responsibilities & Achievements</mat-label>
+                          <textarea matInput formControlName="description" rows="5"></textarea>
+                        </mat-form-field>
+                        <div class="entry-actions">
+                          @if (!isEditMode) {
+                            <app-generate-btn
+                              [disabled]="!canGenerateExperience(entryIndex) || ((isGenerating$ | async) ?? false)"
+                              (generate)="generateExperienceWithAI(entryIndex)"
+                              label="Generate with AI"
+                              [compact]="true"
+                            ></app-generate-btn>
+                          }
+                          <button type="button" mat-stroked-button (click)="removeEntry('experience', entryIndex)">Remove</button>
+                        </div>
+                      </div>
                     }
                   </div>
-                </div>
-                <button
-                  type="button"
-                  mat-icon-button
-                  class="remove-btn"
-                  (click)="removeWorkExperience(i)"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            }
-          </div>
-        }
-      </div>
+                }
 
-      <!-- Education Section -->
-      <div class="form-section">
-        <div class="section-header" (click)="toggleSection('education')">
-          <mat-icon [class.rotated]="showEducation">expand_more</mat-icon>
-          <div class="section-header-content">
-            <h2 class="section-title">Education</h2>
-            <span class="count">{{ educations.length }} degrees</span>
-          </div>
-          <button
-            type="button"
-            mat-icon-button
-            class="add-btn"
-            (click)="addEducation(); $event.stopPropagation()"
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-
-        @if (showEducation) {
-          <div class="section-content" formArrayName="education">
-            @for (edu of educations; let i = $index; track i) {
-              <div class="education-item" [formGroupName]="i">
-                <div class="form-row">
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>School/University</mat-label>
-                      <input matInput formControlName="school" placeholder="School name" />
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Degree</mat-label>
-                      <input matInput formControlName="degree" placeholder="Bachelor's/Master's" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Start Date</mat-label>
-                      <input matInput type="month" formControlName="startDate" />
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>End Date</mat-label>
-                      <input matInput type="month" formControlName="endDate" />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-field full-width">
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Notes</mat-label>
-                      <textarea
-                        matInput
-                        formControlName="description"
-                        placeholder="Honors, activities, or focus areas"
-                        rows="3"
-                      ></textarea>
-                    </mat-form-field>
-                    @if (!isEditMode) {
-                      <app-generate-btn
-                        class="field-generate-btn"
-                        [disabled]="!canGenerateEducation(i) || isGenerating"
-                        (generate)="generateEducationWithAI(i)"
-                        label="Generate with AI"
-                        [compact]="true"
-                      ></app-generate-btn>
+                @case ('education') {
+                  <div formArrayName="education" class="entry-stack">
+                    @for (entry of educationArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>School</mat-label>
+                            <input matInput formControlName="school" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Degree</mat-label>
+                            <input matInput formControlName="degree" />
+                          </mat-form-field>
+                          <cf-date-field
+                            formControlName="startDate"
+                            mode="month"
+                            label="Start Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                          <cf-date-field
+                            formControlName="endDate"
+                            mode="month"
+                            label="End Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Notes</mat-label>
+                          <textarea matInput formControlName="description" rows="4"></textarea>
+                        </mat-form-field>
+                        <div class="entry-actions">
+                          @if (!isEditMode) {
+                            <app-generate-btn
+                              [disabled]="!canGenerateEducation(entryIndex) || ((isGenerating$ | async) ?? false)"
+                              (generate)="generateEducationWithAI(entryIndex)"
+                              label="Generate with AI"
+                              [compact]="true"
+                            ></app-generate-btn>
+                          }
+                          <button type="button" mat-stroked-button (click)="removeEntry('education', entryIndex)">Remove</button>
+                        </div>
+                      </div>
                     }
                   </div>
-                </div>
-                <button
-                  type="button"
-                  mat-icon-button
-                  class="remove-btn"
-                  (click)="removeEducation(i)"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            }
-          </div>
-        }
-      </div>
+                }
 
-      <!-- Skills Section -->
-      <div class="form-section">
-        <div class="section-header" (click)="toggleSection('skills')">
-          <mat-icon [class.rotated]="showSkills">expand_more</mat-icon>
-          <div class="section-header-content">
-            <h2 class="section-title">Skills</h2>
-            <span class="section-subtitle">Technical and soft skills</span>
-          </div>
-        </div>
+                @case ('skills') {
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Skills*</mat-label>
+                    <textarea matInput formControlName="skills" rows="4" placeholder="JavaScript, Angular, UX Strategy, Leadership"></textarea>
+                  </mat-form-field>
+                }
 
-        @if (showSkills) {
-          <div class="section-content">
-            <div class="form-row">
-              <div class="form-field full-width">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Skills*</mat-label>
-                  <textarea
-                    matInput
-                    formControlName="skills"
-                    placeholder="e.g., JavaScript, Python, Project Management"
-                    rows="3"
-                  ></textarea>
-                </mat-form-field>
-              </div>
+                @case ('projects') {
+                  <div formArrayName="projects" class="entry-stack">
+                    @for (entry of projectsArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Project Name</mat-label>
+                            <input matInput formControlName="name" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Role or Label</mat-label>
+                            <input matInput formControlName="role" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Project Link</mat-label>
+                            <input matInput formControlName="link" />
+                          </mat-form-field>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Description</mat-label>
+                          <textarea matInput formControlName="description" rows="4"></textarea>
+                        </mat-form-field>
+                        <div class="entry-actions">
+                          <button type="button" mat-stroked-button (click)="removeEntry('projects', entryIndex)">Remove</button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                @case ('certifications') {
+                  <div formArrayName="certifications" class="entry-stack">
+                    @for (entry of certificationsArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Certification</mat-label>
+                            <input matInput formControlName="name" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Issuer</mat-label>
+                            <input matInput formControlName="issuer" />
+                          </mat-form-field>
+                          <cf-date-field
+                            formControlName="issueDate"
+                            mode="month"
+                            label="Issue Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Credential Link</mat-label>
+                            <input matInput formControlName="credentialLink" />
+                          </mat-form-field>
+                        </div>
+                        <div class="entry-actions">
+                          <button type="button" mat-stroked-button (click)="removeEntry('certifications', entryIndex)">Remove</button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                @case ('languages') {
+                  <div formArrayName="languages" class="entry-stack">
+                    @for (entry of languagesArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card compact-entry" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Language</mat-label>
+                            <input matInput formControlName="language" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Proficiency</mat-label>
+                            <input matInput formControlName="proficiency" placeholder="Native, Fluent, Conversational" />
+                          </mat-form-field>
+                        </div>
+                        <div class="entry-actions">
+                          <button type="button" mat-stroked-button (click)="removeEntry('languages', entryIndex)">Remove</button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                @case ('awards') {
+                  <div formArrayName="awards" class="entry-stack">
+                    @for (entry of awardsArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Award Title</mat-label>
+                            <input matInput formControlName="title" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Issuer</mat-label>
+                            <input matInput formControlName="issuer" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Date</mat-label>
+                            <input matInput formControlName="date" placeholder="2024" />
+                          </mat-form-field>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Description</mat-label>
+                          <textarea matInput formControlName="description" rows="3"></textarea>
+                        </mat-form-field>
+                        <div class="entry-actions">
+                          <button type="button" mat-stroked-button (click)="removeEntry('awards', entryIndex)">Remove</button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                @case ('volunteer') {
+                  <div formArrayName="volunteerExperience" class="entry-stack">
+                    @for (entry of volunteerArray.controls; let entryIndex = $index; track entryIndex) {
+                      <div class="entry-card" [formGroupName]="entryIndex">
+                        <div class="field-grid">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Organization</mat-label>
+                            <input matInput formControlName="organization" />
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Role</mat-label>
+                            <input matInput formControlName="role" />
+                          </mat-form-field>
+                          <cf-date-field
+                            formControlName="startDate"
+                            mode="month"
+                            label="Start Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                          <cf-date-field
+                            formControlName="endDate"
+                            mode="month"
+                            label="End Date"
+                            placeholder="Select month"
+                          ></cf-date-field>
+                        </div>
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Description</mat-label>
+                          <textarea matInput formControlName="description" rows="4"></textarea>
+                        </mat-form-field>
+                        <div class="entry-actions">
+                          <button type="button" mat-stroked-button (click)="removeEntry('volunteer', entryIndex)">Remove</button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                @case ('custom') {
+                  @if (getCustomSectionForm(getSectionId(section)); as customSection) {
+                    <div [formGroup]="customSection" class="custom-section-body">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Section Title</mat-label>
+                        <input
+                          matInput
+                          formControlName="title"
+                          (input)="section.controls.title.setValue(customSection.controls.title.value)"
+                        />
+                      </mat-form-field>
+
+                      <div formArrayName="entries" class="entry-stack">
+                        @for (entry of customSection.controls.entries.controls; let entryIndex = $index; track entryIndex) {
+                          <div class="entry-card" [formGroupName]="entryIndex">
+                            <div class="field-grid">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Title</mat-label>
+                                <input matInput formControlName="title" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Subtitle</mat-label>
+                                <input matInput formControlName="subtitle" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Date or Range</mat-label>
+                                <input matInput formControlName="date" />
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Link</mat-label>
+                                <input matInput formControlName="link" />
+                              </mat-form-field>
+                            </div>
+                            <mat-form-field appearance="outline" class="full-width">
+                              <mat-label>Description</mat-label>
+                              <textarea matInput formControlName="description" rows="4"></textarea>
+                            </mat-form-field>
+                            <div class="entry-actions">
+                              <button type="button" mat-stroked-button (click)="removeEntry('custom', entryIndex, getSectionId(section))">Remove</button>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                }
+              }
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
+    </div>
 
-      <div class="form-actions">
+    <div class="builder-footer">
+      <button type="button" mat-stroked-button (click)="toggleAddSectionMenu()">
+        <mat-icon>playlist_add</mat-icon>
+        Add Another Section
+      </button>
+
+      <div class="footer-actions">
         @if (isEditMode) {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">Export to PDF</button>
+          @if (canDownloadCurrentResume) {
+            <button type="button" mat-stroked-button (click)="exportToPdf()">Export PDF</button>
+          } @else {
+            <button type="button" mat-stroked-button [routerLink]="['/']" fragment="pricing">Upgrade To Download</button>
+          }
         }
-        @if (isSaving$ | async) {
-          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        } @else {
-          <button
-            type="button"
-            mat-flat-button
-            color="primary"
-            (click)="saveResume()"
-            [disabled]="isSaving$ | async"
-          >
+        @if (canStoreCurrentResume) {
+          <button type="button" mat-flat-button color="primary" (click)="saveResume()">
             {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
           </button>
+        } @else {
+          <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
+            Upgrade To Save
+          </button>
         }
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 
-  <!-- Preview Panel -->
-  <div class="preview-panel">
+  <aside class="preview-panel">
     <div class="preview-header">
       <div>
-        <h2 class="preview-title">Preview</h2>
-        <p class="preview-subtitle">Live as you type</p>
-      </div>
-      <div class="template-info">
-        <div class="template-label">Template</div>
-        <div class="template-name">{{ getTemplateLabel(previewTemplate) }}</div>
+        <p class="eyebrow">Live Preview</p>
+        <h2>{{ getTemplateLabel(previewTemplate) }}</h2>
+        <p>Section order and content update here as you edit.</p>
       </div>
       <button type="button" class="change-template" (click)="requestTemplateChange()">Change template</button>
     </div>
+
     <div class="preview-content">
       <app-resume-preview
         [resume]="(preview$ | async) || undefined"
         [templateId]="previewTemplate"
       ></app-resume-preview>
     </div>
-  </div>
+  </aside>
 </div>
 
-
-
+<div class="mobile-action-bar">
+  @if (!isEditMode) {
+    <app-generate-btn
+      [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+      (generate)="generateWithAI()"
+      label="Generate"
+      [compact]="true"
+    ></app-generate-btn>
+  }
+  @if (canStoreCurrentResume) {
+    <button type="button" mat-flat-button color="primary" (click)="saveResume()">
+      {{ isEditMode ? 'Save' : 'Save Resume' }}
+    </button>
+  } @else {
+    <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
+      Upgrade
+    </button>
+  }
+</div>

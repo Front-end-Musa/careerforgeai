@@ -5,7 +5,7 @@
       <app-logo-short class="app-logo-short"></app-logo-short>
     </div>
     <ul class="navigation">
-      @for (link of links; track link.route) {
+      @for (link of visibleLinks(); track link.route) {
         <li
           class="navigation-item"
           [routerLink]="link.route"

@@ -63,6 +63,9 @@ export class JobTracker implements OnInit {
   openAddJobModal() {
     const dialogRef = this.dialog.open(AddJobModal, {
       data: { modalMode: 'add' },
+      autoFocus: false,
+      width: 'min(560px, calc(100vw - 32px))',
+      panelClass: 'cf-app-dialog',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -81,7 +84,7 @@ export class JobTracker implements OnInit {
       title: newJob.title || 'Untitled',
       company: newJob.company || '',
       status,
-      dateApplied: newJob.dateApplied || new Date().toISOString(),
+      dateApplied: newJob.dateApplied || new Date().toISOString().slice(0, 10),
       position: groupedJobs.length,
     };
 

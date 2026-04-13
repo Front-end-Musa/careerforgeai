@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Logo } from '../../logos/logo/logo';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LogoShort } from '../../logos/logo-short/logo-short';
 import { MatAnchor } from "@angular/material/button";
 import { AuthFacade } from '../../auth/data/auth.facade';
+import { EntitlementsService } from '../../../core/services/entitlements.service';
 
 interface NavLink {
   label: string;
@@ -20,7 +22,17 @@ interface NavLink {
 })
 export class Sidebar {
   isSidebarOpen = false;
-  authFacade = inject(AuthFacade)
+  authFacade = inject(AuthFacade);
+  entitlementsService = inject(EntitlementsService);
+  entitlements = toSignal(this.entitlementsService.entitlements$, {
+    initialValue: {
+      resumeGenerationsPerPeriod: 1,
+      coverLettersPerPeriod: 3,
+      canUseJobTracker: false,
+      canStoreGeneratedResume: false,
+      canDownloadResume: false,
+    },
+  });
 
   links: NavLink[] = [
     { label: 'Dashboard', route: 'dashboard', icon: 'grid_view', id: 'dashboard' },
@@ -43,5 +55,11 @@ export class Sidebar {
 
   logout() {
     this.authFacade.logout();
+  }
+
+  visibleLinks() {
+    return this.links.filter((link) =>
+      link.route === 'job-tracker' ? this.entitlements().canUseJobTracker : true,
+    );
   }
 }

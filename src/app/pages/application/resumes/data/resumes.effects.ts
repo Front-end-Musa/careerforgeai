@@ -11,25 +11,21 @@ export class ResumeEffects {
   apiService = inject(ResumeService);
   aiService = inject(AiAgentService);
 
-  createResumeEffect = createEffect(() =>
+  generateResumeEffect = createEffect(() =>
     this.actions$.pipe(
-      ofType(resumesActions.createResume),
-      switchMap(({ resumeText }) =>
-        this.aiService.generateResume(resumeText).pipe(
-          map((resume) => resumesActions.createResumeSuccess({ resume })),
-          catchError((error) => of(resumesActions.createResumeFailure({ error }))),
+      ofType(resumesActions.generateResume),
+      switchMap(({ request }) =>
+        this.aiService.generateResume(request).pipe(
+          map((result) => resumesActions.generateResumeSuccess({ result })),
+          catchError((error) =>
+            of(
+              resumesActions.generateResumeFailure({
+                error: this.toErrorMessage(error),
+              }),
+            ),
+          ),
         ),
       ),
-    ), 
-  );
-
-  saveAIResultEffect = createEffect(() =>
-    this.actions$.pipe(
-      ofType(resumesActions.createResumeSuccess),
-      switchMap((action) => 
-        this.aiService.saveAIResult(action.resume).then(() => resumesActions.saveAIResultSuccess())
-      ),
-      catchError((error) => of(resumesActions.saveAIResultFailure({ error }))),
     ),
   );
 
@@ -39,7 +35,9 @@ export class ResumeEffects {
       switchMap(() =>
         this.apiService.getResumesForUser().pipe(
           map((resumes) => resumesActions.loadResumesSuccess({ resumes })),
-          catchError((error) => of(resumesActions.loadResumesFailure({ error }))),
+          catchError((error) =>
+            of(resumesActions.loadResumesFailure({ error: this.toErrorMessage(error) })),
+          ),
         ),
       ),
     ),
@@ -52,6 +50,19 @@ export class ResumeEffects {
         if (resumeId) {
           return this.apiService.updateResume(resumeId, resume).pipe(
             map(() => resumesActions.saveResumeSuccess({ resumeId })),
+            catchError((error) =>
+              of(
+                resumesActions.saveResumeFailure({
+                  error: error instanceof Error ? error.message : String(error),
+                }),
+              ),
+            ),
+          );
+        }
+
+        if (resume.meta?.source === 'ai') {
+          return this.aiService.saveGeneratedResume(resume).pipe(
+            map((createdResumeId) => resumesActions.saveResumeSuccess({ resumeId: createdResumeId })),
             catchError((error) =>
               of(
                 resumesActions.saveResumeFailure({
@@ -117,4 +128,16 @@ export class ResumeEffects {
       ),
     ),
   );
+
+  private toErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    if (typeof error === 'string' && error.trim()) {
+      return error;
+    }
+
+    return 'Failed to complete the request. Please try again.';
+  }
 }

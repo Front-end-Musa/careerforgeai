@@ -3,6 +3,7 @@
   <div class="wrapper">
     <div class="app-section">
       <h2 class="section-title">Job Details</h2>
+      <p class="output-state">{{ coverLetterUsageLabel }} • Resets {{ nextResetLabel() }}</p>
       <form class="details-form" [formGroup]="coverLetterForm">
         <div class="form-field company-name-field">
           <mat-label>Company Name</mat-label>

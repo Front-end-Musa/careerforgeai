@@ -16,8 +16,8 @@
       </div>
     } @else {
       <div class="resumes-list-wrapper">
-        <cdk-virtual-scroll-viewport itemSize="200" class="viewport">
-          <div *cdkVirtualFor="let resume of resumes()" class="resume-card-wrapper">
+        <cdk-virtual-scroll-viewport [itemSize]="itemSize" class="viewport">
+          <div *cdkVirtualFor="let resume of resumes()" class="resume-card-wrapper" [style.height.px]="itemSize">
             <app-resume-card [resume]="resume"></app-resume-card>
           </div>
         </cdk-virtual-scroll-viewport>

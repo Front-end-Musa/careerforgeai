@@ -1,0 +1,62 @@
+<mat-form-field appearance="outline" class="cf-date-field" [class.cf-date-field-month]="mode() === 'month'">
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
+  }
+
+  <input
+    matInput
+    class="cf-date-field__display"
+    [value]="displayValue"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [disabled]="disabled"
+    readonly
+    (click)="openPicker()"
+    (blur)="markTouched()"
+  />
+
+  <input
+    class="cf-date-field__picker-input"
+    [matDatepicker]="picker"
+    [value]="pickerValue"
+    [min]="minDate"
+    [max]="maxDate"
+    [disabled]="disabled"
+    tabindex="-1"
+    aria-hidden="true"
+    (dateChange)="onDateSelected($event)"
+  />
+
+  @if (value && !required() && !disabled) {
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      class="cf-date-field__clear"
+      aria-label="Clear date"
+      (click)="clearValue($event)"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+
+  <button
+    mat-icon-button
+    matSuffix
+    type="button"
+    class="cf-date-field__toggle"
+    [disabled]="disabled"
+    [attr.aria-label]="mode() === 'month' ? 'Open month picker' : 'Open date picker'"
+    (click)="openPicker()"
+  >
+    <mat-icon>{{ mode() === 'month' ? 'calendar_month' : 'event' }}</mat-icon>
+  </button>
+
+  <mat-datepicker
+    #picker
+    [startView]="pickerStartView"
+    [panelClass]="resolvedPanelClass"
+    (yearSelected)="onYearSelected()"
+    (monthSelected)="onMonthSelected($event, picker)"
+  ></mat-datepicker>
+</mat-form-field>

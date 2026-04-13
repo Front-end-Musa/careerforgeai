@@ -97,6 +97,7 @@ export class Signup {
       providerSubscriptionId: '',
       providerVariantId: '',
       freeGenerationsUsed: 0,
+      fullResumeGenerationsUsed: 0,
     };
 
     this.authFacade.register(signupCredentials);

@@ -13,14 +13,39 @@ service cloud.firestore {
       return isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
+    function currentUserPlan() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.plan;
+    }
+
+    function currentUserIsPremium() {
+      return isSignedIn() && currentUserPlan() == 'premium';
+    }
+
+    function isAiResumeWrite() {
+      return request.resource.data.meta.source == 'ai';
+    }
+
+    function existingResumeIsAi() {
+      return resource.data.meta.source == 'ai';
+    }
+
+    function canWriteResume() {
+      return !isAiResumeWrite() || currentUserPlan() != 'free';
+    }
+
+    function canModifyExistingResume() {
+      return !existingResumeIsAi() || currentUserPlan() != 'free';
+    }
+
     match /users/{userId} {
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow read, update, delete: if isSignedIn() && request.auth.uid == userId;
     }
 
     match /resumes/{resumeId} {
-      allow create: if isOwnerField();
-      allow read, update, delete: if ownerFieldMatches();
+      allow create: if isOwnerField() && canWriteResume();
+      allow read, delete: if ownerFieldMatches();
+      allow update: if ownerFieldMatches() && canWriteResume() && canModifyExistingResume();
     }
 
     match /coverLetters/{coverLetterId} {
@@ -34,8 +59,8 @@ service cloud.firestore {
     }
 
     match /jobs/{jobId} {
-      allow create: if isOwnerField();
-      allow read, update, delete: if ownerFieldMatches();
+      allow create: if isOwnerField() && currentUserIsPremium();
+      allow read, update, delete: if ownerFieldMatches() && currentUserIsPremium();
     }
   }
 }

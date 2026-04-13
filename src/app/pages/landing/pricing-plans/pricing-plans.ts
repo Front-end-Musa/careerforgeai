@@ -19,15 +19,19 @@ type FeatureKey =
   | 'oneTemplate'
   | 'allTemplates'
   | 'jobTracker'
-  | 'aiCredits3'
-  | 'aiCredits30'
-  | 'aiCredits80'
+  | 'resumeQuota1'
+  | 'resumeQuota5'
+  | 'resumeQuota10'
+  | 'coverLetters3'
+  | 'coverLetters20'
+  | 'coverLetters35'
   | 'aiSummary'
   | 'aiExperience'
   | 'aiEducation'
   | 'aiCoverLetter'
   | 'unlimitedResumes'
-  | 'pdfExport'
+  | 'downloadResume'
+  | 'storeGeneratedResume'
   | 'prioritySupport'
   | 'resumeTailoringSoon'
   | 'proTemplates';
@@ -38,15 +42,19 @@ const FEATURE_LABELS: Record<FeatureKey, string> = {
   allTemplates: 'All resume templates',
   proTemplates: 'Pro templates',
   jobTracker: 'Job application tracker',
-  aiCredits3: '3 AI generations per month',
-  aiCredits30: '30 AI generations per month',
-  aiCredits80: '80 AI generations per month',
+  resumeQuota1: '1 AI resume generation per period',
+  resumeQuota5: '5 AI resume generations per month',
+  resumeQuota10: '10 AI resume generations per month',
+  coverLetters3: '3 AI cover letters per month',
+  coverLetters20: '20 AI cover letters per month',
+  coverLetters35: '35 AI cover letters per month',
   aiSummary: 'AI summary generation',
   aiExperience: 'AI experience bullets',
   aiEducation: 'AI education bullets',
   aiCoverLetter: 'AI cover letter generator',
   unlimitedResumes: 'Unlimited resumes',
-  pdfExport: 'PDF export',
+  downloadResume: 'Resume download',
+  storeGeneratedResume: 'Store AI-generated resumes',
   prioritySupport: 'Priority email support',
   resumeTailoringSoon: 'Resume tailoring (coming soon)',
 };
@@ -57,15 +65,19 @@ const FEATURE_ORDER: FeatureKey[] = [
   'allTemplates',
   'proTemplates',
   'jobTracker',
-  'aiCredits3',
-  'aiCredits30',
-  'aiCredits80',
+  'resumeQuota1',
+  'resumeQuota5',
+  'resumeQuota10',
+  'coverLetters3',
+  'coverLetters20',
+  'coverLetters35',
   'aiSummary',
   'aiExperience',
   'aiEducation',
   'aiCoverLetter',
   'unlimitedResumes',
-  'pdfExport',
+  'downloadResume',
+  'storeGeneratedResume',
   'prioritySupport',
   'resumeTailoringSoon',
 ];
@@ -103,10 +115,9 @@ export class PricingPlans {
       features: buildFeatures([
         'resumeBuilder',
         'oneTemplate',
-        'jobTracker',
-        'aiCredits3',
-        'pdfExport',
-      ]),
+        'resumeQuota1',
+        'coverLetters3',
+      ], ['jobTracker', 'storeGeneratedResume', 'downloadResume']),
       button: 'Start Free',
       popular: false,
       planSlug: null,
@@ -117,14 +128,16 @@ export class PricingPlans {
       features: buildFeatures([
         'resumeBuilder',
         'proTemplates',
-        'aiCredits30',
+        'resumeQuota5',
+        'coverLetters20',
         'aiSummary',
         'aiExperience',
         'aiEducation',
         'aiCoverLetter',
         'unlimitedResumes',
-        'pdfExport',
-      ]),
+        'storeGeneratedResume',
+        'downloadResume',
+      ], ['jobTracker']),
       button: 'Start Pro',
       popular: true,
       planSlug: 'pro',
@@ -135,13 +148,15 @@ export class PricingPlans {
       features: buildFeatures([
         'resumeBuilder',
         'allTemplates',
-        'aiCredits80',
+        'resumeQuota10',
+        'coverLetters35',
         'aiSummary',
         'aiExperience',
         'aiEducation',
         'aiCoverLetter',
         'unlimitedResumes',
-        'pdfExport',
+        'storeGeneratedResume',
+        'downloadResume',
         'jobTracker',
         'resumeTailoringSoon',
       ]),

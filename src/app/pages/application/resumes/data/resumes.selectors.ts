@@ -35,7 +35,7 @@ export const selectResumeById = (id: string) =>
 
 export const selectGeneratedResumeText = createSelector(
   selectResumesFeature,
-  (state: ResumesState) => state.generatedText,
+  (state: ResumesState) => state.generatedResult,
 );
 
 export const selectIsSaving = createSelector(

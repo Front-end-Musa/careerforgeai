@@ -17,16 +17,44 @@ initializeApp();
 type PlanTier = "free" | "pro" | "premium";
 type SubscriptionStatus = "none" | "active" | "past_due" | "cancelled";
 
+type PlanEntitlements = {
+  resumeGenerationsPerPeriod: number;
+  coverLettersPerPeriod: number;
+  canUseJobTracker: boolean;
+  canStoreGeneratedResume: boolean;
+  canDownloadResume: boolean;
+};
+
 type AppUserDoc = {
   name?: string;
   email?: string;
   plan?: PlanTier;
+  entitlements?: PlanEntitlements;
   providerCustomerId?: string;
   providerSubscriptionId?: string;
   providerVariantId?: string;
   subscriptionStatus?: SubscriptionStatus;
   currentPeriodEnd?: Date | null;
   entitlementsUpdatedAt?: number | null;
+  resumeGenerationsUsed?: number;
+  coverLettersUsed?: number;
+  usagePeriodKey?: string | null;
+  usagePeriodStartedAt?: Date | null;
+  usagePeriodEndsAt?: Date | null;
+  fullResumeGenerationsUsed?: number;
+};
+
+type UsageQuotaKind = "resume" | "coverLetter";
+
+type UsagePeriodWindow = {
+  key: string;
+  startedAt: Date;
+  endsAt: Date;
+};
+
+type ReservedUsage = {
+  periodKey: string;
+  kind: UsageQuotaKind;
 };
 
 type TailorExperienceEntry = {
@@ -36,6 +64,96 @@ type TailorExperienceEntry = {
   endDate?: string;
   description?: string[];
 };
+
+type ResumeGenerationMode = "full" | "summary" | "experience" | "education";
+
+type ResumeEducationEntry = {
+  school?: string;
+  degree?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string[];
+};
+
+type ResumeGenerationDraft = {
+  personalInfo?: {
+    fullName?: string;
+    jobTitle?: string;
+  };
+  contact?: {
+    email?: string;
+    phone?: string;
+    location?: string;
+  };
+  summary?: string;
+  skills?: string[];
+  experience?: TailorExperienceEntry[];
+  education?: ResumeEducationEntry[];
+  meta?: {
+    createdAt?: string;
+    updatedAt?: string;
+    source?: "ai" | "manual";
+    version?: number;
+  };
+};
+
+const PLAN_ENTITLEMENTS: Record<PlanTier, PlanEntitlements> = {
+  free: {
+    resumeGenerationsPerPeriod: 1,
+    coverLettersPerPeriod: 3,
+    canUseJobTracker: false,
+    canStoreGeneratedResume: false,
+    canDownloadResume: false,
+  },
+  pro: {
+    resumeGenerationsPerPeriod: 5,
+    coverLettersPerPeriod: 20,
+    canUseJobTracker: false,
+    canStoreGeneratedResume: true,
+    canDownloadResume: true,
+  },
+  premium: {
+    resumeGenerationsPerPeriod: 10,
+    coverLettersPerPeriod: 35,
+    canUseJobTracker: true,
+    canStoreGeneratedResume: true,
+    canDownloadResume: true,
+  },
+};
+
+type ResumeGenerationRequest = {
+  mode?: ResumeGenerationMode;
+  resume?: ResumeGenerationDraft;
+  targetIndex?: number;
+};
+
+type ResumeGenerationResult =
+  | {
+      mode: "full";
+      summary: string;
+      skills: string[];
+      experienceDescriptions: string[][];
+      educationDescriptions: string[][];
+      meta: {
+        source: "ai";
+        version: number;
+        updatedAt: string;
+      };
+    }
+  | {
+      mode: "summary";
+      summary: string;
+    }
+  | {
+      mode: "experience";
+      targetIndex: number;
+      description: string[];
+    }
+  | {
+      mode: "education";
+      targetIndex: number;
+      description: string[];
+    };
 
 type TailorResumeInput = {
   summary?: string;
@@ -55,6 +173,201 @@ type TailorResumeInput = {
   };
   [key: string]: unknown;
 };
+
+/**
+ * Returns a trimmed string or throws when the value is missing.
+ * @param {unknown} value Candidate input value.
+ * @param {string} fieldName Field name used in the error message.
+ * @return {string} Trimmed string value.
+ */
+function requireTrimmedString(value: unknown, fieldName: string): string {
+  if (typeof value !== "string" || !value.trim()) {
+    throw new HttpsError("invalid-argument", `${fieldName} is required.`);
+  }
+
+  return value.trim();
+}
+
+/**
+ * Normalizes unknown values into a trimmed string.
+ * @param {unknown} value Candidate input value.
+ * @return {string} Trimmed string or an empty string.
+ */
+function getStringOrEmpty(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+/**
+ * Normalizes unknown values into an array of trimmed strings.
+ * @param {unknown} value Candidate input value.
+ * @return {string[]} Filtered string array.
+ */
+function getStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Normalizes resume experience entries from a callable payload.
+ * @param {unknown} value Candidate experience payload.
+ * @return {TailorExperienceEntry[]} Normalized experience entries.
+ */
+function normalizeResumeExperience(value: unknown): TailorExperienceEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((entry) => {
+    const item = typeof entry === "object" && entry !== null ? entry : {};
+    return {
+      company: getStringOrEmpty((item as TailorExperienceEntry).company),
+      role: getStringOrEmpty((item as TailorExperienceEntry).role),
+      startDate: getStringOrEmpty((item as TailorExperienceEntry).startDate),
+      endDate: getStringOrEmpty((item as TailorExperienceEntry).endDate),
+      description: getStringArray((item as TailorExperienceEntry).description),
+    };
+  });
+}
+
+/**
+ * Normalizes resume education entries from a callable payload.
+ * @param {unknown} value Candidate education payload.
+ * @return {ResumeEducationEntry[]} Normalized education entries.
+ */
+function normalizeResumeEducation(value: unknown): ResumeEducationEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((entry) => {
+    const item = typeof entry === "object" && entry !== null ? entry : {};
+    return {
+      school: getStringOrEmpty((item as ResumeEducationEntry).school),
+      degree: getStringOrEmpty((item as ResumeEducationEntry).degree),
+      startDate: getStringOrEmpty((item as ResumeEducationEntry).startDate),
+      endDate: getStringOrEmpty((item as ResumeEducationEntry).endDate),
+      description: getStringArray((item as ResumeEducationEntry).description),
+    };
+  });
+}
+
+/**
+ * Normalizes the draft payload used for AI resume generation.
+ * @param {unknown} value Candidate resume payload.
+ * @return {ResumeGenerationDraft} Normalized resume generation draft.
+ */
+function normalizeResumeGenerationDraft(value: unknown): ResumeGenerationDraft {
+  const resume = typeof value === "object" && value !== null ? value : {};
+  const personalInfo =
+    typeof (resume as ResumeGenerationDraft).personalInfo === "object" &&
+    (resume as ResumeGenerationDraft).personalInfo !== null ?
+      ((resume as ResumeGenerationDraft).personalInfo ?? {}) :
+      {};
+  const contact =
+    typeof (resume as ResumeGenerationDraft).contact === "object" &&
+    (resume as ResumeGenerationDraft).contact !== null ?
+      ((resume as ResumeGenerationDraft).contact ?? {}) :
+      {};
+  const meta =
+    typeof (resume as ResumeGenerationDraft).meta === "object" &&
+    (resume as ResumeGenerationDraft).meta !== null ?
+      ((resume as ResumeGenerationDraft).meta ?? {}) :
+      {};
+
+  return {
+    personalInfo: {
+      fullName: getStringOrEmpty(personalInfo.fullName),
+      jobTitle: getStringOrEmpty(personalInfo.jobTitle),
+    },
+    contact: {
+      email: getStringOrEmpty(contact.email),
+      phone: getStringOrEmpty(contact.phone),
+      location: getStringOrEmpty(contact.location),
+    },
+    summary: getStringOrEmpty((resume as ResumeGenerationDraft).summary),
+    skills: getStringArray((resume as ResumeGenerationDraft).skills),
+    experience: normalizeResumeExperience((resume as ResumeGenerationDraft).experience),
+    education: normalizeResumeEducation((resume as ResumeGenerationDraft).education),
+    meta: {
+      createdAt: getStringOrEmpty(meta.createdAt),
+      updatedAt: getStringOrEmpty(meta.updatedAt),
+      source: meta.source === "manual" ? "manual" : "ai",
+      version: typeof meta.version === "number" ? meta.version : 1,
+    },
+  };
+}
+
+/**
+ * Validates and normalizes a callable request for resume generation.
+ * @param {unknown} data Raw callable payload.
+ * @return {Object} Validated generation request.
+ */
+function validateResumeGenerationRequest(data: unknown): {
+  mode: ResumeGenerationMode;
+  resume: ResumeGenerationDraft;
+  targetIndex?: number;
+} {
+  const payload = typeof data === "object" && data !== null ? data as ResumeGenerationRequest : {};
+  const mode = payload.mode;
+
+  if (
+    mode !== "full" &&
+    mode !== "summary" &&
+    mode !== "experience" &&
+    mode !== "education"
+  ) {
+    throw new HttpsError("invalid-argument", "A valid generation mode is required.");
+  }
+
+  const resume = normalizeResumeGenerationDraft(payload.resume);
+
+  if (!resume.personalInfo?.fullName || !resume.personalInfo.jobTitle) {
+    throw new HttpsError(
+      "failed-precondition",
+      "Add your full name and target job title before generating resume content.",
+    );
+  }
+
+  if (mode === "full") {
+    requireTrimmedString(resume.contact?.email, "contact.email");
+    requireTrimmedString(resume.contact?.location, "contact.location");
+    const hasExperienceSeed = (resume.experience ?? []).some(
+      (entry) => Boolean(entry.company && entry.role),
+    );
+    const hasEducationSeed = (resume.education ?? []).some(
+      (entry) => Boolean(entry.school && entry.degree),
+    );
+
+    if (!resume.skills?.length && !hasExperienceSeed && !hasEducationSeed) {
+      throw new HttpsError(
+        "failed-precondition",
+        "Add skills, work experience, or education before generating a full resume.",
+      );
+    }
+  }
+
+  if (mode === "experience" || mode === "education") {
+    if (
+      typeof payload.targetIndex !== "number" ||
+      !Number.isInteger(payload.targetIndex) ||
+      payload.targetIndex < 0
+    ) {
+      throw new HttpsError("invalid-argument", "targetIndex must be a valid entry index.");
+    }
+  }
+
+  return {
+    mode,
+    resume,
+    targetIndex: payload.targetIndex,
+  };
+}
 
 /**
  * Creates a Polar SDK client using the configured secret token.
@@ -147,6 +460,295 @@ function resolvePlanFromProduct(productName: unknown): PlanTier {
 }
 
 /**
+ * Returns entitlements for the provided plan.
+ * @param {PlanTier} plan Current plan tier.
+ * @return {PlanEntitlements} Plan entitlements.
+ */
+function getPlanEntitlements(plan: PlanTier): PlanEntitlements {
+  return PLAN_ENTITLEMENTS[plan];
+}
+
+/**
+ * Normalizes a date-like value into a Date instance, or null when unavailable.
+ * @param {unknown} value Candidate timestamp value.
+ * @return {Date|null} Parsed date or null.
+ */
+function normalizeStoredDate(value: unknown): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "toDate" in value &&
+    typeof (value as { toDate?: () => Date }).toDate === "function"
+  ) {
+    return (value as { toDate: () => Date }).toDate();
+  }
+
+  return toNullableDate(value);
+}
+
+/**
+ * Returns the usage period for the current user entitlement state.
+ * @param {AppUserDoc} user Current user document.
+ * @return {UsagePeriodWindow} Current usage period window.
+ */
+function getUsagePeriodWindow(user: AppUserDoc): UsagePeriodWindow {
+  const plan = user.plan ?? "free";
+
+  if (plan === "free") {
+    const now = new Date();
+    const startedAt = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+    const endsAt = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+    const key = `free:${startedAt.toISOString().slice(0, 7)}`;
+
+    return {key, startedAt, endsAt};
+  }
+
+  const currentPeriodEnd = normalizeStoredDate(user.currentPeriodEnd);
+  if (!currentPeriodEnd) {
+    const now = new Date();
+    const startedAt = now;
+    const endsAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const key = `${plan}:${endsAt.toISOString()}`;
+
+    return {key, startedAt, endsAt};
+  }
+
+  const storedPeriodKey = typeof user.usagePeriodKey === "string" ? user.usagePeriodKey : null;
+  const storedStartedAt = normalizeStoredDate(user.usagePeriodStartedAt);
+  const fallbackStartedAt = storedStartedAt ?? new Date();
+  const key = `${plan}:${currentPeriodEnd.toISOString()}`;
+
+  return {
+    key,
+    startedAt: storedPeriodKey === key ? fallbackStartedAt : new Date(),
+    endsAt: currentPeriodEnd,
+  };
+}
+
+/**
+ * Returns true when the current stored usage period is stale.
+ * @param {AppUserDoc} user Current user document.
+ * @param {UsagePeriodWindow} nextWindow Expected active usage window.
+ * @return {boolean} Whether counters should reset.
+ */
+function shouldResetUsageWindow(user: AppUserDoc, nextWindow: UsagePeriodWindow): boolean {
+  return user.usagePeriodKey !== nextWindow.key;
+}
+
+/**
+ * Returns the current usage count for the requested quota kind.
+ * @param {AppUserDoc} user Current user document.
+ * @param {UsageQuotaKind} kind Quota kind.
+ * @param {boolean} resetUsage Whether the current window is stale.
+ * @return {number} Current usage count.
+ */
+function getUsageCount(user: AppUserDoc, kind: UsageQuotaKind, resetUsage: boolean): number {
+  if (resetUsage) {
+    return 0;
+  }
+
+  if (kind === "resume") {
+    return typeof user.resumeGenerationsUsed === "number" ?
+      user.resumeGenerationsUsed :
+      (typeof user.fullResumeGenerationsUsed === "number" ? user.fullResumeGenerationsUsed : 0);
+  }
+
+  return typeof user.coverLettersUsed === "number" ? user.coverLettersUsed : 0;
+}
+
+/**
+ * Returns the error message for a quota kind when the user is at limit.
+ * @param {UsageQuotaKind} kind Quota kind.
+ * @return {string} User-facing message.
+ */
+function getQuotaExceededMessage(kind: UsageQuotaKind): string {
+  if (kind === "resume") {
+    return "You reached your resume generation limit for this period. Upgrade to continue.";
+  }
+
+  return "You reached your cover letter generation limit for this period. Upgrade to continue.";
+}
+
+/**
+ * Reserves one usage slot for a quota-gated action.
+ * @param {string} uid Authenticated Firebase user id.
+ * @param {UsageQuotaKind} kind Quota kind.
+ * @return {Promise<ReservedUsage>} Reserved usage metadata.
+ */
+async function reserveQuotaUsage(uid: string, kind: UsageQuotaKind): Promise<ReservedUsage> {
+  const db = getFirestore();
+  const userRef = db.collection("users").doc(uid);
+
+  return db.runTransaction(async (transaction) => {
+    const userSnapshot = await transaction.get(userRef);
+    if (!userSnapshot.exists) {
+      throw new HttpsError("failed-precondition", "User profile does not exist.");
+    }
+
+    const user = userSnapshot.data() as AppUserDoc;
+    const plan = user.plan ?? "free";
+    const entitlements = getPlanEntitlements(plan);
+    const usageWindow = getUsagePeriodWindow(user);
+    const resetUsage = shouldResetUsageWindow(user, usageWindow);
+    const resumeGenerationsUsed = getUsageCount(user, "resume", resetUsage);
+    const coverLettersUsed = getUsageCount(user, "coverLetter", resetUsage);
+
+    if (
+      kind === "resume" &&
+      resumeGenerationsUsed >= entitlements.resumeGenerationsPerPeriod
+    ) {
+      throw new HttpsError("resource-exhausted", getQuotaExceededMessage(kind));
+    }
+
+    if (
+      kind === "coverLetter" &&
+      coverLettersUsed >= entitlements.coverLettersPerPeriod
+    ) {
+      throw new HttpsError("resource-exhausted", getQuotaExceededMessage(kind));
+    }
+
+    transaction.set(
+      userRef,
+      {
+        entitlements,
+        usagePeriodKey: usageWindow.key,
+        usagePeriodStartedAt: usageWindow.startedAt,
+        usagePeriodEndsAt: usageWindow.endsAt,
+        resumeGenerationsUsed: kind === "resume" ? resumeGenerationsUsed + 1 : resumeGenerationsUsed,
+        coverLettersUsed: kind === "coverLetter" ? coverLettersUsed + 1 : coverLettersUsed,
+        fullResumeGenerationsUsed: kind === "resume" ? resumeGenerationsUsed + 1 : resumeGenerationsUsed,
+      },
+      {merge: true},
+    );
+
+    return {
+      periodKey: usageWindow.key,
+      kind,
+    };
+  });
+}
+
+/**
+ * Releases a reserved usage slot after a failed AI action.
+ * @param {string} uid Authenticated Firebase user id.
+ * @param {ReservedUsage} reservedUsage Reservation metadata.
+ * @return {Promise<void>} Resolves when the quota slot is released.
+ */
+async function releaseQuotaUsage(uid: string, reservedUsage: ReservedUsage): Promise<void> {
+  const db = getFirestore();
+  const userRef = db.collection("users").doc(uid);
+
+  await db.runTransaction(async (transaction) => {
+    const userSnapshot = await transaction.get(userRef);
+    if (!userSnapshot.exists) {
+      return;
+    }
+
+    const user = userSnapshot.data() as AppUserDoc;
+    if (user.usagePeriodKey !== reservedUsage.periodKey) {
+      return;
+    }
+
+    const resumeGenerationsUsed =
+      typeof user.resumeGenerationsUsed === "number" ? user.resumeGenerationsUsed : 0;
+    const coverLettersUsed =
+      typeof user.coverLettersUsed === "number" ? user.coverLettersUsed : 0;
+
+    transaction.set(
+      userRef,
+      {
+        resumeGenerationsUsed:
+          reservedUsage.kind === "resume" ? Math.max(resumeGenerationsUsed - 1, 0) : resumeGenerationsUsed,
+        coverLettersUsed:
+          reservedUsage.kind === "coverLetter" ? Math.max(coverLettersUsed - 1, 0) : coverLettersUsed,
+        fullResumeGenerationsUsed:
+          reservedUsage.kind === "resume" ? Math.max(resumeGenerationsUsed - 1, 0) : resumeGenerationsUsed,
+      },
+      {merge: true},
+    );
+  });
+}
+
+/**
+ * Syncs the active usage window and entitlements without consuming quota.
+ * @param {string} uid Authenticated Firebase user id.
+ * @return {Promise<AppUserDoc>} Updated user document.
+ */
+async function syncUsageWindowState(uid: string): Promise<AppUserDoc> {
+  const db = getFirestore();
+  const userRef = db.collection("users").doc(uid);
+
+  return db.runTransaction(async (transaction) => {
+    const userSnapshot = await transaction.get(userRef);
+    if (!userSnapshot.exists) {
+      throw new HttpsError("failed-precondition", "User profile does not exist.");
+    }
+
+    const user = userSnapshot.data() as AppUserDoc;
+    const plan = user.plan ?? "free";
+    const entitlements = getPlanEntitlements(plan);
+    const usageWindow = getUsagePeriodWindow(user);
+    const resetUsage = shouldResetUsageWindow(user, usageWindow);
+    const resumeGenerationsUsed = getUsageCount(user, "resume", resetUsage);
+    const coverLettersUsed = getUsageCount(user, "coverLetter", resetUsage);
+
+    const nextUser: AppUserDoc = {
+      ...user,
+      entitlements,
+      usagePeriodKey: usageWindow.key,
+      usagePeriodStartedAt: usageWindow.startedAt,
+      usagePeriodEndsAt: usageWindow.endsAt,
+      resumeGenerationsUsed,
+      coverLettersUsed,
+      fullResumeGenerationsUsed: resumeGenerationsUsed,
+    };
+
+    transaction.set(userRef, nextUser, {merge: true});
+    return nextUser;
+  });
+}
+
+/**
+ * Throws when the user cannot store AI-generated resumes.
+ * @param {AppUserDoc} user Current user document.
+ * @return {void}
+ */
+function assertGeneratedResumeStorageAllowed(user: AppUserDoc) {
+  const plan = user.plan ?? "free";
+  const entitlements = user.entitlements ?? getPlanEntitlements(plan);
+  if (!entitlements.canStoreGeneratedResume) {
+    throw new HttpsError(
+      "permission-denied",
+      "Upgrade to save AI-generated resumes to your account.",
+    );
+  }
+}
+
+/**
+ * Throws when the user cannot download resumes.
+ * @param {AppUserDoc} user Current user document.
+ * @return {void}
+ */
+function assertResumeDownloadAllowed(user: AppUserDoc) {
+  const plan = user.plan ?? "free";
+  const entitlements = user.entitlements ?? getPlanEntitlements(plan);
+  if (!entitlements.canDownloadResume) {
+    throw new HttpsError(
+      "permission-denied",
+      "Upgrade to download resumes on your current plan.",
+    );
+  }
+}
+
+/**
  * Ensures a Polar customer exists and is linked to the user document.
  * Idempotent by checking providerCustomerId and external customer ID first.
  * @param {string} uid Firebase auth UID used as external customer ID.
@@ -227,6 +829,7 @@ async function applySubscriptionState(uid: string, data: unknown) {
   const now = Date.now();
   const status = normalizeSubscriptionStatus(subscription.status);
   const plan = resolvePlanFromProduct(subscription.product?.name);
+  const entitlements = getPlanEntitlements(plan);
   const currentPeriodEnd =
     toNullableDate(subscription.currentPeriodEnd) ?? toNullableDate(subscription.endsAt);
 
@@ -236,6 +839,7 @@ async function applySubscriptionState(uid: string, data: unknown) {
     .set(
       {
         plan,
+        entitlements,
         subscriptionStatus: status,
         providerCustomerId: subscription.customer?.id ?? "",
         providerSubscriptionId: subscription.id ?? "",
@@ -282,6 +886,7 @@ async function clearCustomerState(uid: string) {
   await db.collection("users").doc(uid).set(
     {
       plan: "free",
+      entitlements: getPlanEntitlements("free"),
       subscriptionStatus: "none",
       providerCustomerId: "",
       providerSubscriptionId: "",
@@ -605,9 +1210,11 @@ export const syncEntitlements = onCall(
       }
 
       const entitlementsUpdatedAt = Date.now();
+      const entitlements = getPlanEntitlements(plan);
       await getFirestore().collection("users").doc(uid).set(
         {
           plan,
+          entitlements,
           subscriptionStatus,
           providerCustomerId: customerState.id,
           providerSubscriptionId,
@@ -618,13 +1225,25 @@ export const syncEntitlements = onCall(
         {merge: true},
       );
 
+      const syncedUser = await syncUsageWindowState(uid);
+
       return {
         plan,
+        entitlements: syncedUser.entitlements ?? entitlements,
         subscriptionStatus,
         providerCustomerId: customerState.id,
         providerSubscriptionId,
         providerVariantId,
         currentPeriodEnd: currentPeriodEnd ? currentPeriodEnd.getTime() : null,
+        usagePeriodKey: syncedUser.usagePeriodKey ?? null,
+        usagePeriodStartedAt: syncedUser.usagePeriodStartedAt ?
+          syncedUser.usagePeriodStartedAt.getTime() :
+          null,
+        usagePeriodEndsAt: syncedUser.usagePeriodEndsAt ?
+          syncedUser.usagePeriodEndsAt.getTime() :
+          null,
+        resumeGenerationsUsed: syncedUser.resumeGenerationsUsed ?? 0,
+        coverLettersUsed: syncedUser.coverLettersUsed ?? 0,
         entitlementsUpdatedAt,
       };
     } catch (error) {
@@ -695,72 +1314,342 @@ export const backfillPolarCustomers = onCall(
   },
 );
 
+/**
+ * Ensures an AI response contains non-empty text.
+ * @param {string|null|undefined} responseText Raw AI response text.
+ * @param {string} message Error message when the response is empty.
+ * @return {string} Trimmed response text.
+ */
+function requireAiResponseText(responseText: string | null | undefined, message: string): string {
+  const trimmed = responseText?.trim();
+  if (!trimmed) {
+    throw new HttpsError("internal", message);
+  }
+
+  return trimmed;
+}
+
+/**
+ * Parses an AI JSON response or throws an HttpsError.
+ * @template T
+ * @param {string} responseText Raw AI response text.
+ * @param {string} message Error message when parsing fails.
+ * @return {T} Parsed JSON payload.
+ */
+function parseAiJsonResponse<T>(responseText: string, message: string): T {
+  const normalizedText = normalizeAiJsonText(responseText);
+
+  try {
+    return JSON.parse(normalizedText) as T;
+  } catch (error) {
+    logger.error("Failed to parse AI JSON response", {responseText, normalizedText, error});
+    throw new HttpsError("internal", message);
+  }
+}
+
+/**
+ * Normalizes AI output so wrapped JSON can still be parsed.
+ * @param {string} responseText Raw AI response text.
+ * @return {string} Extracted JSON text.
+ */
+function normalizeAiJsonText(responseText: string): string {
+  const trimmed = responseText.trim();
+  const fencedMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  const withoutFences = fencedMatch ? fencedMatch[1].trim() : trimmed;
+
+  if (withoutFences.startsWith("{") || withoutFences.startsWith("[")) {
+    return withoutFences;
+  }
+
+  const objectStart = withoutFences.indexOf("{");
+  const objectEnd = withoutFences.lastIndexOf("}");
+  if (objectStart !== -1 && objectEnd > objectStart) {
+    return withoutFences.slice(objectStart, objectEnd + 1);
+  }
+
+  const arrayStart = withoutFences.indexOf("[");
+  const arrayEnd = withoutFences.lastIndexOf("]");
+  if (arrayStart !== -1 && arrayEnd > arrayStart) {
+    return withoutFences.slice(arrayStart, arrayEnd + 1);
+  }
+
+  return withoutFences;
+}
+
+/**
+ * Normalizes nested description arrays to the expected result length.
+ * @param {unknown} value Candidate nested descriptions payload.
+ * @param {number} expectedLength Expected outer array length.
+ * @return {Array<Array<string>>} Normalized nested descriptions.
+ */
+function sanitizeNestedDescriptions(value: unknown, expectedLength: number): string[][] {
+  const descriptions = Array.isArray(value) ? value : [];
+  const normalized = descriptions.map((entry) => getStringArray(entry));
+
+  while (normalized.length < expectedLength) {
+    normalized.push([]);
+  }
+
+  return normalized.slice(0, expectedLength);
+}
+
 export const generateResume = onCall(
   {secrets: [openaiSecret], invoker: "public"},
   async (request) => {
-    const {resumeText} = request.data as { resumeText?: string };
-
-    if (!resumeText) {
-      throw new HttpsError("invalid-argument", "No resume text");
+    const uid = request.auth?.uid;
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
     }
 
-    const openaiApiKey = await openaiSecret.value();
-    const client = new OpenAI({apiKey: openaiApiKey});
+    const {mode, resume, targetIndex} = validateResumeGenerationRequest(request.data);
+    await syncUsageWindowState(uid);
+    const reservedUsage = mode === "full" ? await reserveQuotaUsage(uid, "resume") : null;
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful assistant that helps users improve their resumes.",
-        },
-        {
-          role: "user",
-          content: resumeText,
-        },
-      ],
-    });
+    try {
+      const openaiApiKey = await openaiSecret.value();
+      const client = new OpenAI({apiKey: openaiApiKey});
+      const experience = resume.experience ?? [];
+      const education = resume.education ?? [];
+      const skills = resume.skills ?? [];
 
-    const responseText = completion.choices[0].message?.content;
+      let systemPrompt = "";
+      let userPrompt = "";
 
-    return {
-      text: responseText,
-    };
+      if (mode === "full") {
+        systemPrompt = [
+          "You are an expert resume writing assistant.",
+          "Use only the facts provided in the input.",
+          "Do not invent employers, schools, dates, tools, awards, or metrics.",
+          "Return valid JSON only.",
+        ].join(" ");
+        userPrompt = JSON.stringify(
+          {
+            task:
+              "Complete the missing resume writing fields for this candidate. Generate a concise professional summary, improve or organize the skills list, write experience bullets for each experience entry, and write education notes for each education entry.",
+            candidate: resume,
+            outputSchema: {
+              summary: "string",
+              skills: ["string"],
+              experienceDescriptions: [["string"]],
+              educationDescriptions: [["string"]],
+            },
+            rules: [
+              "Summary should be 2-4 sentences.",
+              "Each experience entry should have 3-5 bullet points when enough facts exist.",
+              "Each education entry should have 1-3 bullet points when enough facts exist.",
+              "If there is not enough information for an entry, return an empty array for that entry.",
+            ],
+          },
+          null,
+          2,
+        );
+      } else if (mode === "summary") {
+        systemPrompt = [
+          "You write resume summaries using only the facts provided.",
+          "Do not invent employers, dates, metrics, or locations.",
+          "Return valid JSON only.",
+        ].join(" ");
+        userPrompt = JSON.stringify(
+          {
+            task: "Write a 2-4 sentence professional summary for this candidate.",
+            candidate: resume,
+            outputSchema: {
+              summary: "string",
+            },
+          },
+          null,
+          2,
+        );
+      } else if (mode === "experience") {
+        const experienceEntry = experience[targetIndex ?? -1];
+        if (!experienceEntry || !experienceEntry.company || !experienceEntry.role) {
+          throw new HttpsError(
+            "failed-precondition",
+            "Add the company and role before generating work experience bullets.",
+          );
+        }
+
+        systemPrompt = [
+          "You write resume bullet points for a single work experience entry.",
+          "Use only the facts provided.",
+          "Do not invent tools, metrics, employers, or dates.",
+          "Return valid JSON only.",
+        ].join(" ");
+        userPrompt = JSON.stringify(
+          {
+            task: "Write 3-5 concise resume bullet points for this work experience entry.",
+            candidate: {
+              personalInfo: resume.personalInfo,
+              skills,
+            },
+            experienceEntry,
+            outputSchema: {
+              description: ["string"],
+            },
+          },
+          null,
+          2,
+        );
+      } else {
+        const educationEntry = education[targetIndex ?? -1];
+        if (!educationEntry || !educationEntry.school || !educationEntry.degree) {
+          throw new HttpsError(
+            "failed-precondition",
+            "Add the school and degree before generating education notes.",
+          );
+        }
+
+        systemPrompt = [
+          "You write concise resume notes for a single education entry.",
+          "Use only the facts provided.",
+          "Do not invent institutions, honors, or dates.",
+          "Return valid JSON only.",
+        ].join(" ");
+        userPrompt = JSON.stringify(
+          {
+            task: "Write 1-3 concise bullet points for this education entry.",
+            candidate: {
+              personalInfo: resume.personalInfo,
+              skills,
+            },
+            educationEntry,
+            outputSchema: {
+              description: ["string"],
+            },
+          },
+          null,
+          2,
+        );
+      }
+
+      const completion = await client.chat.completions.create({
+        model: "gpt-4o",
+        temperature: 0.3,
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt,
+          },
+          {
+            role: "user",
+            content: userPrompt,
+          },
+        ],
+      });
+
+      const responseText = requireAiResponseText(
+        completion.choices[0].message?.content,
+        "No resume generation response from AI.",
+      );
+
+      let result: ResumeGenerationResult;
+      if (mode === "full") {
+        const parsed = parseAiJsonResponse<{
+          summary?: unknown;
+          skills?: unknown;
+          experienceDescriptions?: unknown;
+          educationDescriptions?: unknown;
+        }>(responseText, "Failed to parse generated resume response.");
+
+        result = {
+          mode,
+          summary: getStringOrEmpty(parsed.summary),
+          skills: getStringArray(parsed.skills),
+          experienceDescriptions: sanitizeNestedDescriptions(parsed.experienceDescriptions, experience.length),
+          educationDescriptions: sanitizeNestedDescriptions(parsed.educationDescriptions, education.length),
+          meta: {
+            source: "ai",
+            version: typeof resume.meta?.version === "number" ? resume.meta.version : 1,
+            updatedAt: new Date().toISOString(),
+          },
+        };
+      } else if (mode === "summary") {
+        const parsed = parseAiJsonResponse<{ summary?: unknown }>(
+          responseText,
+          "Failed to parse generated summary response.",
+        );
+        result = {
+          mode,
+          summary: getStringOrEmpty(parsed.summary),
+        };
+      } else if (mode === "experience") {
+        const parsed = parseAiJsonResponse<{ description?: unknown }>(
+          responseText,
+          "Failed to parse generated experience response.",
+        );
+        result = {
+          mode,
+          targetIndex: targetIndex ?? 0,
+          description: getStringArray(parsed.description),
+        };
+      } else {
+        const parsed = parseAiJsonResponse<{ description?: unknown }>(
+          responseText,
+          "Failed to parse generated education response.",
+        );
+        result = {
+          mode,
+          targetIndex: targetIndex ?? 0,
+          description: getStringArray(parsed.description),
+        };
+      }
+
+      return {result};
+    } catch (error) {
+      if (reservedUsage) {
+        await releaseQuotaUsage(uid, reservedUsage);
+      }
+
+      throw error;
+    }
   },
 );
 
 export const generateCoverLetter = onCall(
   {secrets: [openaiSecret], invoker: "public"},
   async (request) => {
+    const uid = request.auth?.uid;
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
+    }
+
     const {resumeText} = request.data as { resumeText?: string };
 
     if (!resumeText) {
       throw new HttpsError("invalid-argument", "No resume text");
     }
 
-    const openaiApiKey = await openaiSecret.value();
-    const client = new OpenAI({apiKey: openaiApiKey});
+    await syncUsageWindowState(uid);
+    const reservedUsage = await reserveQuotaUsage(uid, "coverLetter");
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful assistant that helps users write cover letters based on their resumes.",
-        },
-        {
-          role: "user",
-          content: resumeText,
-        },
-      ],
-    });
+    try {
+      const openaiApiKey = await openaiSecret.value();
+      const client = new OpenAI({apiKey: openaiApiKey});
 
-    const responseText = completion.choices[0].message?.content;
+      const completion = await client.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that helps users write cover letters based on their resumes.",
+          },
+          {
+            role: "user",
+            content: resumeText,
+          },
+        ],
+      });
 
-    return {
-      text: responseText,
-    };
+      const responseText = completion.choices[0].message?.content;
+
+      return {
+        text: responseText,
+      };
+    } catch (error) {
+      await releaseQuotaUsage(uid, reservedUsage);
+      throw error;
+    }
   },
 );
 
@@ -906,6 +1795,39 @@ export const tailorResumeToJob = onCall(
   },
 );
 
+export const saveGeneratedResume = onCall(
+  {secrets: [], invoker: "public"},
+  async (request) => {
+    const uid = request.auth?.uid;
+    const {resume} = request.data as { resume?: Record<string, unknown> };
+
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
+    }
+
+    if (!resume || typeof resume !== "object") {
+      throw new HttpsError("invalid-argument", "A valid resume payload is required.");
+    }
+
+    const user = await syncUsageWindowState(uid);
+    assertGeneratedResumeStorageAllowed(user);
+
+    const payload = {
+      ...resume,
+      userId: uid,
+      createdAt: new Date(),
+      meta: {
+        ...(typeof resume["meta"] === "object" && resume["meta"] !== null ? resume["meta"] as object : {}),
+        source: "ai",
+        updatedAt: new Date().toISOString(),
+      },
+    };
+
+    const createdResume = await getFirestore().collection("resumes").add(payload);
+    return {resumeId: createdResume.id};
+  },
+);
+
 export const downloadResume = onCall({secrets: [], invoker: "public"}, async (request) => {
   const uid = request.auth?.uid;
   const {resumeId} = request.data as { resumeId?: string };
@@ -919,6 +1841,8 @@ export const downloadResume = onCall({secrets: [], invoker: "public"}, async (re
   }
 
   const db = getFirestore();
+  const user = await syncUsageWindowState(uid);
+  assertResumeDownloadAllowed(user);
   const resumeRef = db.collection("resumes").doc(resumeId);
   const resumeSnapshot = await resumeRef.get();
 

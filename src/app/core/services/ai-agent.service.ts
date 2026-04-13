@@ -1,60 +1,61 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, Firestore, serverTimestamp } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { from, Observable, take, firstValueFrom, of } from 'rxjs';
+import { catchError, from, map, Observable, throwError } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
-import { AuthFacade } from '../../pages/auth/data/auth.facade';
-import { Auth } from '@angular/fire/auth';
+import {
+  ResumeGenerationRequest,
+  ResumeGenerationResult,
+} from '../interfaces/resume-generation.interface';
+import { toCallableError } from './callable-error.util';
 
 @Injectable({ providedIn: 'root' })
 export class AiAgentService {
-  constructor(
-    private functions: Functions,
-    private firestore: Firestore,
-    private auth: Auth,
-  ) {}
+  constructor(private functions: Functions) {}
 
-  /**
-   * Persist AI-generated resume JSON into Firestore.
-   * Ensures the userId is resolved before writing to avoid storing a Promise.
-   */
-  async saveAIResult(result: string) {
-    const colRef = collection(this.firestore, 'resumes');
-    const payload = JSON.parse(result);
-    const user = await firstValueFrom(this.auth.currentUser ? of(this.auth.currentUser) : of(null));
-    const userId = user?.uid ?? null;
+  generateResume(request: ResumeGenerationRequest): Observable<ResumeGenerationResult> {
+    const fn = httpsCallable<ResumeGenerationRequest, { result: ResumeGenerationResult }>(
+      this.functions,
+      'generateResume',
+    );
 
-    return addDoc(colRef, {
-      ...payload,
-      userId,
-      createdAt: serverTimestamp(),
-    });
+    return from(fn(request)).pipe(
+      map((res) => res.data.result),
+      catchError((error) =>
+        throwError(() => toCallableError(error, 'Failed to generate resume content. Please try again.')),
+      ),
+    );
   }
 
-  generateResume(resumeText: string): Observable<string> {
-    const fn = httpsCallable(this.functions, 'generateResume');
+  saveGeneratedResume(resume: Partial<Resume>): Observable<string> {
+    const fn = httpsCallable<{ resume: Partial<Resume> }, { resumeId: string }>(
+      this.functions,
+      'saveGeneratedResume',
+    );
 
-    const generatedJson$ = fn({ resumeText }).then((res: any) => JSON.parse(res.data.text));
-
-    return from(generatedJson$);
-  }
-
-  async saveCoverLetter(result: string) {
-    const colRef = collection(this.firestore, 'coverLetters');
-    const payload = JSON.parse(result);
-    const user = await firstValueFrom(this.auth.currentUser ? of(this.auth.currentUser) : of(null));
-    const userId = user?.uid ?? null;
-
-    return addDoc(colRef, {
-      ...payload,
-      userId,
-      createdAt: serverTimestamp(),
-    });
+    return from(
+      fn({
+        resume: {
+          ...resume,
+          meta: { ...(resume.meta ?? {}), source: 'ai' },
+        } as Partial<Resume>,
+      }),
+    ).pipe(
+      map((res) => res.data.resumeId),
+      catchError((error) =>
+        throwError(() =>
+          toCallableError(error, 'Failed to save generated resume. Please try again.'),
+        ),
+      ),
+    );
   }
 
   generateCoverLetter(resumeText: string, jobDescription: string, companyName: string, position: string, tone: string): Observable<string> {
     const fn = httpsCallable(this.functions, 'generateCoverLetter');
-    return from(fn({ resumeText, jobDescription, companyName, position, tone }).then((res: any) => res.data.text));
+    return from(fn({ resumeText, jobDescription, companyName, position, tone }).then((res: any) => res.data.text)).pipe(
+      catchError((error) =>
+        throwError(() => toCallableError(error, 'Failed to generate cover letter. Please try again.')),
+      ),
+    );
   }
 
   tailorResumeToJob(
@@ -66,6 +67,10 @@ export class AiAgentService {
     const fn = httpsCallable(this.functions, 'tailorResumeToJob');
     return from(
       fn({ resume, companyName, position, jobDescription }).then((res: any) => res.data.resume as Resume),
+    ).pipe(
+      catchError((error) =>
+        throwError(() => toCallableError(error, 'Failed to tailor resume. Please try again.')),
+      ),
     );
   }
 }

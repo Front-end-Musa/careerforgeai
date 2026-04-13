@@ -1,132 +1,83 @@
 :root {
-  --date-input-bg: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
   --date-input-border: #d6dfec;
   --date-input-border-hover: #c2d1e8;
   --date-input-border-focus: #2563eb;
-  --date-input-text: var(--text);
-  --date-input-muted: #64748b;
-  --date-input-radius: 12px;
-  --date-input-padding-y: 10px;
-  --date-input-padding-x: 14px;
+  --date-input-surface: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  --date-input-surface-focus: #ffffff;
+  --date-input-text: #14304a;
+  --date-input-muted: #5f7388;
+  --date-input-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+  --date-input-shadow-hover: 0 14px 28px rgba(15, 23, 42, 0.1);
   --date-input-focus-ring:
-    0 0 0 3px rgba(37, 99, 235, 0.16),
-    0 8px 20px rgba(37, 99, 235, 0.16);
-  --date-input-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 22px rgba(15, 23, 42, 0.06);
-  --date-input-shadow-hover: 0 1px 2px rgba(15, 23, 42, 0.06), 0 14px 28px rgba(15, 23, 42, 0.1);
-  --date-input-disabled-bg: #f3f6fb;
-  --date-input-disabled-text: #94a3b8;
-  --date-input-invalid: #dc2626;
+    0 0 0 3px rgba(37, 99, 235, 0.14),
+    0 12px 28px rgba(37, 99, 235, 0.12);
 }
 
-input[type='date'],
-input[type='month'] {
-  width: 100%;
-  min-height: 44px;
-  padding: var(--date-input-padding-y) var(--date-input-padding-x);
-  border: 1px solid var(--date-input-border);
-  border-radius: var(--date-input-radius);
-  background: var(--date-input-bg);
-  color: var(--date-input-text);
-  box-shadow: var(--date-input-shadow);
-  font: inherit;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.35;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.16s ease;
-}
+.cf-date-field {
+  .mat-mdc-text-field-wrapper {
+    min-height: 56px;
+    border-radius: 16px;
+    background: var(--date-input-surface);
+    box-shadow: var(--date-input-shadow);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.18s ease;
+  }
 
-input[type='date']:hover,
-input[type='month']:hover {
-  border-color: var(--date-input-border-hover);
-  box-shadow: var(--date-input-shadow-hover);
-  transform: translateY(-1px);
-}
+  .mat-mdc-form-field-infix {
+    min-height: 56px;
+    padding-top: 16px;
+    padding-bottom: 12px;
+  }
 
-input[type='date']:focus,
-input[type='date']:focus-visible,
-input[type='month']:focus,
-input[type='month']:focus-visible {
-  outline: none;
-  border-color: var(--date-input-border-focus);
-  box-shadow: var(--date-input-focus-ring);
-  background: #ffffff;
-  transform: translateY(-1px);
-}
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--date-input-border) !important;
+  }
 
-input[type='date']:disabled,
-input[type='month']:disabled {
-  background: var(--date-input-disabled-bg);
-  color: var(--date-input-disabled-text);
-  border-color: var(--date-input-border);
-  cursor: not-allowed;
-}
+  &:hover {
+    .mat-mdc-text-field-wrapper {
+      box-shadow: var(--date-input-shadow-hover);
+      transform: translateY(-1px);
+    }
 
-input[type='date']:invalid,
-input[type='month']:invalid {
-  border-color: var(--date-input-invalid);
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12);
-}
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--date-input-border-hover) !important;
+    }
+  }
 
-input[type='date']::-webkit-calendar-picker-indicator,
-input[type='month']::-webkit-calendar-picker-indicator {
-  opacity: 1;
-  cursor: pointer;
-  padding: 3px;
-  border-radius: 8px;
-  filter: invert(31%) sepia(84%) saturate(1864%) hue-rotate(212deg) brightness(95%) contrast(92%);
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.18);
-  transition:
-    background-color 0.2s ease,
-    opacity 0.2s ease,
-    box-shadow 0.2s ease;
-}
+  &.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      background: var(--date-input-surface-focus);
+      box-shadow: var(--date-input-focus-ring);
+      transform: translateY(-1px);
+    }
 
-input[type='date']::-webkit-calendar-picker-indicator:hover,
-input[type='month']::-webkit-calendar-picker-indicator:hover {
-  background-color: rgba(37, 99, 235, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.32);
-}
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--date-input-border-focus) !important;
+    }
+  }
 
-input[type='date']::-webkit-datetime-edit,
-input[type='month']::-webkit-datetime-edit {
-  color: var(--date-input-text);
-}
+  .mat-mdc-form-field-input-control,
+  .mat-mdc-form-field-input-control::placeholder,
+  .mat-mdc-floating-label {
+    color: var(--date-input-text) !important;
+  }
 
-input[type='date']::-webkit-datetime-edit-fields-wrapper,
-input[type='month']::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
-}
+  .mat-mdc-form-field-input-control::placeholder {
+    color: var(--date-input-muted) !important;
+  }
 
-input[type='date']::-webkit-datetime-edit-text,
-input[type='month']::-webkit-datetime-edit-text,
-input[type='date']::-webkit-datetime-edit-month-field,
-input[type='date']::-webkit-datetime-edit-day-field,
-input[type='date']::-webkit-datetime-edit-year-field,
-input[type='month']::-webkit-datetime-edit-month-field,
-input[type='month']::-webkit-datetime-edit-year-field {
-  color: var(--date-input-muted);
-}
-
-input[type='date']:focus::-webkit-datetime-edit-text,
-input[type='month']:focus::-webkit-datetime-edit-text,
-input[type='date']:focus::-webkit-datetime-edit-month-field,
-input[type='date']:focus::-webkit-datetime-edit-day-field,
-input[type='date']:focus::-webkit-datetime-edit-year-field,
-input[type='month']:focus::-webkit-datetime-edit-month-field,
-input[type='month']:focus::-webkit-datetime-edit-year-field {
-  color: var(--date-input-text);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  input[type='date'],
-  input[type='month'] {
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-    transform: none;
+  .mat-mdc-icon-button {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px !important;
+    color: #2b5c93 !important;
   }
 }
 
@@ -142,7 +93,7 @@ input[type='month']:focus::-webkit-datetime-edit-year-field {
 
 .cf-date-picker-panel .mat-datepicker-content {
   border: 1px solid #d6dfec;
-  border-radius: 16px;
+  border-radius: 20px;
   box-shadow:
     0 18px 40px rgba(15, 23, 42, 0.22),
     0 2px 8px rgba(15, 23, 42, 0.1);
@@ -162,6 +113,11 @@ input[type='month']:focus::-webkit-datetime-edit-year-field {
   margin: 8px 10px 6px;
 }
 
+.cf-date-picker-panel .mat-calendar-period-button {
+  font-weight: 700;
+  color: #133455;
+}
+
 .cf-date-picker-panel .mat-calendar-period-button,
 .cf-date-picker-panel .mat-calendar-previous-button,
 .cf-date-picker-panel .mat-calendar-next-button {
@@ -171,4 +127,13 @@ input[type='month']:focus::-webkit-datetime-edit-year-field {
 .cf-date-picker-panel .mat-calendar-body-cell-content {
   border-radius: 10px;
   font-weight: 600;
+}
+
+.cf-date-picker-panel-month .mat-calendar-body-label,
+.cf-date-picker-panel-month .mat-calendar-table-header {
+  display: none;
+}
+
+.cf-date-picker-panel-month .mat-calendar-body-cell-content {
+  border-radius: 14px;
 }

@@ -6,6 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillingService } from '../../../core/services/billing.service';
 import { NotificationsService } from '../../../core/services/notifications.service';
 import { Router } from '@angular/router';
+import { EntitlementsService } from '../../../core/services/entitlements.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings',
@@ -21,6 +23,30 @@ export class Settings {
   private billingService = inject(BillingService);
   private notifications = inject(NotificationsService);
   private router = inject(Router);
+  private entitlementsService = inject(EntitlementsService);
+  entitlements = toSignal(this.entitlementsService.entitlements$, {
+    initialValue: {
+      resumeGenerationsPerPeriod: 1,
+      coverLettersPerPeriod: 3,
+      canUseJobTracker: false,
+      canStoreGeneratedResume: false,
+      canDownloadResume: false,
+    },
+  });
+  usage = toSignal(this.entitlementsService.usage$, {
+    initialValue: {
+      resumeGenerationsUsed: 0,
+      coverLettersUsed: 0,
+      resumeGenerationsRemaining: 1,
+      coverLettersRemaining: 3,
+      usagePeriodKey: null,
+      usagePeriodStartedAt: null,
+      usagePeriodEndsAt: null,
+    },
+  });
+  nextResetLabel = toSignal(this.entitlementsService.nextResetLabel$, {
+    initialValue: 'this period',
+  });
 
   onSave() {}
 

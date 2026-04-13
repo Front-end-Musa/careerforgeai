@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { MatLabel } from '@angular/material/form-field';
 import { DirName } from '../dir-name/dir-name';
@@ -7,6 +8,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { GenerateBtn } from '../../buttons/generate-btn/generate-btn';
 import { ToneChoose } from '../../buttons/tone-choose/tone-choose';
 import { CoverLetterFacade } from './data/cover-letter.facade';
+import { EntitlementsService } from '../../../core/services/entitlements.service';
 
 @Component({
   selector: 'app-cover-letter',
@@ -19,9 +21,33 @@ export class CoverLetter implements OnInit {
   selectedTone = this.tones[0];
   coverLetterForm: FormGroup;
   coverLetterFacade = inject(CoverLetterFacade);
+  entitlementsService = inject(EntitlementsService);
   generatedText$ = this.coverLetterFacade.generatedText$;
   generating$ = this.coverLetterFacade.generating$;
   error$ = this.coverLetterFacade.error$;
+  entitlements = toSignal(this.entitlementsService.entitlements$, {
+    initialValue: {
+      resumeGenerationsPerPeriod: 1,
+      coverLettersPerPeriod: 3,
+      canUseJobTracker: false,
+      canStoreGeneratedResume: false,
+      canDownloadResume: false,
+    },
+  });
+  usage = toSignal(this.entitlementsService.usage$, {
+    initialValue: {
+      resumeGenerationsUsed: 0,
+      coverLettersUsed: 0,
+      resumeGenerationsRemaining: 1,
+      coverLettersRemaining: 3,
+      usagePeriodKey: null,
+      usagePeriodStartedAt: null,
+      usagePeriodEndsAt: null,
+    },
+  });
+  nextResetLabel = toSignal(this.entitlementsService.nextResetLabel$, {
+    initialValue: 'this period',
+  });
   copied = false;
 
   constructor() {
@@ -82,5 +108,9 @@ export class CoverLetter implements OnInit {
     }
 
     return 'Failed to generate cover letter. Please try again.';
+  }
+
+  get coverLetterUsageLabel() {
+    return `${this.usage().coverLettersRemaining}/${this.entitlements().coverLettersPerPeriod} cover letters left`;
   }
 }

@@ -267,6 +267,12 @@ p {
   border-radius: 10px !important;
 }
 
+::ng-deep .cf-app-dialog .mat-mdc-dialog-surface,
+::ng-deep .cf-app-dialog .mdc-dialog__surface {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

@@ -2,6 +2,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { createReducer, on } from '@ngrx/store';
 import * as ResumesActions from '../data/resumes.actions';
+import { ResumeGenerationResult } from '../../../../core/interfaces/resume-generation.interface';
 
 export enum ResumesStatus {
   Init = 'init',
@@ -17,7 +18,7 @@ export interface ResumesState extends EntityState<Resume> {
   // UI / AI
   formValue: any | null;
   generating: boolean;
-  generatedText?: string;
+  generatedResult: ResumeGenerationResult | null;
   saving: boolean;
   saveSucceeded: boolean;
   tailoring: boolean;
@@ -38,6 +39,7 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   error: null,
   formValue: null,
   generating: false,
+  generatedResult: null,
   saving: false,
   saveSucceeded: false,
   tailoring: false,
@@ -50,23 +52,29 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
 export const resumesReducer = createReducer(
   initialState,
 
-  on(ResumesActions.createResume, (state) => ({
+  on(ResumesActions.generateResume, (state) => ({
     ...state,
     generating: true,
     error: null,
+    generatedResult: null,
   })),
 
-  on(ResumesActions.createResumeSuccess, (state, { resume }) => ({
+  on(ResumesActions.generateResumeSuccess, (state, { result }) => ({
     ...state,
     generating: false,
     error: null,
-    generatedText: resume,
+    generatedResult: result,
   })),
 
-  on(ResumesActions.createResumeFailure, (state, { error }) => ({
+  on(ResumesActions.generateResumeFailure, (state, { error }) => ({
     ...state,
     generating: false,
     error: error,
+  })),
+
+  on(ResumesActions.clearResumeGenerationResult, (state) => ({
+    ...state,
+    generatedResult: null,
   })),
 
   on(ResumesActions.deleteResume, (state) => ({
@@ -80,16 +88,6 @@ export const resumesReducer = createReducer(
       error: null,
     }),
   ),
-
-  on(ResumesActions.saveAIResultSuccess, (state) => ({
-    ...state,
-    error: null,
-  })),
-
-  on(ResumesActions.saveAIResultFailure, (state, { error }) => ({
-    ...state,
-    error: error,
-  })),
 
   on(ResumesActions.loadResumes, (state) => ({
     ...state,
