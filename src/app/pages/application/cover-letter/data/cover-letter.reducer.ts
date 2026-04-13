@@ -8,7 +8,7 @@ type stateStatus = 'init' | 'loading' | 'loaded' | 'error';
 export interface CoverLetterState extends EntityState<CoverLetter> {
   coverLetters: any[];
   status: stateStatus;
-  error: string | null;
+  error: unknown | null;
   // UI / AI
   formValue: any | null;
   generating: boolean;

@@ -57,6 +57,15 @@
           <span class="material-symbols-outlined green-icon">mail_outline</span>
           <h4 class="action-title">Create Cover Letter</h4>
         </div>
+        <div class="action" routerLink="/application/job-tracker">
+          <span class="material-symbols-outlined orange-icon">view_kanban</span>
+          <h4 class="action-title">
+            Job Tracker
+            @if (!jobTrackerEnabled()) {
+              <span class="action-meta">Premium</span>
+            }
+          </h4>
+        </div>
       </div>
     </div>
   </div>

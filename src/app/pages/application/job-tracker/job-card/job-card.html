@@ -1,4 +1,4 @@
-<div class="job-item" cdkDrag cdkDragHandle>
+<div class="job-item" cdkDrag cdkDragHandle [cdkDragDisabled]="readonly">
   <h4 class="job-title">
     {{ job.title }}
   </h4>
@@ -9,6 +9,7 @@
     {{ job.dateApplied | date: 'yyyy-mm-dd' }}
   </p>
 
+  @if (!readonly) {
   <div class="job-item_actions">
     <div class="menu-trigger" (click)="toggleActions()" aria-label="Toggle job actions">
       <span class="material-symbols-outlined">more_vert</span>
@@ -24,6 +25,7 @@
       </button>
     </div>
   </div>
+  }
 </div>
 
 <ng-template cdkDragPreview>
@@ -37,6 +39,7 @@
     <p class="job-date">
       {{ job.dateApplied | date: 'yyyy-mm-dd' }}
     </p>
+    @if (!readonly) {
     <div class="job-item_actions">
       <div
         class="menu-trigger"
@@ -56,5 +59,6 @@
         </button>
       </div>
     </div>
+    }
   </div>
 </ng-template>

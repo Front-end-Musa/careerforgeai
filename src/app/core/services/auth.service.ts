@@ -165,7 +165,8 @@ export class AuthService {
       providerCustomerId: '',
       providerSubscriptionId: '',
       providerVariantId: '',
-      freeGenerationsUsed: 0,
+      aiUsageCount: 0,
+      aiUsageWindowKey: null,
       emailVerified: false,
       entitlementsUpdatedAt: null,
     });

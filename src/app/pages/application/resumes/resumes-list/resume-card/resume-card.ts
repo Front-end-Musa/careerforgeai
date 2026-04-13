@@ -14,6 +14,10 @@ export class ResumeCard {
   @Input() resume!: Resume;
 
   constructor(private resumesFacade: ResumesFacade) { }
+
+  downloadResume() {
+    return this.resumesFacade.exportResumeToPdf(this.resume, this.resume.templateId);
+  }
   
   deleteResume() {
     this.resumesFacade.deleteResume(this.resume.id ? this.resume.id : '');

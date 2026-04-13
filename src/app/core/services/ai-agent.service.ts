@@ -1,10 +1,37 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, Firestore, serverTimestamp } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { from, Observable, take, firstValueFrom, of } from 'rxjs';
+import { catchError, firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
-import { AuthFacade } from '../../pages/auth/data/auth.facade';
 import { Auth } from '@angular/fire/auth';
+import { mapCallableError } from '../utils/callable-error';
+
+type GenerateResumeRequest = {
+  resumeText: string;
+};
+
+type GenerateTextResponse = {
+  text: string;
+};
+
+type GenerateCoverLetterRequest = {
+  resumeText: string;
+  jobDescription: string;
+  companyName: string;
+  position: string;
+  tone: string;
+};
+
+type TailorResumeRequest = {
+  resume: Resume;
+  companyName: string;
+  position: string;
+  jobDescription: string;
+};
+
+type TailorResumeResponse = {
+  resume: Resume;
+};
 
 @Injectable({ providedIn: 'root' })
 export class AiAgentService {
@@ -32,11 +59,16 @@ export class AiAgentService {
   }
 
   generateResume(resumeText: string): Observable<string> {
-    const fn = httpsCallable(this.functions, 'generateResume');
+    const fn = httpsCallable<GenerateResumeRequest, GenerateTextResponse>(
+      this.functions,
+      'generateResume',
+    );
 
-    const generatedJson$ = fn({ resumeText }).then((res: any) => JSON.parse(res.data.text));
+    const generatedJson$ = fn({ resumeText }).then((res) => JSON.parse(res.data.text));
 
-    return from(generatedJson$);
+    return from(generatedJson$).pipe(
+      catchError((error) => throwError(() => mapCallableError(error))),
+    );
   }
 
   async saveCoverLetter(result: string) {
@@ -52,9 +84,20 @@ export class AiAgentService {
     });
   }
 
-  generateCoverLetter(resumeText: string, jobDescription: string, companyName: string, position: string, tone: string): Observable<string> {
-    const fn = httpsCallable(this.functions, 'generateCoverLetter');
-    return from(fn({ resumeText, jobDescription, companyName, position, tone }).then((res: any) => res.data.text));
+  generateCoverLetter(
+    resumeText: string,
+    jobDescription: string,
+    companyName: string,
+    position: string,
+    tone: string,
+  ): Observable<string> {
+    const fn = httpsCallable<GenerateCoverLetterRequest, GenerateTextResponse>(
+      this.functions,
+      'generateCoverLetter',
+    );
+    return from(
+      fn({ resumeText, jobDescription, companyName, position, tone }).then((res) => res.data.text),
+    ).pipe(catchError((error) => throwError(() => mapCallableError(error))));
   }
 
   tailorResumeToJob(
@@ -63,9 +106,12 @@ export class AiAgentService {
     position: string,
     jobDescription: string,
   ): Observable<Resume> {
-    const fn = httpsCallable(this.functions, 'tailorResumeToJob');
-    return from(
-      fn({ resume, companyName, position, jobDescription }).then((res: any) => res.data.resume as Resume),
+    const fn = httpsCallable<TailorResumeRequest, TailorResumeResponse>(
+      this.functions,
+      'tailorResumeToJob',
     );
+    return from(
+      fn({ resume, companyName, position, jobDescription }).then((res) => res.data.resume),
+    ).pipe(catchError((error) => throwError(() => mapCallableError(error))));
   }
 }

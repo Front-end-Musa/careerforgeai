@@ -5,6 +5,7 @@
       <app-logo-short class="app-logo-short"></app-logo-short>
     </div>
     <ul class="navigation">
+      @let jobTrackerEnabled = (jobTrackerEnabled$ | async) ?? false;
       @for (link of links; track link.route) {
         <li
           class="navigation-item"
@@ -15,7 +16,12 @@
           [attr.id]="link.id"
         >
           <span class="material-symbols-outlined">{{ link.icon }}</span>
-          <a class="navigation-link">{{ link.label }}</a>
+          <a class="navigation-link">
+            {{ link.label }}
+            @if (link.premiumOnly && !jobTrackerEnabled) {
+              <span class="nav-badge">Premium</span>
+            }
+          </a>
         </li>
       }
     </ul>

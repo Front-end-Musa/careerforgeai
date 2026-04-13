@@ -8,7 +8,15 @@
   <div class="updatedat">Updated at {{ resume.meta.updatedAt | date : 'dd.MM.yyyy' }}</div>
   <div class="resume-btns">
     <button class="edit-btn" [routerLink]="['/application/resumes', resume.id, 'edit']">Edit</button>
-    <button class="tailor-btn" [routerLink]="['/application/resumes', resume.id, 'tailor']">AI Tailor</button>
+    <button
+      class="download-btn"
+      type="button"
+      aria-label="Download resume"
+      title="Download resume"
+      (click)="downloadResume()"
+    >
+      <span class="material-symbols-outlined resume-mat">download</span>
+    </button>
     <button class="delete-btn" (click)="deleteResume()">
       <span class="material-symbols-outlined resume-mat delete-btn">Delete</span>
     </button>

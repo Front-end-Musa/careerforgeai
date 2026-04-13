@@ -123,6 +123,20 @@
           color: #3399ff;
         }
       }
+
+      &.download-btn {
+        min-width: 44px;
+        width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: #dcfce7;
+          border-color: #22c55e;
+          color: #15803d;
+        }
+      }
     }
   }
 }

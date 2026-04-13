@@ -13,10 +13,9 @@ import {
   selectIsTailoring,
   selectTailorError,
 } from './resumes.selectors';
-import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { Resume, ResumeTemplateId } from '../../../../core/interfaces/resumes.interface';
 import { ResumeService } from '../../../../core/services/resume.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
-import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -62,8 +61,8 @@ export class ResumesFacade {
     return this.resumeService.getResumeById(id);
   }
 
-  exportResumeToPdf(formGroup: FormGroup) {
-    return this.resumeService.exportToPdf(formGroup);
+  exportResumeToPdf(resume: Partial<Resume>, templateId?: ResumeTemplateId) {
+    return this.resumeService.exportResumeToPdf(resume, templateId);
   }
 
   deleteResume(resumeId: string) {

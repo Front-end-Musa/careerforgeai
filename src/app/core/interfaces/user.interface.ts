@@ -13,7 +13,8 @@ export interface AppUser {
   providerCustomerId: string;
   providerSubscriptionId: string;
   providerVariantId: string;
-  freeGenerationsUsed: number;
+  aiUsageCount: number;
+  aiUsageWindowKey: string | null;
   emailVerified?: boolean;
   entitlementsUpdatedAt?: number | null;
 };

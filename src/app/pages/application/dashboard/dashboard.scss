@@ -107,6 +107,20 @@
             font-size: 1rem;
             margin-top: 20px;
             font-weight: 500;
+
+            .action-meta {
+              display: inline-flex;
+              align-items: center;
+              margin-left: 8px;
+              padding: 2px 8px;
+              border-radius: 999px;
+              background: #fef3c7;
+              color: #92400e;
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              vertical-align: middle;
+            }
           }
 
           span {

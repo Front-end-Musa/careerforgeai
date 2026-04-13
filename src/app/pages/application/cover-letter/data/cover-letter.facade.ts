@@ -1,10 +1,19 @@
 import { inject, Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { deleteCoverLetter, generateCoverLetter, loadAllCoverLetters } from "./cover-letter.actions";
+import {
+    deleteCoverLetter,
+    generateCoverLetter,
+    generateCoverLetterFailure,
+    loadAllCoverLetters,
+} from "./cover-letter.actions";
 import { selectCoverLettersError, selectCoverLettersGenerating, selectGeneratedCoverLetterText } from "./cover-letter.selectors";
 import { ResumeService } from "../../../../core/services/resume.service";
 import { firstValueFrom } from "rxjs";
 import { Resume } from "../../../../core/interfaces/resumes.interface";
+
+type LatestResumeTextResult =
+  | { ok: true; resumeText: string }
+  | { ok: false; error: string };
 
 @Injectable({
     providedIn: "root"
@@ -15,6 +24,7 @@ export class CoverLetterFacade {
     generatedText$ = this.store.select(selectGeneratedCoverLetterText);
     generating$ = this.store.select(selectCoverLettersGenerating);
     error$ = this.store.select(selectCoverLettersError);
+    resumes$ = this.resumeService.getResumesForUser();
     constructor(  ) { }
 
     loadCoverLetters() {
@@ -29,14 +39,40 @@ export class CoverLetterFacade {
         this.store.dispatch(generateCoverLetter({ resumeText, jobDescription, companyName, position, tone }));
     }
 
-    async getLatestResumeText(): Promise<string> {
-        const resumes = await firstValueFrom(this.resumeService.getResumesForUser());
-        const latestResume = resumes?.[0];
-        if (!latestResume) {
-            return '';
+    reportGenerationError(error: string) {
+        this.store.dispatch(generateCoverLetterFailure({ error }));
+    }
+
+    async getResumeTextById(resumeId: string): Promise<LatestResumeTextResult> {
+        const trimmedResumeId = resumeId.trim();
+        if (!trimmedResumeId) {
+            return {
+                ok: false,
+                error: "Select a resume before generating a cover letter.",
+            };
         }
 
-        return this.formatResumeAsText(latestResume);
+        const resumes = await firstValueFrom(this.resumes$);
+        const selectedResume = resumes?.find((resume) => resume.id === trimmedResumeId);
+        if (!selectedResume) {
+            return {
+                ok: false,
+                error: "The selected resume could not be found.",
+            };
+        }
+
+        const resumeText = this.formatResumeAsText(selectedResume);
+        if (!resumeText) {
+            return {
+                ok: false,
+                error: "Add some resume details before generating a cover letter.",
+            };
+        }
+
+        return {
+            ok: true,
+            resumeText,
+        };
     }
 
     private formatResumeAsText(resume: Resume): string {

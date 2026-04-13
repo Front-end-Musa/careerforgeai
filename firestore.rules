@@ -13,6 +13,16 @@ service cloud.firestore {
       return isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
+    function currentUserPlan() {
+      return isSignedIn() ?
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.plan :
+        null;
+    }
+
+    function hasPremiumJobTracker() {
+      return currentUserPlan() == 'premium';
+    }
+
     match /users/{userId} {
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow read, update, delete: if isSignedIn() && request.auth.uid == userId;
@@ -34,8 +44,9 @@ service cloud.firestore {
     }
 
     match /jobs/{jobId} {
-      allow create: if isOwnerField();
-      allow read, update, delete: if ownerFieldMatches();
+      allow create: if isOwnerField() && hasPremiumJobTracker();
+      allow read: if ownerFieldMatches();
+      allow update, delete: if ownerFieldMatches() && hasPremiumJobTracker();
     }
   }
 }

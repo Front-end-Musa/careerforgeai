@@ -8,7 +8,14 @@
     "watch": "nx build --watch --configuration development",
     "test": "nx test",
     "serve:ssr:application": "node dist/application/server/server.mjs",
-    "smoke:functions:local": "node scripts/functions-callable-smoke.mjs"
+    "build:functions": "npm --prefix functions run build",
+    "lint:functions": "npm --prefix functions run lint",
+    "test:functions": "npm --prefix functions run test",
+    "test:functions:emulator": "npm --prefix functions run test:emulator",
+    "smoke:functions:local": "node scripts/functions-callable-smoke.mjs",
+    "smoke:functions:test-port": "powershell -Command \"$env:FUNCTIONS_EMULATOR_PORT='35001'; node scripts/functions-callable-smoke.mjs\"",
+    "smoke:functions:emulator": "firebase emulators:exec --project ai-job-seeker-ed1d3 --config firebase.testing.json --only functions,firestore \"npm run smoke:functions:test-port\"",
+    "verify:functions": "npm run build && npm run lint:functions && npm run build:functions && npm run test:functions && npm run test:functions:emulator && npm run smoke:functions:emulator"
   },
   "prettier": {
     "printWidth": 100,

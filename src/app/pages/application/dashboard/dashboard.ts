@@ -7,6 +7,8 @@ import { RouterLink } from '@angular/router';
 import { ResumesFacade } from '../resumes/data/resumes.facade';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JobsFacade } from '../job-tracker/data/jobs.facade';
+import { computed } from '@angular/core';
+import { getPlanEntitlements } from '../../../core/utils/plan-entitlements';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +27,9 @@ export class Dashboard {
   applications = signal<Job[]>([]);
   interviews = signal<Job[]>([]);
   offers = signal<Job[]>([]);
+  jobTrackerEnabled = computed(() =>
+    getPlanEntitlements(this.user()?.plan ?? 'free').jobTrackerEnabled,
+  );
 
   ngOnInit() {
     this.resumesFacade.loadResumes();

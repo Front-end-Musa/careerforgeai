@@ -36,3 +36,40 @@
     }
   }
 }
+
+.locked-state {
+  justify-content: center;
+  align-items: center;
+}
+
+.locked-card {
+  width: min(640px, 100%);
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-card);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+
+  h2 {
+    margin: 0 0 12px;
+  }
+
+  p {
+    margin: 0 0 20px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .upgrade-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}

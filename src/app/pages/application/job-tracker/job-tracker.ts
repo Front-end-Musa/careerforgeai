@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
@@ -24,10 +25,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { JobsFacade } from './data/jobs.facade';
 import { MatDialog } from '@angular/material/dialog';
 import { JobCard } from './job-card/job-card';
+import { AuthFacade } from '../../auth/data/auth.facade';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AppUser } from '../../../core/interfaces/user.interface';
+import { getPlanEntitlements } from '../../../core/utils/plan-entitlements';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-job-tracker',
-  imports: [DirName, DragDropModule, CommonModule, JobCard],
+  imports: [DirName, DragDropModule, CommonModule, JobCard, RouterLink],
   templateUrl: './job-tracker.html',
   styleUrl: './job-tracker.scss',
   encapsulation: ViewEncapsulation.None,
@@ -36,8 +42,12 @@ export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
   private dialog = inject(MatDialog);
   private jobsFacade = inject(JobsFacade);
+  private authFacade = inject(AuthFacade);
+  private destroyRef = inject(DestroyRef);
 
   jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
+  user = signal<AppUser | null>(null);
+  jobTrackerEnabled = computed(() => getPlanEntitlements(this.user()?.plan ?? 'free').jobTrackerEnabled);
   appliedJobs: Signal<Job[]> = computed(() =>
     this.jobs().filter((job) => job.status === 'applied'),
   );
@@ -61,6 +71,10 @@ export class JobTracker implements OnInit {
   @ViewChild('actionsMenu') actionsMenu!: any;
 
   openAddJobModal() {
+    if (!this.jobTrackerEnabled()) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(AddJobModal, {
       data: { modalMode: 'add' },
     });
@@ -89,6 +103,10 @@ export class JobTracker implements OnInit {
   }
 
   drop(event: CdkDragDrop<Job[]>) {
+    if (!this.jobTrackerEnabled()) {
+      return;
+    }
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -159,6 +177,10 @@ export class JobTracker implements OnInit {
   }
 
   ngOnInit() {
+    this.authFacade.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
+      this.user.set(user);
+    });
+
     this.jobsFacade.loadJobs();
   }
 }

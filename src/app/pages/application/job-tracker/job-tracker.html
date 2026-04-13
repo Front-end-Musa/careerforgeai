@@ -1,10 +1,28 @@
 <div class="job-tracker container">
   <app-dir-name title="Job Application Tracker" (additionalElemClicked)="openAddJobModal()">
-    <button class="add-job-btn" type="button" aria-label="Add Job" (click)="openAddJobModal()">
+    <button
+      class="add-job-btn"
+      type="button"
+      aria-label="Add Job"
+      (click)="openAddJobModal()"
+      [disabled]="!jobTrackerEnabled()"
+    >
       <span class="btn-icon">+</span>
       Add Job
     </button>
   </app-dir-name>
+  @if (!jobTrackerEnabled()) {
+    <div class="locked-state app-section">
+      <div class="locked-card">
+        <h2>Premium feature</h2>
+        <p>
+          Job Tracker is available on the Premium plan. Upgrade to manage applications, move cards,
+          and keep your pipeline organized in one board.
+        </p>
+        <a class="upgrade-link" routerLink="/checkouts">Upgrade to Premium</a>
+      </div>
+    </div>
+  } @else {
   <div class="app-section">
     <div class="applied-list jobs-list">
       <h2>Applied</h2>
@@ -18,7 +36,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (job of appliedJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
+          <app-job-card [job]="job" [readonly]="!jobTrackerEnabled()"></app-job-card>
         }
       </div>
     </div>
@@ -34,7 +52,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (job of interviewingJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
+          <app-job-card [job]="job" [readonly]="!jobTrackerEnabled()"></app-job-card>
         }
       </div>
     </div>
@@ -50,7 +68,7 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (job of offerJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
+          <app-job-card [job]="job" [readonly]="!jobTrackerEnabled()"></app-job-card>
         }
       </div>
     </div>
@@ -66,9 +84,10 @@
         (cdkDropListDropped)="drop($event)"
       >
         @for (job of rejectedJobs(); track job.id) {
-          <app-job-card [job]="job"></app-job-card>
+          <app-job-card [job]="job" [readonly]="!jobTrackerEnabled()"></app-job-card>
         }
       </div>
     </div>
   </div>
+  }
 </div>

@@ -11,30 +11,19 @@
       ]
     }
   ],
-  "hosting": {
-    "port": 5000,
-    "public": "dist/application/browser",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
   "firestore": {
     "rules": "firestore.rules"
   },
   "emulators": {
     "functions": {
-      "port": 5001
+      "port": 35001
     },
     "firestore": {
-      "port": 8080
+      "port": 38080
     },
     "ui": {
       "enabled": true,
-      "port": 4000
+      "port": 34001
     }
   }
 }

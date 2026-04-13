@@ -15,15 +15,24 @@ import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 })
 export class JobCard {
   @Input() job!: Job;
+  @Input() readonly = false;
   private dialog = inject(MatDialog);
   private jobsFacade = inject(JobsFacade);
   showActions: WritableSignal<boolean> = signal<boolean>(false);
 
   toggleActions() {
+    if (this.readonly) {
+      return;
+    }
+
     this.showActions.set(!this.showActions());
   }
 
   openEditJobModal(job: Job) {
+    if (this.readonly) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(AddJobModal, {
       data: { modalMode: 'edit', existingJob: job },
     });
@@ -42,6 +51,10 @@ export class JobCard {
   }
 
   deleteJob(job: Job) {
+    if (this.readonly) {
+      return;
+    }
+
     if (job.id) {
       this.jobsFacade.deleteJob(job.id);
     }

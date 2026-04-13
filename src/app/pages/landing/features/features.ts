@@ -30,7 +30,7 @@ export class Features {
       icon: 'insert_drive_file',
       title: 'AI Cover Letters Generator',
       description:
-        'Create personalized cover letters that complement your resume and highlight your best qualities for each job.',
+        'Create personalized cover letters that complement your resume and use your monthly AI generation allowance across all plans.',
     },
     {
       id: 2,
@@ -44,7 +44,7 @@ export class Features {
       icon: 'view_kanban',
       title: 'Job Application Tracker',
       description:
-        'Track all your applications in one place with our intuitive kanban board. Never lose track of opportunities.',
+        'Premium users can track all applications in one place with our intuitive kanban board and keep every opportunity organized.',
     },
   ];
 

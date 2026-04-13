@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, Injectable } from '@angular/core';
 import {
   Firestore,
   addDoc,
@@ -16,10 +16,10 @@ import {
 import { Auth, user } from '@angular/fire/auth';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
-import { Resume } from '../interfaces/resumes.interface';
+import { Resume, ResumeTemplateId } from '../interfaces/resumes.interface';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { FormGroup } from '@angular/forms';
+import { ResumePreview } from '../../pages/application/resumes/resume-preview/resume-preview';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +29,8 @@ export class ResumeService {
     private firestore: Firestore,
     private auth: Auth,
     private functions: Functions,
+    private appRef: ApplicationRef,
+    private environmentInjector: EnvironmentInjector,
   ) {}
 
   getResumesForUser(): Observable<Resume[]> {
@@ -104,46 +106,59 @@ export class ResumeService {
     });
   }
 
-  async exportToPdf(formGroup: FormGroup): Promise<void> {
+  async exportResumeToPdf(
+    resume: Partial<Resume>,
+    templateId?: ResumeTemplateId,
+  ): Promise<void> {
     if (typeof window === 'undefined') {
       return;
     }
 
-    const previewElement = document.querySelector(
-      '.preview-content .resume-preview',
-    ) as HTMLElement | null;
-    if (!previewElement) {
-      return;
-    }
+    const renderedPreview = this.createHiddenPreview(
+      resume,
+      this.resolveTemplateId(templateId ?? resume.templateId),
+    );
 
-    const canvas = await html2canvas(previewElement, {
-      scale: Math.max(window.devicePixelRatio, 2),
-      backgroundColor: '#ffffff',
-      useCORS: true,
-    });
+    try {
+      const previewElement = renderedPreview.hostElement.querySelector(
+        '.resume-preview',
+      ) as HTMLElement | null;
 
-    const imageData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 8;
-    const contentWidth = pageWidth - margin * 2;
-    const imageHeight = (canvas.height * contentWidth) / canvas.width;
-    const pageContentHeight = pageHeight - margin * 2;
+      if (!previewElement) {
+        return;
+      }
 
-    let renderedHeight = 0;
-    pdf.addImage(imageData, 'PNG', margin, margin, contentWidth, imageHeight);
-    renderedHeight += pageContentHeight;
+      await this.waitForRender();
 
-    while (renderedHeight < imageHeight) {
-      pdf.addPage();
-      pdf.addImage(imageData, 'PNG', margin, margin - renderedHeight, contentWidth, imageHeight);
+      const canvas = await html2canvas(previewElement, {
+        scale: Math.max(window.devicePixelRatio, 2),
+        backgroundColor: '#ffffff',
+        useCORS: true,
+      });
+
+      const imageData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 0;
+      const contentWidth = pageWidth - margin * 2;
+      const imageHeight = (canvas.height * contentWidth) / canvas.width;
+      const pageContentHeight = pageHeight - margin * 2;
+
+      let renderedHeight = 0;
+      pdf.addImage(imageData, 'PNG', margin, margin, contentWidth, imageHeight);
       renderedHeight += pageContentHeight;
-    }
 
-    const fullName = formGroup.get('personalInfo.fullName')?.value?.trim();
-    const sanitizedName = (fullName || 'resume').replace(/[^\w\-]+/g, '_');
-    pdf.save(`${sanitizedName}.pdf`);
+      while (renderedHeight < imageHeight) {
+        pdf.addPage();
+        pdf.addImage(imageData, 'PNG', margin, margin - renderedHeight, contentWidth, imageHeight);
+        renderedHeight += pageContentHeight;
+      }
+
+      pdf.save(this.buildPdfFileName(resume.personalInfo?.fullName));
+    } finally {
+      this.destroyHiddenPreview(renderedPreview);
+    }
   }
 
   deleteResume(id: string): Observable<void> {
@@ -155,5 +170,53 @@ export class ResumeService {
         throw err;
       }),
     );
+  }
+
+  private createHiddenPreview(resume: Partial<Resume>, templateId: ResumeTemplateId) {
+    const hostElement = document.createElement('div');
+    hostElement.style.position = 'fixed';
+    hostElement.style.left = '-10000px';
+    hostElement.style.top = '0';
+    hostElement.style.pointerEvents = 'none';
+    hostElement.style.opacity = '0';
+    hostElement.style.zIndex = '-1';
+    document.body.appendChild(hostElement);
+
+    const componentRef = createComponent(ResumePreview, {
+      environmentInjector: this.environmentInjector,
+      hostElement,
+    });
+    componentRef.setInput('resume', resume);
+    componentRef.setInput('templateId', templateId);
+    this.appRef.attachView(componentRef.hostView);
+    componentRef.changeDetectorRef.detectChanges();
+
+    return { hostElement, componentRef };
+  }
+
+  private destroyHiddenPreview(renderedPreview: {
+    hostElement: HTMLElement;
+    componentRef: ComponentRef<ResumePreview>;
+  }) {
+    this.appRef.detachView(renderedPreview.componentRef.hostView);
+    renderedPreview.componentRef.destroy();
+    renderedPreview.hostElement.remove();
+  }
+
+  private waitForRender(): Promise<void> {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  }
+
+  private resolveTemplateId(templateId?: ResumeTemplateId): ResumeTemplateId {
+    return templateId ?? 'basic';
+  }
+
+  private buildPdfFileName(fullName?: string): string {
+    const sanitizedName = (fullName?.trim() || 'resume').replace(/[^\w\-]+/g, '_');
+    return `${sanitizedName}.pdf`;
   }
 }
