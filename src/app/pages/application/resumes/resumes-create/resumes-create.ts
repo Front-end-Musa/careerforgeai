@@ -39,6 +39,7 @@ import {
   ResumeGenerationRequest,
   ResumeGenerationResult,
 } from '../../../../core/interfaces/resume-generation.interface';
+import { AppUser } from '../../../../core/interfaces/user.interface';
 import {
   CORE_RESUME_SECTION_TYPES,
   PRESET_RESUME_SECTION_TYPES,
@@ -90,6 +91,8 @@ export class ResumesCreate implements OnInit, OnChanges {
   @Input() resumeId: string | null = null;
   @Input() templateId?: ResumeTemplateId;
   @Input() plan: 'free' | 'pro' | 'premium' = 'free';
+  @Input() user: AppUser | null = null;
+  @Input() resumeCount = 0;
   @Output() changeTemplate = new EventEmitter<void>();
 
   resumesFacade = inject(ResumesFacade);
@@ -683,7 +686,11 @@ export class ResumesCreate implements OnInit, OnChanges {
       return;
     }
 
-    await this.resumesFacade.exportResumeToPdf(this.resumeGroup);
+    if (!this.resumeId) {
+      return;
+    }
+
+    await this.resumesFacade.exportResumeToPdf(this.resumeId, this.resumeGroup);
   }
 
   private requiredPlan(templateId: ResumeTemplateId) {

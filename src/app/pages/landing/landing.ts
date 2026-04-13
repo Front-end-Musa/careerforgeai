@@ -18,7 +18,7 @@ import { SimpleSteps } from './simple-steps/simple-steps';
 
 @Component({
   selector: 'app-landing',
-  imports: [Header, Hero, Features, About, PricingPlans, Faq, Contact, Footer, SimpleSteps],
+  imports: [Header, Hero, Features, About, Faq, Contact, Footer, SimpleSteps],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
   encapsulation: ViewEncapsulation.None,

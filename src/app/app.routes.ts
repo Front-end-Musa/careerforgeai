@@ -88,6 +88,20 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'upgrade',
+    loadComponent: () =>
+      import('./pages/landing/pricing-plans/upgrade/upgrade').then((c) => c.Upgrade),
+    data: {
+      seo: {
+        title: 'Choose Your Plan | ResumeCrafts AI',
+        description: 'Choose a paid plan before continuing to secure checkout.',
+        robots: 'noindex, nofollow',
+        canonicalPath: '/upgrade',
+        ogType: 'website',
+      },
+    },
+  },
+  {
     path: 'checkouts',
     loadChildren: () =>
       import('./pages/landing/pricing-plans/checkouts/checkouts.routes').then(
