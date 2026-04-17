@@ -23,10 +23,11 @@
               [class.selected]="selectedTemplateId === template.id"
               (click)="selectTemplate(template.id)"
             >
-              <div class="template-preview">
+              <div class="template-preview" [ngStyle]="getPreviewStyle(template)">
                 <app-resume-preview
                   [resume]="demoResume"
                   [templateId]="template.id"
+                  renderContext="picker"
                 ></app-resume-preview>
               </div>
               <div class="template-meta">

@@ -23,6 +23,7 @@
         [user]="currentUser"
         [resumeCount]="resumeCount"
         (changeTemplate)="openTemplateModal()"
+        (saveCompleted)="handleResumeSaved()"
       ></app-resumes-create>
     } @else {
       <app-resumes-list (createRequested)="handleViewModeChange('create')"></app-resumes-list>

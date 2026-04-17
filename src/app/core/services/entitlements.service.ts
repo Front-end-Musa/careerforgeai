@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
 import { doc, docData, Firestore, Timestamp } from '@angular/fire/firestore';
-import { map, of, switchMap } from 'rxjs';
+import { map, of, shareReplay, switchMap } from 'rxjs';
 import { AppUser } from '../interfaces/user.interface';
 import { getPlanEntitlements } from './plan-entitlements';
 
@@ -21,6 +21,7 @@ export class EntitlementsService {
         map((snapshot) => (snapshot as AppUser | undefined) ?? null),
       );
     }),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   entitlements$ = this.user$.pipe(

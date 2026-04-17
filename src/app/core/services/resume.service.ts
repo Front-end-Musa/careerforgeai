@@ -18,6 +18,7 @@ import { Resume } from '../interfaces/resumes.interface';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { FormGroup } from '@angular/forms';
+import { isLatexTemplate } from '../../pages/application/resumes/data/resume-template-catalog';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,10 @@ export class ResumeService {
     { resumeId: string },
     { fileName: string; contentType: string; content: string }
   >(this.functions, 'downloadResume');
+  private renderResumePdfFn = httpsCallable<
+    { resumeId: string },
+    { fileName: string; contentType: string; content: string; encoding?: 'base64' | 'utf8' }
+  >(this.functions, 'renderResumePdf');
 
   constructor(
     private firestore: Firestore,
@@ -100,10 +105,21 @@ export class ResumeService {
       return;
     }
 
+    const templateId = formGroup.get('templateId')?.value;
+    if (isLatexTemplate(templateId)) {
+      const result = await this.renderResumePdfFn({ resumeId });
+      this.saveBase64File(
+        result.data.content,
+        result.data.fileName,
+        result.data.contentType || 'application/pdf',
+      );
+      return;
+    }
+
     await this.downloadResumeFn({ resumeId });
 
     const previewElement = document.querySelector(
-      '.preview-content .resume-preview',
+      '.resume-export-surface .resume-preview',
     ) as HTMLElement | null;
     if (!previewElement) {
       return;
@@ -184,5 +200,22 @@ export class ResumeService {
     }
 
     return new Error(`Unable to ${action} your resume.`);
+  }
+
+  private saveBase64File(base64: string, fileName: string, contentType: string) {
+    const binary = window.atob(base64);
+    const bytes = new Uint8Array(binary.length);
+
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+
+    const blob = new Blob([bytes], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = fileName;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
   }
 }

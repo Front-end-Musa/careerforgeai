@@ -10,6 +10,11 @@ export const selectCoverLettersStatus = createSelector(
     (state: CoverLetterState) => state.status,
 );
 
+export const selectCoverLettersStale = createSelector(
+    selectCoverLetterFeature,
+    (state: CoverLetterState) => state.stale,
+);
+
 export const selectIsLoading = createSelector(
     selectCoverLetterFeature,
     (state: CoverLetterState) => state.status === 'loading',

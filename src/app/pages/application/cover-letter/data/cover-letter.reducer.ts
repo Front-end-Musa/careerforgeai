@@ -6,9 +6,11 @@ import { CoverLetter } from '../../../../core/interfaces/cover-letter.interface'
 type stateStatus = 'init' | 'loading' | 'loaded' | 'error';
 
 export interface CoverLetterState extends EntityState<CoverLetter> {
-  coverLetters: any[];
+  coverLetters: CoverLetter[];
   status: stateStatus;
   error: string | null;
+  stale: boolean;
+  loadedAt: string | null;
   // UI / AI
   formValue: any | null;
   generating: boolean;
@@ -24,6 +26,8 @@ export const initialState: CoverLetterState = coverLettersAdapter.getInitialStat
   coverLetters: [],
   status: 'init',
   error: null,
+  stale: true,
+  loadedAt: null,
   formValue: null,
   generating: false,
 });
@@ -41,12 +45,15 @@ export const coverLetterReducer = createReducer(
         ...state,
         status: 'loaded',
         error: null,
+        stale: false,
+        loadedAt: new Date().toISOString(),
         coverLetters: coverLetters,
     })),
     on(CoverLetterActions.loadAllCoverLettersFailure, (state, { error }) => ({
         ...state,
         status: 'error',
         error: error,
+        stale: true,
     })),
 
     on(CoverLetterActions.deleteCoverLetter, (state) => ({
@@ -56,6 +63,7 @@ export const coverLetterReducer = createReducer(
     on(CoverLetterActions.deleteCoverLetterSuccess, (state, { id }) => ({
         ...state,
         error: null,
+        stale: true,
         coverLetters: state.coverLetters.filter((cl) => cl.id !== id),
     })),
     on(CoverLetterActions.deleteCoverLetterFailure, (state, { error }) => ({

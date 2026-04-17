@@ -10,9 +10,14 @@ export const selectResumesStatus = createSelector(
   (state: ResumesState) => state.status,
 );
 
+export const selectResumesStale = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.stale,
+);
+
 export const selectIsLoading = createSelector(
   selectResumesFeature,
-  (state: any) => state.resumes?.status === 'loading',
+  (state: ResumesState) => state.status === 'loading',
 );
 
 export const selectResumesError = createSelector(

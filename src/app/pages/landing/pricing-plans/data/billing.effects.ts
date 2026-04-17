@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, from, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, from, map, of, tap } from 'rxjs';
 import { BillingService } from '../../../../core/services/billing.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
 import * as BillingActions from './billing.actions';
@@ -16,7 +16,7 @@ export class BillingEffects {
   startCheckoutEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(BillingActions.startCheckout),
-      switchMap(({ plan }) =>
+      exhaustMap(({ plan }) =>
         from(this.billingService.createCheckout(plan)).pipe(
           map((checkoutUrl) => BillingActions.startCheckoutSuccess({ checkoutUrl })),
           catchError((error) =>

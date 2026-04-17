@@ -26,7 +26,7 @@ export class App implements OnInit {
   authStatus = AuthStatus;
 
   ngOnInit() {
-    this.authFacade.initAuth();
+    this.authFacade.initAuth({ source: 'App.ngOnInit' });
 
     this.router.events
       .pipe(

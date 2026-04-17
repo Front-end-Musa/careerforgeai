@@ -76,7 +76,7 @@ export class ResumesTailor {
         this.resume.set(resume);
       });
 
-    this.resumesFacade.loadResumes();
+    this.resumesFacade.ensureLoaded('ResumesTailor.constructor');
     combineLatest([this.authFacade.user$, this.resumesFacade.resumes$])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([user, resumes]) => {

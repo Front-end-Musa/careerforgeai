@@ -26,8 +26,8 @@
             {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
           </button>
         } @else {
-          <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
-            Upgrade To Save
+          <button type="button" mat-flat-button color="primary" (click)="saveResume()">
+            {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
           </button>
         }
       </div>
@@ -275,6 +275,32 @@
                     <mat-label>Skills*</mat-label>
                     <textarea matInput formControlName="skills" rows="4" placeholder="JavaScript, Angular, UX Strategy, Leadership"></textarea>
                   </mat-form-field>
+
+                  @if (isHarshibarTemplate) {
+                    <div class="field-grid field-grid-wide">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Languages</mat-label>
+                        <textarea
+                          matInput
+                          formControlName="skillsLanguages"
+                          rows="3"
+                          placeholder="Angular, TypeScript, JavaScript, NgRx"
+                        ></textarea>
+                        <mat-hint>Controls the Languages line in Harshibar Creator.</mat-hint>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tools</mat-label>
+                        <textarea
+                          matInput
+                          formControlName="skillsTools"
+                          rows="3"
+                          placeholder="RxJs, Nx, Git"
+                        ></textarea>
+                        <mat-hint>Controls the Tools line in Harshibar Creator.</mat-hint>
+                      </mat-form-field>
+                    </div>
+                  }
                 }
 
                 @case ('projects') {
@@ -491,9 +517,13 @@
       <div class="footer-actions">
         @if (isEditMode) {
           @if (canDownloadCurrentResume) {
-            <button type="button" mat-stroked-button (click)="exportToPdf()">Export PDF</button>
+            <button type="button" mat-stroked-button (click)="exportToPdf()">
+              {{ isLatexPreviewTemplate ? 'Compile & Download PDF' : 'Export PDF' }}
+            </button>
           } @else {
-            <button type="button" mat-stroked-button [routerLink]="['/']" fragment="pricing">Upgrade To Download</button>
+            <button type="button" mat-stroked-button (click)="exportToPdf()">
+              {{ isLatexPreviewTemplate ? 'Compile & Download PDF' : 'Export PDF' }}
+            </button>
           }
         }
         @if (canStoreCurrentResume) {
@@ -501,8 +531,8 @@
             {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
           </button>
         } @else {
-          <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
-            Upgrade To Save
+          <button type="button" mat-flat-button color="primary" (click)="saveResume()">
+            {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
           </button>
         }
       </div>
@@ -512,9 +542,9 @@
   <aside class="preview-panel">
     <div class="preview-header">
       <div>
-        <p class="eyebrow">Live Preview</p>
-        <h2>{{ getTemplateLabel(previewTemplate) }}</h2>
-        <p>Section order and content update here as you edit.</p>
+        <p class="eyebrow">{{ previewHeading }}</p>
+        <h2>{{ selectedTemplateName }}</h2>
+        <p>{{ previewDescription }}</p>
       </div>
       <button type="button" class="change-template" (click)="requestTemplateChange()">Change template</button>
     </div>
@@ -542,8 +572,8 @@
       {{ isEditMode ? 'Save' : 'Save Resume' }}
     </button>
   } @else {
-    <button type="button" mat-flat-button color="primary" [routerLink]="['/']" fragment="pricing">
-      Upgrade
+    <button type="button" mat-flat-button color="primary" (click)="saveResume()">
+      {{ isEditMode ? 'Save' : 'Save Resume' }}
     </button>
   }
 </div>

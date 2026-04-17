@@ -2,6 +2,10 @@ export type ResumeTemplateId =
   | 'basic'
   | 'ats-simple'
   | 'classic-one-column'
+  | 'overleaf-compact'
+  | 'overleaf-jake'
+  | 'overleaf-academic'
+  | 'overleaf-executive'
   | 'pro-modern'
   | 'cascade'
   | 'cubic-pro'
@@ -25,6 +29,7 @@ export interface Resume {
   experience: ExperienceEntry[];
   education: EducationEntry[];
   skills: string[];
+  skillGroups?: SkillGroups;
 
   projects?: ProjectEntry[];
   certifications?: CertificationSectionEntry[];
@@ -75,6 +80,11 @@ export interface ContactInfo {
   linkedin?: string;
   github?: string;
   website?: string;
+}
+
+export interface SkillGroups {
+  languages?: string[];
+  tools?: string[];
 }
 
 export type ResumeSectionType =

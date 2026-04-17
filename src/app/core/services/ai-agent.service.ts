@@ -49,9 +49,33 @@ export class AiAgentService {
     );
   }
 
-  generateCoverLetter(resumeText: string, jobDescription: string, companyName: string, position: string, tone: string): Observable<string> {
-    const fn = httpsCallable(this.functions, 'generateCoverLetter');
-    return from(fn({ resumeText, jobDescription, companyName, position, tone }).then((res: any) => res.data.text)).pipe(
+  generateCoverLetter(
+    resumeText: string,
+    jobDescription: string,
+    companyName: string,
+    position: string,
+    tone: string,
+    resumeId: string,
+    resumeLabel: string,
+  ): Observable<string> {
+    const fn = httpsCallable<
+      {
+        resumeText: string;
+        jobDescription: string;
+        companyName: string;
+        position: string;
+        tone: string;
+        resumeId: string;
+        resumeLabel: string;
+      },
+      { text: string; coverLetterId: string }
+    >(this.functions, 'generateCoverLetter');
+
+    return from(
+      fn({ resumeText, jobDescription, companyName, position, tone, resumeId, resumeLabel }).then(
+        (res) => res.data.text,
+      ),
+    ).pipe(
       catchError((error) =>
         throwError(() => toCallableError(error, 'Failed to generate cover letter. Please try again.')),
       ),

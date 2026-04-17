@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,7 +51,10 @@ import { GenerateBtn } from '../../../buttons/generate-btn/generate-btn';
 import { ResumesFacade } from '../data/resumes.facade';
 import { ResumePreview } from '../resume-preview/resume-preview';
 import { EntitlementsService } from '../../../../core/services/entitlements.service';
+import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { DateField } from '../../../../lib/date-field/date-field';
+import { getTemplateById, getTemplateLabel, isLatexTemplate } from '../data/resume-template-catalog';
 
 type SectionControl = FormGroup<{
   id: FormControl<string>;
@@ -78,7 +81,6 @@ type CustomSectionControl = FormGroup<{
     MatInputModule,
     MatIconModule,
     MatProgressBarModule,
-    RouterLink,
     GenerateBtn,
     ResumePreview,
     DateField,
@@ -94,9 +96,12 @@ export class ResumesCreate implements OnInit, OnChanges {
   @Input() user: AppUser | null = null;
   @Input() resumeCount = 0;
   @Output() changeTemplate = new EventEmitter<void>();
+  @Output() saveCompleted = new EventEmitter<void>();
 
   resumesFacade = inject(ResumesFacade);
   entitlementsService = inject(EntitlementsService);
+  resumeAccessPolicy = inject(ResumeAccessPolicyService);
+  resumeUpgrade = inject(ResumeUpgradeService);
   destroyRef = inject(DestroyRef);
   location = inject(Location);
   router = inject(Router);
@@ -158,6 +163,8 @@ export class ResumesCreate implements OnInit, OnChanges {
     }),
     summary: new FormControl('', { nonNullable: true }),
     skills: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    skillsLanguages: new FormControl('', { nonNullable: true }),
+    skillsTools: new FormControl('', { nonNullable: true }),
     experience: new FormArray<FormGroup>([]),
     education: new FormArray<FormGroup>([]),
     projects: new FormArray<FormGroup>([]),
@@ -167,6 +174,7 @@ export class ResumesCreate implements OnInit, OnChanges {
     volunteerExperience: new FormArray<FormGroup>([]),
     customSections: new FormArray<CustomSectionControl>([]),
     sectionOrder: new FormArray<SectionControl>([]),
+    templateId: new FormControl<ResumeTemplateId>('basic', { nonNullable: true }),
     meta: new FormGroup({
       createdAt: new FormControl(new Date().toISOString(), { nonNullable: true }),
       updatedAt: new FormControl(new Date().toISOString(), { nonNullable: true }),
@@ -184,12 +192,13 @@ export class ResumesCreate implements OnInit, OnChanges {
   ngOnInit() {
     if (this.templateId) {
       this.previewTemplate = this.templateId;
+      this.resumeGroup.controls.templateId.setValue(this.templateId);
     }
 
     this.resumesFacade.saveSucceeded$
       .pipe(skip(1), filter((saved) => saved), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.router.navigate(['/application/resumes']);
+        this.saveCompleted.emit();
       });
 
     this.resumesFacade.generatedResult$
@@ -210,6 +219,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['templateId']?.currentValue) {
       this.previewTemplate = changes['templateId'].currentValue;
+      this.resumeGroup.controls.templateId.setValue(changes['templateId'].currentValue);
     }
   }
 
@@ -227,6 +237,28 @@ export class ResumesCreate implements OnInit, OnChanges {
 
   get canDownloadCurrentResume() {
     return this.entitlements().canDownloadResume;
+  }
+
+  get isLatexPreviewTemplate() {
+    return isLatexTemplate(this.previewTemplate);
+  }
+
+  get isHarshibarTemplate() {
+    return this.previewTemplate === 'overleaf-compact';
+  }
+
+  get previewHeading() {
+    return this.isLatexPreviewTemplate ? 'Live LaTeX Preview' : 'Live Preview';
+  }
+
+  get previewDescription() {
+    return this.isLatexPreviewTemplate ?
+        'Your .tex source and the template output update as you type.' :
+        'Section order and content update here as you edit.';
+  }
+
+  get selectedTemplateName() {
+    return getTemplateById(this.previewTemplate).name;
   }
 
   get resumeUsageLabel() {
@@ -285,7 +317,7 @@ export class ResumesCreate implements OnInit, OnChanges {
       this.resumeGroup.get('contact.email')?.value?.trim(),
       this.resumeGroup.get('contact.location')?.value?.trim(),
       this.resumeGroup.get('summary')?.value?.trim(),
-      this.normalizeSkills(this.resumeGroup.get('skills')?.value ?? '').length ? 'skills' : '',
+      this.getNormalizedSkillSet(this.resumeGroup.getRawValue()).length ? 'skills' : '',
     ];
 
     return Math.round((checks.filter(Boolean).length / checks.length) * 100);
@@ -334,7 +366,7 @@ export class ResumesCreate implements OnInit, OnChanges {
       return this.resumeGroup.get('summary')?.value?.trim() ? 'Ready' : 'Optional';
     }
     if (type === 'skills') {
-      const skillsCount = this.normalizeSkills(this.resumeGroup.get('skills')?.value ?? '').length;
+      const skillsCount = this.getNormalizedSkillSet(this.resumeGroup.getRawValue()).length;
       return skillsCount ? `${skillsCount} skills` : 'Add skills';
     }
 
@@ -600,7 +632,7 @@ export class ResumesCreate implements OnInit, OnChanges {
     const jobTitle = this.resumeGroup.get('personalInfo.jobTitle')?.value?.trim();
     const email = this.resumeGroup.get('contact.email')?.value?.trim();
     const location = this.resumeGroup.get('contact.location')?.value?.trim();
-    const skills = this.normalizeSkills(this.resumeGroup.get('skills')?.value ?? '');
+    const skills = this.getNormalizedSkillSet(this.resumeGroup.getRawValue());
     const hasExperienceSeed = this.experienceArray.controls.some((group) => {
       return Boolean(group.get('company')?.value?.trim() && group.get('role')?.value?.trim());
     });
@@ -622,22 +654,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   getTemplateLabel(templateId: ResumeTemplateId) {
-    const labels: Record<ResumeTemplateId, string> = {
-      basic: 'Basic',
-      'ats-simple': 'ATS-Friendly Simple',
-      'classic-one-column': 'Classic One-Column',
-      'pro-modern': 'Pro (Professional & Modern)',
-      cascade: 'Cascade (Pro)',
-      'cubic-pro': 'Cubic (Pro)',
-      'tech-savvy': 'Tech-Savvy',
-      'modern-executive': 'Modern Executive',
-      'premium-executive': 'Premium (Executive & High-End)',
-      'executive-edge': 'Executive Edge',
-      'graphical-genius': 'Graphical Genius',
-      'elite-senior': 'Elite Senior',
-      'metamorphic-masterpiece': 'Metamorphic Masterpiece',
-    };
-    return labels[templateId] ?? 'Basic';
+    return getTemplateLabel(templateId);
   }
 
   isTemplateLocked(templateId: ResumeTemplateId) {
@@ -655,6 +672,7 @@ export class ResumesCreate implements OnInit, OnChanges {
     }
 
     if (!this.canStoreCurrentResume) {
+      this.redirectToUpgrade('save');
       return;
     }
 
@@ -682,11 +700,16 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   async exportToPdf() {
-    if (!this.canDownloadCurrentResume || typeof window === 'undefined') {
+    if (typeof window === 'undefined') {
       return;
     }
 
     if (!this.resumeId) {
+      return;
+    }
+
+    if (!this.canDownloadCurrentResume) {
+      this.redirectToUpgrade('download');
       return;
     }
 
@@ -695,6 +718,7 @@ export class ResumesCreate implements OnInit, OnChanges {
 
   private requiredPlan(templateId: ResumeTemplateId) {
     const proTemplates: ResumeTemplateId[] = [
+      'overleaf-academic',
       'pro-modern',
       'cascade',
       'cubic-pro',
@@ -702,6 +726,7 @@ export class ResumesCreate implements OnInit, OnChanges {
       'modern-executive',
     ];
     const premiumTemplates: ResumeTemplateId[] = [
+      'overleaf-executive',
       'premium-executive',
       'executive-edge',
       'graphical-genius',
@@ -726,6 +751,18 @@ export class ResumesCreate implements OnInit, OnChanges {
       return 2;
     }
     return 1;
+  }
+
+  private redirectToUpgrade(reason: 'save' | 'download' | 'second_resume' | 'template_lock' | 'tailor') {
+    const returnTo =
+      this.isEditMode && this.resumeId ? `/application/resumes/${this.resumeId}/edit` : '/application/resumes';
+
+    this.resumeUpgrade.startUpgrade({
+      reason,
+      returnTo,
+      recommendedPlan: this.previewTemplate === 'overleaf-executive' ? 'premium' : 'pro',
+      message: this.resumeAccessPolicy.upgradeMessage(reason, this.previewTemplate),
+    });
   }
 
   private resetSectionOrder(sections?: ResumeSection[]) {
@@ -899,6 +936,26 @@ export class ResumesCreate implements OnInit, OnChanges {
       .filter(Boolean);
   }
 
+  private buildSkillGroups(raw: { skillsLanguages?: string; skillsTools?: string }) {
+    const languages = this.normalizeSkills(raw.skillsLanguages ?? '');
+    const tools = this.normalizeSkills(raw.skillsTools ?? '');
+
+    return {
+      languages,
+      tools,
+    };
+  }
+
+  private getNormalizedSkillSet(raw: { skills?: string; skillsLanguages?: string; skillsTools?: string }) {
+    const skills = this.normalizeSkills(raw.skills ?? '');
+    if (skills.length) {
+      return skills;
+    }
+
+    const groupedSkills = this.buildSkillGroups(raw);
+    return [...groupedSkills.languages, ...groupedSkills.tools];
+  }
+
   private normalizeBullets(input?: string | string[]) {
     if (!input) {
       return [];
@@ -1023,7 +1080,7 @@ export class ResumesCreate implements OnInit, OnChanges {
     return Boolean(
       this.resumeGroup.get('personalInfo.fullName')?.value?.trim() &&
         this.resumeGroup.get('personalInfo.jobTitle')?.value?.trim() &&
-        this.resumeGroup.get('skills')?.value?.trim(),
+        this.getNormalizedSkillSet(this.resumeGroup.getRawValue()).length,
     );
   }
 
@@ -1048,7 +1105,7 @@ export class ResumesCreate implements OnInit, OnChanges {
         website: raw.contact?.website?.trim() ?? '',
       },
       summary: raw.summary?.trim() ?? '',
-      skills: this.normalizeSkills(raw.skills ?? ''),
+      skills: this.getNormalizedSkillSet(raw),
       experience: this.normalizeExperience(raw.experience ?? []),
       education: this.normalizeEducation(raw.education ?? []),
       ...(Object.keys(meta).length ? { meta } : {}),
@@ -1129,6 +1186,8 @@ export class ResumesCreate implements OnInit, OnChanges {
     const awards = this.normalizeAwards(raw.awards ?? []);
     const volunteerExperience = this.normalizeVolunteer(raw.volunteerExperience ?? []);
     const customSections = this.normalizeCustomSections(raw.customSections ?? []);
+    const skillGroups = this.buildSkillGroups(raw);
+    const normalizedSkills = this.getNormalizedSkillSet(raw);
 
     return {
       personalInfo: {
@@ -1146,7 +1205,11 @@ export class ResumesCreate implements OnInit, OnChanges {
       summary: raw.summary?.trim() ?? '',
       experience: this.normalizeExperience(raw.experience ?? []),
       education: this.normalizeEducation(raw.education ?? []),
-      skills: this.normalizeSkills(raw.skills ?? ''),
+      skills: normalizedSkills,
+      skillGroups:
+        skillGroups.languages.length || skillGroups.tools.length ?
+          skillGroups :
+          undefined,
       projects: projects.map((entry) => ({
         name: entry.name,
         role: entry.role,
@@ -1289,6 +1352,12 @@ export class ResumesCreate implements OnInit, OnChanges {
           },
           summary: resume.summary ?? '',
           skills: Array.isArray(resume.skills) ? resume.skills.join(', ') : '',
+          skillsLanguages: Array.isArray(resume.skillGroups?.languages) ?
+            resume.skillGroups.languages.join(', ') :
+            '',
+          skillsTools: Array.isArray(resume.skillGroups?.tools) ?
+            resume.skillGroups.tools.join(', ') :
+            '',
           meta: {
             createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
             updatedAt: resume.meta?.updatedAt ?? new Date().toISOString(),
@@ -1298,6 +1367,7 @@ export class ResumesCreate implements OnInit, OnChanges {
         });
 
         this.previewTemplate = resume.templateId ?? this.previewTemplate;
+        this.resumeGroup.controls.templateId.setValue(this.previewTemplate);
         this.loadedMeta = resume.meta ?? null;
         this.resetSectionOrder(sections);
 

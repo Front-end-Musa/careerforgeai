@@ -29,7 +29,7 @@ export class Dashboard {
   offers = signal<Job[]>([]);
 
   ngOnInit() {
-    this.resumesFacade.loadResumes();
+    this.resumesFacade.ensureLoaded('Dashboard.ngOnInit');
     this.resumesFacade.resumes$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((resumes) => {
       this.resumes.set(resumes);
     });
@@ -42,7 +42,7 @@ export class Dashboard {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((entitlements) => {
         if (entitlements.canUseJobTracker) {
-          this.jobsFacade.loadJobs();
+          this.jobsFacade.ensureLoaded('Dashboard.entitlements');
           return;
         }
 

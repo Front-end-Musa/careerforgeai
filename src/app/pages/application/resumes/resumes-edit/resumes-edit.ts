@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ResumeTemplateId } from '../../../../core/interfaces/resumes.interface';
@@ -22,6 +22,7 @@ export class ResumesEdit implements OnInit, AfterViewInit {
   @ViewChild('templateModal') templateModal?: ResumeTemplateModal;
 
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private resumesFacade = inject(ResumesFacade);
   private authFacade = inject(AuthFacade);
   private destroyRef = inject(DestroyRef);
@@ -37,7 +38,7 @@ export class ResumesEdit implements OnInit, AfterViewInit {
   );
 
   ngOnInit() {
-    this.resumesFacade.loadResumes();
+    this.resumesFacade.ensureLoaded('ResumesEdit.ngOnInit');
     combineLatest([this.authFacade.user$, this.resumesFacade.resumes$])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([user, resumes]) => {
@@ -74,6 +75,10 @@ export class ResumesEdit implements OnInit, AfterViewInit {
       recommendedPlan: this.templateRequiresPremium(templateId) ? 'premium' : 'pro',
       message: this.resumeAccessPolicy.upgradeMessage('template_lock', templateId),
     });
+  }
+
+  handleResumeSaved() {
+    this.router.navigate(['/application/resumes']);
   }
 
   private templateRequiresPremium(templateId: ResumeTemplateId) {

@@ -21,7 +21,10 @@ describe('Success', () => {
   };
   const resumeUpgradeMock = {
     getPendingPath: jasmine.createSpy('getPendingPath').and.returnValue('/application/resumes'),
+    getPendingPlan: jasmine.createSpy('getPendingPlan').and.returnValue('pro'),
     clearPendingPath: jasmine.createSpy('clearPendingPath'),
+    clearPendingPlan: jasmine.createSpy('clearPendingPlan'),
+    markRecentUpgrade: jasmine.createSpy('markRecentUpgrade'),
   };
 
   beforeEach(async () => {
@@ -43,5 +46,26 @@ describe('Success', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('marks recent upgrades and refreshes auth after a successful paid sync', async () => {
+    await component.ngOnInit();
+
+    expect(billingServiceMock.syncEntitlements).toHaveBeenCalled();
+    expect(authFacadeMock.initAuth).toHaveBeenCalled();
+    expect(resumeUpgradeMock.markRecentUpgrade).toHaveBeenCalledWith('pro');
+    expect(resumeUpgradeMock.clearPendingPlan).toHaveBeenCalled();
+  });
+
+  it('shows an error when checkout succeeds but entitlements still sync as free', async () => {
+    billingServiceMock.syncEntitlements.and.resolveTo({
+      plan: 'free',
+      subscriptionStatus: 'none',
+      entitlementsUpdatedAt: Date.now(),
+    });
+
+    await component.ngOnInit();
+
+    expect(component.error()).toContain('paid access has not synced yet');
   });
 });

@@ -1,14 +1,23 @@
 import { ResumeTemplateId } from '../../../../core/interfaces/resumes.interface';
 
 export type PlanTier = 'free' | 'pro' | 'premium';
-export type ResumeLayoutType = 'classic' | 'modern' | 'minimal' | 'split-accent' | 'executive-grid';
+export type ResumeTemplateFamily = 'classic' | 'modern' | 'premium' | 'latex';
+export type ResumeTemplateRenderer = ResumeTemplateFamily;
+export type ResumeRenderContext = 'picker' | 'editor' | 'export';
+
+export interface ResumeTemplatePreviewSettings {
+  pickerScale: number;
+  pickerWidthPercent: number;
+}
 
 export interface ResumeTemplateOption {
   id: ResumeTemplateId;
   name: string;
   description: string;
   requiredPlan: PlanTier;
-  layoutType: ResumeLayoutType;
+  family: ResumeTemplateFamily;
+  renderer: ResumeTemplateRenderer;
+  preview: ResumeTemplatePreviewSettings;
 }
 
 const PLAN_RANK: Record<PlanTier, number> = {
@@ -23,91 +32,153 @@ export const RESUME_TEMPLATES: readonly ResumeTemplateOption[] = [
     name: 'Basic',
     description: 'Clean, straightforward layout with clear sections.',
     requiredPlan: 'free',
-    layoutType: 'classic',
+    family: 'classic',
+    renderer: 'classic',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
   },
   {
     id: 'ats-simple',
     name: 'ATS-Friendly Simple',
     description: 'Optimized for ATS scanners with minimal styling.',
     requiredPlan: 'free',
-    layoutType: 'classic',
+    family: 'classic',
+    renderer: 'classic',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
   },
   {
     id: 'classic-one-column',
     name: 'Classic One-Column',
     description: 'Traditional single-column resume layout.',
     requiredPlan: 'free',
-    layoutType: 'classic',
+    family: 'classic',
+    renderer: 'classic',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
+  },
+  {
+    id: 'overleaf-compact',
+    name: 'Harshibar Creator',
+    description: 'Real LaTeX template based on Harshibar’s resume layout.',
+    requiredPlan: 'free',
+    family: 'latex',
+    renderer: 'latex',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
+  },
+  {
+    id: 'overleaf-jake',
+    name: "Jake's Resume",
+    description: 'Classic Overleaf LaTeX resume by Jake Gutierrez with ATS-friendly structure.',
+    requiredPlan: 'free',
+    family: 'latex',
+    renderer: 'latex',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
+  },
+  {
+    id: 'overleaf-academic',
+    name: 'Overleaf Academic',
+    description: 'LaTeX template tuned for academic and research resumes.',
+    requiredPlan: 'pro',
+    family: 'latex',
+    renderer: 'latex',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
+  },
+  {
+    id: 'overleaf-executive',
+    name: 'Overleaf Executive',
+    description: 'LaTeX export with a more formal executive presentation.',
+    requiredPlan: 'premium',
+    family: 'latex',
+    renderer: 'latex',
+    preview: { pickerScale: 0.46, pickerWidthPercent: 218 },
   },
   {
     id: 'pro-modern',
     name: 'Pro (Professional & Modern)',
     description: 'Modern two-column layout with strong hierarchy.',
     requiredPlan: 'pro',
-    layoutType: 'modern',
+    family: 'modern',
+    renderer: 'modern',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'cascade',
     name: 'Cascade (Pro)',
     description: 'Elegant spacing and bold section flow.',
     requiredPlan: 'pro',
-    layoutType: 'modern',
+    family: 'modern',
+    renderer: 'modern',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'cubic-pro',
     name: 'Cubic (Pro)',
     description: 'Geometric spacing with crisp block headings.',
     requiredPlan: 'pro',
-    layoutType: 'modern',
+    family: 'modern',
+    renderer: 'modern',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'tech-savvy',
     name: 'Tech-Savvy',
     description: 'Sleek tech-forward layout with sharp accents.',
     requiredPlan: 'pro',
-    layoutType: 'modern',
+    family: 'modern',
+    renderer: 'modern',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'modern-executive',
     name: 'Modern Executive',
     description: 'Executive-ready layout with confident styling.',
     requiredPlan: 'pro',
-    layoutType: 'modern',
+    family: 'modern',
+    renderer: 'modern',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'premium-executive',
     name: 'Premium (Executive & High-End)',
     description: 'High-end executive formatting with luxury detail.',
     requiredPlan: 'premium',
-    layoutType: 'minimal',
+    family: 'premium',
+    renderer: 'premium',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'executive-edge',
     name: 'Executive Edge',
     description: 'Polished, premium layout for senior roles.',
     requiredPlan: 'premium',
-    layoutType: 'minimal',
+    family: 'premium',
+    renderer: 'premium',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'graphical-genius',
     name: 'Graphical Genius',
     description: 'Premium visual balance with refined typography.',
     requiredPlan: 'premium',
-    layoutType: 'minimal',
+    family: 'premium',
+    renderer: 'premium',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'elite-senior',
     name: 'Elite Senior',
     description: 'Senior-level polish with calm hierarchy.',
     requiredPlan: 'premium',
-    layoutType: 'minimal',
+    family: 'premium',
+    renderer: 'premium',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
   {
     id: 'metamorphic-masterpiece',
     name: 'Metamorphic Masterpiece',
     description: 'Luxury serif styling with layered sections.',
     requiredPlan: 'premium',
-    layoutType: 'minimal',
+    family: 'premium',
+    renderer: 'premium',
+    preview: { pickerScale: 0.44, pickerWidthPercent: 228 },
   },
 ];
 
@@ -142,4 +213,8 @@ export function isTemplateLocked(plan: PlanTier, templateId: unknown): boolean {
 
 export function getTemplateLabel(templateId: unknown): string {
   return getTemplateById(templateId).name;
+}
+
+export function isLatexTemplate(templateId: unknown): boolean {
+  return getTemplateById(templateId).family === 'latex';
 }

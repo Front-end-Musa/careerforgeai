@@ -9,15 +9,21 @@ import {
   selectJobsError,
   selectJobsSaving,
   selectJobsStatus,
+  selectJobsStale,
   selectOfferedJobs,
   selectRejectedJobs,
 } from './jobs.selectors';
+import { JobsStatus } from './jobs.reducer';
+import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JobsFacade {
   private store = inject(Store);
+  private trace = inject(ActionTraceService);
+  private status = this.store.selectSignal(selectJobsStatus);
+  private stale = this.store.selectSignal(selectJobsStale);
 
   jobs$ = this.store.select(selectAll);
   appliedJobs$ = this.store.select(selectAppliedJobs);
@@ -28,24 +34,47 @@ export class JobsFacade {
   saving$ = this.store.select(selectJobsSaving);
   error$ = this.store.select(selectJobsError);
 
-  loadJobs() {
-    this.store.dispatch(JobsActions.loadJobs());
+  ensureLoaded(source = 'JobsFacade.ensureLoaded', force = false) {
+    const status = this.status();
+    if (!force && (status === JobsStatus.Loading || (status === JobsStatus.Loaded && !this.stale()))) {
+      this.trace.traceSkip(JobsActions.loadJobs.type, source, 'jobs already loaded', {
+        jobsStatus: status,
+        jobsStale: this.stale(),
+      });
+      return;
+    }
+
+    const action = JobsActions.loadJobs();
+    this.trace.traceDispatch(action, source, {
+      force,
+      jobsStatus: status,
+      jobsStale: this.stale(),
+    });
+    this.store.dispatch(action);
   }
 
   addJob(job: Pick<Job, 'title' | 'company' | 'status' | 'dateApplied' | 'position'>) {
-    this.store.dispatch(JobsActions.addJob({ job }));
+    const action = JobsActions.addJob({ job });
+    this.trace.traceDispatch(action, 'JobsFacade.addJob');
+    this.store.dispatch(action);
   }
 
   moveJob(jobs: Array<{ id: string; status: Job['status']; position: number }>) {
-    this.store.dispatch(JobsActions.moveJob({ jobs }));
+    const action = JobsActions.moveJob({ jobs });
+    this.trace.traceDispatch(action, 'JobsFacade.moveJob');
+    this.store.dispatch(action);
   }
 
   updateJob(id: string, changes: Partial<Job>) {
-    this.store.dispatch(JobsActions.updateJob({ id, changes }));
+    const action = JobsActions.updateJob({ id, changes });
+    this.trace.traceDispatch(action, 'JobsFacade.updateJob');
+    this.store.dispatch(action);
   }
 
   deleteJob(id: string) {
-    this.store.dispatch(JobsActions.deleteJob({ id }));
+    const action = JobsActions.deleteJob({ id });
+    this.trace.traceDispatch(action, 'JobsFacade.deleteJob');
+    this.store.dispatch(action);
   }
 
   clearState() {

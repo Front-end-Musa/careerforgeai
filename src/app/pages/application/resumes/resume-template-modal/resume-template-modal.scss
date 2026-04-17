@@ -108,15 +108,17 @@
 .template-preview {
   background: #f8fafc;
   border-radius: 8px;
-  padding: 8px;
+  padding: 10px;
   overflow: hidden;
-  max-height: 220px;
+  height: 310px;
+  --preview-scale: 0.46;
+  --preview-width: 218%;
 
   app-resume-preview {
     display: block;
-    transform: scale(0.62);
+    transform: scale(var(--preview-scale));
     transform-origin: top left;
-    width: 160%;
+    width: var(--preview-width);
   }
 }
 
@@ -172,11 +174,10 @@
   }
 
   .template-preview {
-    max-height: 190px;
+    height: 250px;
 
     app-resume-preview {
-      transform: scale(0.55);
-      width: 180%;
+      width: max(var(--preview-width), 210%);
     }
   }
 }

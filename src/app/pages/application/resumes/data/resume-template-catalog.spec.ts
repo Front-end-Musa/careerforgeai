@@ -13,6 +13,14 @@ describe('resume-template-catalog', () => {
 
     expect(uniqueCount).toBe(ids.length);
     expect(RESUME_TEMPLATES.every((template) => Boolean(template.name && template.description))).toBeTrue();
+    expect(
+      RESUME_TEMPLATES.every(
+        (template) =>
+          Boolean(template.family && template.renderer) &&
+          template.preview.pickerScale > 0 &&
+          template.preview.pickerWidthPercent > 0,
+      ),
+    ).toBeTrue();
   });
 
   it('should keep expected tier counts after expansion', () => {
@@ -20,9 +28,9 @@ describe('resume-template-catalog', () => {
     const proCount = RESUME_TEMPLATES.filter((template) => template.requiredPlan === 'pro').length;
     const premiumCount = RESUME_TEMPLATES.filter((template) => template.requiredPlan === 'premium').length;
 
-    expect(freeCount).toBe(6);
-    expect(proCount).toBe(8);
-    expect(premiumCount).toBe(8);
+    expect(freeCount).toBe(3);
+    expect(proCount).toBe(5);
+    expect(premiumCount).toBe(5);
   });
 
   it('should support cumulative access by plan', () => {

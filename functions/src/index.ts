@@ -7,6 +7,7 @@ import {getAuth} from "firebase-admin/auth";
 import {getFirestore} from "firebase-admin/firestore";
 import {Polar} from "@polar-sh/sdk";
 import {validateEvent, WebhookVerificationError} from "@polar-sh/sdk/webhooks";
+import {resolvePlanFromPolarProduct} from "./billing-plan";
 
 const openaiSecret = defineSecret("OPENAI_API_KEY");
 
@@ -172,6 +173,16 @@ type TailorResumeInput = {
     };
   };
   [key: string]: unknown;
+};
+
+type GenerateCoverLetterRequest = {
+  resumeText?: string;
+  jobDescription?: string;
+  companyName?: string;
+  position?: string;
+  tone?: string;
+  resumeId?: string;
+  resumeLabel?: string;
 };
 
 /**
@@ -441,22 +452,6 @@ function normalizeSubscriptionStatus(status: unknown): SubscriptionStatus {
     return "cancelled";
   }
   return "none";
-}
-
-/**
- * Derives plan tier from a product name.
- * @param {unknown} productName Product display name.
- * @return {PlanTier} Resolved plan tier.
- */
-function resolvePlanFromProduct(productName: unknown): PlanTier {
-  const normalized = typeof productName === "string" ? productName.toLowerCase() : "";
-  if (normalized.includes("premium")) {
-    return "premium";
-  }
-  if (normalized.includes("pro")) {
-    return "pro";
-  }
-  return "free";
 }
 
 /**
@@ -828,7 +823,10 @@ async function applySubscriptionState(uid: string, data: unknown) {
   const db = getFirestore();
   const now = Date.now();
   const status = normalizeSubscriptionStatus(subscription.status);
-  const plan = resolvePlanFromProduct(subscription.product?.name);
+  const plan = resolvePlanFromPolarProduct({
+    productId: subscription.productId ?? subscription.product?.id,
+    productName: subscription.product?.name,
+  });
   const entitlements = getPlanEntitlements(plan);
   const currentPeriodEnd =
     toNullableDate(subscription.currentPeriodEnd) ?? toNullableDate(subscription.endsAt);
@@ -1195,17 +1193,25 @@ export const syncEntitlements = onCall(
         providerVariantId = latestActiveSubscription.productId;
         currentPeriodEnd = latestActiveSubscription.currentPeriodEnd;
         subscriptionStatus = normalizeSubscriptionStatus(latestActiveSubscription.status);
+        plan = resolvePlanFromPolarProduct({
+          productId: latestActiveSubscription.productId,
+        });
 
         try {
           const subscription = await polar.subscriptions.get({id: latestActiveSubscription.id});
-          plan = resolvePlanFromProduct(subscription.product?.name);
+          plan = resolvePlanFromPolarProduct({
+            productId:
+              latestActiveSubscription.productId ??
+              subscription.productId ??
+              subscription.product?.id,
+            productName: subscription.product?.name,
+          });
         } catch (error) {
           logger.warn("syncEntitlements unable to hydrate subscription product name", {
             uid,
             subscriptionId: latestActiveSubscription.id,
             error,
           });
-          plan = "free";
         }
       }
 
@@ -1403,7 +1409,7 @@ export const generateResume = onCall(
 
     const {mode, resume, targetIndex} = validateResumeGenerationRequest(request.data);
     await syncUsageWindowState(uid);
-    const reservedUsage = mode === "full" ? await reserveQuotaUsage(uid, "resume") : null;
+    const reservedUsage = await reserveQuotaUsage(uid, "resume");
 
     try {
       const openaiApiKey = await openaiSecret.value();
@@ -1613,11 +1619,23 @@ export const generateCoverLetter = onCall(
       throw new HttpsError("unauthenticated", "Authentication is required.");
     }
 
-    const {resumeText} = request.data as { resumeText?: string };
+    const {
+      resumeText,
+      jobDescription,
+      companyName,
+      position,
+      tone,
+      resumeId,
+      resumeLabel,
+    } = request.data as GenerateCoverLetterRequest;
 
-    if (!resumeText) {
-      throw new HttpsError("invalid-argument", "No resume text");
-    }
+    const normalizedResumeText = requireTrimmedString(resumeText, "resumeText");
+    const normalizedJobDescription = requireTrimmedString(jobDescription, "jobDescription");
+    const normalizedCompanyName = requireTrimmedString(companyName, "companyName");
+    const normalizedPosition = requireTrimmedString(position, "position");
+    const normalizedTone = requireTrimmedString(tone, "tone");
+    const normalizedResumeId = requireTrimmedString(resumeId, "resumeId");
+    const normalizedResumeLabel = requireTrimmedString(resumeLabel, "resumeLabel");
 
     await syncUsageWindowState(uid);
     const reservedUsage = await reserveQuotaUsage(uid, "coverLetter");
@@ -1632,23 +1650,61 @@ export const generateCoverLetter = onCall(
           {
             role: "system",
             content:
-              "You are a helpful assistant that helps users write cover letters based on their resumes.",
+              "You are a helpful assistant that writes tailored cover letters from a resume and target job details.",
           },
           {
             role: "user",
-            content: resumeText,
+            content: JSON.stringify(
+              {
+                targetJob: {
+                  companyName: normalizedCompanyName,
+                  position: normalizedPosition,
+                  tone: normalizedTone,
+                  jobDescription: normalizedJobDescription,
+                },
+                resumeText: normalizedResumeText,
+              },
+              null,
+              2,
+            ),
           },
         ],
       });
 
-      const responseText = completion.choices[0].message?.content;
+      const responseText = requireAiResponseText(
+        completion.choices[0].message?.content,
+        "No cover letter response from AI.",
+      );
+
+      const createdCoverLetter = await getFirestore().collection("coverLetters").add({
+        userId: uid,
+        companyName: normalizedCompanyName,
+        position: normalizedPosition,
+        jobDescription: normalizedJobDescription,
+        tone: normalizedTone,
+        text: responseText,
+        resumeId: normalizedResumeId,
+        resumeLabel: normalizedResumeLabel,
+        createdAt: new Date(),
+      });
 
       return {
         text: responseText,
+        coverLetterId: createdCoverLetter.id,
       };
     } catch (error) {
       await releaseQuotaUsage(uid, reservedUsage);
-      throw error;
+
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+
+      logger.error("generateCoverLetter failed", {
+        uid,
+        resumeId: normalizedResumeId,
+        error,
+      });
+      throw new HttpsError("internal", "Failed to generate cover letter.");
     }
   },
 );

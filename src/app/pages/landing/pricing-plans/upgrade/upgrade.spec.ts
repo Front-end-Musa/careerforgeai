@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { convertToParamMap, provideRouter } from '@angular/router';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 import { Upgrade } from './upgrade';
 import { ActivatedRoute } from '@angular/router';
 import { BillingFacade } from '../data/billing.facade';
-import { ResumeUpgradeService } from '../../../../../core/services/resume-upgrade.service';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 
 describe('Upgrade', () => {
   let component: Upgrade;
@@ -18,7 +18,10 @@ describe('Upgrade', () => {
       error$: of(null),
       selectedPlan$: of(null),
     });
-    resumeUpgrade = jasmine.createSpyObj<ResumeUpgradeService>('ResumeUpgradeService', ['setPendingPath']);
+    resumeUpgrade = jasmine.createSpyObj<ResumeUpgradeService>('ResumeUpgradeService', [
+      'setPendingPath',
+      'setPendingPlan',
+    ]);
 
     await TestBed.configureTestingModule({
       imports: [Upgrade],
@@ -59,6 +62,7 @@ describe('Upgrade', () => {
     component.selectPlan('pro');
     component.continueToCheckout();
 
+    expect(resumeUpgrade.setPendingPlan).toHaveBeenCalledWith('pro');
     expect(billingFacade.startCheckout).toHaveBeenCalledWith('pro');
   });
 });

@@ -1,13 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { Resume } from '../../../../../core/interfaces/resumes.interface';
 import { ResumesFacade } from '../../data/resumes.facade';
 import { ResumeCard } from './resume-card';
+import { ResumeService } from '../../../../../core/services/resume.service';
+import { EntitlementsService } from '../../../../../core/services/entitlements.service';
+import { ResumeAccessPolicyService } from '../../../../../core/services/resume-access-policy.service';
+import { ResumeUpgradeService } from '../../../../../core/services/resume-upgrade.service';
+import { NotificationsService } from '../../../../../core/services/notifications.service';
 
 describe('ResumeCard', () => {
   let component: ResumeCard;
   let fixture: ComponentFixture<ResumeCard>;
   let resumesFacade: jasmine.SpyObj<ResumesFacade>;
+  let resumeService: jasmine.SpyObj<ResumeService>;
+  let resumeAccessPolicy: jasmine.SpyObj<ResumeAccessPolicyService>;
+  let resumeUpgrade: jasmine.SpyObj<ResumeUpgradeService>;
+  let notifications: jasmine.SpyObj<NotificationsService>;
 
   const resume: Resume = {
     id: 'resume-1',
@@ -39,10 +49,34 @@ describe('ResumeCard', () => {
 
   beforeEach(async () => {
     resumesFacade = jasmine.createSpyObj<ResumesFacade>('ResumesFacade', ['deleteResume']);
+    resumeService = jasmine.createSpyObj<ResumeService>('ResumeService', ['downloadResume']);
+    resumeAccessPolicy = jasmine.createSpyObj<ResumeAccessPolicyService>('ResumeAccessPolicyService', [
+      'canExportResume',
+      'upgradeMessage',
+    ]);
+    resumeUpgrade = jasmine.createSpyObj<ResumeUpgradeService>('ResumeUpgradeService', ['startUpgrade']);
+    notifications = jasmine.createSpyObj<NotificationsService>('NotificationsService', ['showError']);
+    resumeAccessPolicy.canExportResume.and.returnValue(true);
+    resumeAccessPolicy.upgradeMessage.and.returnValue('Resume downloads are available on paid plans.');
+    resumeService.downloadResume.and.returnValue(
+      of({
+        fileName: 'jane-candidate.json',
+        contentType: 'application/json',
+        content: '{"id":"resume-1"}',
+      }),
+    );
 
     await TestBed.configureTestingModule({
       imports: [ResumeCard],
-      providers: [{ provide: ResumesFacade, useValue: resumesFacade }, provideRouter([])],
+      providers: [
+        { provide: ResumesFacade, useValue: resumesFacade },
+        { provide: ResumeService, useValue: resumeService },
+        { provide: EntitlementsService, useValue: { user$: of(null) } },
+        { provide: ResumeAccessPolicyService, useValue: resumeAccessPolicy },
+        { provide: ResumeUpgradeService, useValue: resumeUpgrade },
+        { provide: NotificationsService, useValue: notifications },
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResumeCard);
@@ -80,8 +114,43 @@ describe('ResumeCard', () => {
     expect(buttons[1].getAttribute('ng-reflect-router-link')).toContain('/application/resumes,resume-1,tailor');
   });
 
+  it('downloads the resume when the user has access', () => {
+    const createObjectURLSpy = spyOn(URL, 'createObjectURL').and.returnValue('blob:resume');
+    const revokeObjectURLSpy = spyOn(URL, 'revokeObjectURL');
+    const clickSpy = jasmine.createSpy('click');
+    spyOn(document, 'createElement').and.returnValue({
+      click: clickSpy,
+    } as unknown as HTMLAnchorElement);
+
+    component.downloadResume();
+
+    expect(resumeService.downloadResume).toHaveBeenCalledWith('resume-1');
+    expect(createObjectURLSpy).toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
+    expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:resume');
+  });
+
+  it('routes to upgrade when download access is locked', () => {
+    resumeAccessPolicy.canExportResume.and.returnValue(false);
+
+    component.downloadResume();
+
+    expect(resumeUpgrade.startUpgrade).toHaveBeenCalled();
+    expect(resumeService.downloadResume).not.toHaveBeenCalled();
+  });
+
+  it('shows an error notification when download fails', () => {
+    resumeService.downloadResume.and.returnValue(throwError(() => new Error('download failed')));
+
+    component.downloadResume();
+
+    expect(notifications.showError).toHaveBeenCalledWith('Unable to download this resume right now.');
+  });
+
   it('calls the facade when deleting a resume', () => {
-    const deleteButton = fixture.nativeElement.querySelector('.resume-card__icon-btn') as HTMLButtonElement | null;
+    const deleteButton = fixture.nativeElement.querySelector(
+      '.resume-card__icon-btn:not(.resume-card__icon-btn--download)',
+    ) as HTMLButtonElement | null;
 
     deleteButton?.click();
 

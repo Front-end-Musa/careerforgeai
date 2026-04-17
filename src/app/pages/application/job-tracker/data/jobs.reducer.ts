@@ -14,6 +14,8 @@ export interface JobsState extends EntityState<Job> {
   status: JobsStatus;
   error: string | null;
   saving: boolean;
+  stale: boolean;
+  loadedAt: string | null;
 }
 
 export const jobsAdapter: EntityAdapter<Job> = createEntityAdapter<Job>({
@@ -25,6 +27,8 @@ export const initialState: JobsState = jobsAdapter.getInitialState({
   status: JobsStatus.Init,
   error: null,
   saving: false,
+  stale: true,
+  loadedAt: null,
 });
 
 export const jobsReducer = createReducer(
@@ -39,12 +43,15 @@ export const jobsReducer = createReducer(
       ...state,
       status: JobsStatus.Loaded,
       error: null,
+      stale: false,
+      loadedAt: new Date().toISOString(),
     }),
   ),
   on(JobsActions.loadJobsFailure, (state, { error }) => ({
     ...state,
     status: JobsStatus.Error,
     error,
+    stale: true,
   })),
   on(JobsActions.addJob, JobsActions.moveJob, JobsActions.updateJob, JobsActions.deleteJob, (state) => ({
     ...state,
@@ -60,6 +67,7 @@ export const jobsReducer = createReducer(
       ...state,
       saving: false,
       error: null,
+      stale: true,
     }),
   ),
   on(
@@ -79,14 +87,19 @@ export const jobsReducer = createReducer(
     status: JobsStatus.Loading,
     error: null,
   })),
-  on(JobsActions.deleteJobSuccess, (state, { id }) => jobsAdapter.removeOne(id, {
-    ...state,
-    status: JobsStatus.Loaded,
-    error: null,
-  })),
+  on(JobsActions.deleteJobSuccess, (state, { id }) =>
+    jobsAdapter.removeOne(id, {
+      ...state,
+      status: JobsStatus.Loaded,
+      saving: false,
+      error: null,
+      stale: true,
+    }),
+  ),
   on(JobsActions.deleteJobFailure, (state, { error }) => ({
     ...state,
     status: JobsStatus.Error,
+    saving: false,
     error,
   })),
 );

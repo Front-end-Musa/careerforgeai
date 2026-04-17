@@ -1,7 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { FirebaseError } from '@angular/fire/app';
+import { Router } from '@angular/router';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { ActionTraceService } from '../../../core/state/debug/action-trace.service';
 import {
   authResolvedNoUser,
   deleteAccount,
@@ -20,32 +23,32 @@ import {
   registerUserFailure,
   registerUserSuccess,
 } from './auth.actions';
-import { FirebaseError } from '@angular/fire/app';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
   actions$ = inject(Actions);
   authService$ = inject(AuthService);
   router = inject(Router);
+  trace = inject(ActionTraceService);
 
   signupEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(registerUser),
       switchMap(({ user }) =>
         this.authService$.registerUser(user).pipe(
-          map((user) => registerUserSuccess({ user })),
+          map((registeredUser) => registerUserSuccess({ user: registeredUser })),
           catchError((error: FirebaseError) => of(registerUserFailure({ error: error.message }))),
         ),
       ),
     ),
   );
+
   loginEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(loginUser),
       switchMap(({ user }) =>
         this.authService$.login(user).pipe(
-          map((user) => loginUserSuccess({ user })),
+          map((loggedInUser) => loginUserSuccess({ user: loggedInUser })),
           catchError((error: FirebaseError) => of(loginUserFailure({ error: error.message }))),
         ),
       ),
@@ -118,8 +121,28 @@ export class AuthEffects {
         ofType(deleteAccountFailure),
         tap(({ error }) => {
           console.error('Delete account failed:', error);
-          // You could inject a notification service here if needed
         }),
+      ),
+    { dispatch: false },
+  );
+
+  traceAuthOutcomesEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(
+          initUserSuccess,
+          initUserFailure,
+          loginUserSuccess,
+          loginUserFailure,
+          registerUserSuccess,
+          registerUserFailure,
+          logoutSuccess,
+          logoutFailure,
+          deleteAccountSuccess,
+          deleteAccountFailure,
+          authResolvedNoUser,
+        ),
+        tap((action) => this.trace.traceEffect(action, 'AuthEffects.traceAuthOutcomesEffect')),
       ),
     { dispatch: false },
   );
@@ -127,12 +150,19 @@ export class AuthEffects {
   initUserEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(initUser),
-      switchMap(() =>
+      tap((action) => this.trace.traceEffect(action, 'AuthEffects.initUserEffect')),
+      exhaustMap(() =>
         this.authService$.initAuth().pipe(
-          map(
-            (user) => (user ? initUserSuccess({ user }) : authResolvedNoUser()), // 👈 NOT logout
+          map((user) => {
+            const nextAction = user ? initUserSuccess({ user }) : authResolvedNoUser();
+            this.trace.traceEffect(nextAction, 'AuthEffects.initUserEffect.success');
+            return nextAction;
+          }),
+          catchError((error) =>
+            of(initUserFailure({ error: error.message })).pipe(
+              tap((action) => this.trace.traceEffect(action, 'AuthEffects.initUserEffect.failure')),
+            ),
           ),
-          catchError((err) => of(initUserFailure({ error: err.message }))),
         ),
       ),
     ),

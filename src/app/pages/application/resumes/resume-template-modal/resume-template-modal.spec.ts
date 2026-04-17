@@ -12,6 +12,13 @@ describe('ResumeTemplateModal', () => {
     expect(component.templates.length).toBe(RESUME_TEMPLATES.length);
   });
 
+  it('should expose preview sizing from the shared catalog', () => {
+    const style = component.getPreviewStyle(RESUME_TEMPLATES[0]);
+
+    expect(style['--preview-scale']).toBeDefined();
+    expect(style['--preview-width']).toContain('%');
+  });
+
   it('should lock paid templates for a free user', () => {
     component.user = {
       name: 'Free User',

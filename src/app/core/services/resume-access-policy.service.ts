@@ -5,7 +5,7 @@ import { getTemplateById } from '../../pages/application/resumes/data/resume-tem
 
 export type PlanTier = 'free' | 'pro' | 'premium';
 export type SubscriptionStatus = 'none' | 'active' | 'past_due' | 'cancelled';
-export type UpgradeReason = 'second_resume' | 'download' | 'tailor' | 'template_lock';
+export type UpgradeReason = 'second_resume' | 'save' | 'download' | 'tailor' | 'template_lock';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeAccessPolicyService {
@@ -46,6 +46,10 @@ export class ResumeAccessPolicyService {
     return this.canUsePaidResumeFeatures(user);
   }
 
+  canSaveGeneratedResume(user: AppUser | null | undefined): boolean {
+    return this.canUsePaidResumeFeatures(user);
+  }
+
   canTailorResume(user: AppUser | null | undefined): boolean {
     return this.canUsePaidResumeFeatures(user);
   }
@@ -77,6 +81,8 @@ export class ResumeAccessPolicyService {
     switch (reason) {
       case 'second_resume':
         return !this.canCreateResume(user, resumeCount);
+      case 'save':
+        return !this.canSaveGeneratedResume(user);
       case 'download':
         return !this.canExportResume(user);
       case 'tailor':
@@ -91,6 +97,10 @@ export class ResumeAccessPolicyService {
   upgradeMessage(reason: UpgradeReason, templateId?: ResumeTemplateId): string {
     if (reason === 'second_resume') {
       return 'Your free plan includes one saved resume. Upgrade to create another.';
+    }
+
+    if (reason === 'save') {
+      return 'Saving AI-generated resumes is available on paid plans.';
     }
 
     if (reason === 'download') {

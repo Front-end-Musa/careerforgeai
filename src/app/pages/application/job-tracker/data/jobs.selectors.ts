@@ -9,6 +9,8 @@ export const { selectAll, selectEntities, selectIds, selectTotal } =
 
 export const selectJobsStatus = createSelector(selectJobsFeature, (state) => state.status);
 
+export const selectJobsStale = createSelector(selectJobsFeature, (state) => state.stale);
+
 export const selectJobsError = createSelector(selectJobsFeature, (state) => state.error);
 
 export const selectJobsSaving = createSelector(selectJobsFeature, (state) => state.saving);

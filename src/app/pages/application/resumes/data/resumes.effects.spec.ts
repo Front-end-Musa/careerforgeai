@@ -50,7 +50,7 @@ describe('ResumeEffects', () => {
   beforeEach(() => {
     aiServiceMock = jasmine.createSpyObj<AiAgentService>('AiAgentService', [
       'generateResume',
-      'saveAIResult',
+      'saveGeneratedResume',
       'tailorResumeToJob',
     ]);
 

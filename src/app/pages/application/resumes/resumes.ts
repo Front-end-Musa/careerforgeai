@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AppUser } from '../../../core/interfaces/user.interface';
 import { ResumeAccessPolicyService } from '../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../core/services/resume-upgrade.service';
+import { BillingService } from '../../../core/services/billing.service';
 
 @Component({
   selector: 'app-resumes',
@@ -31,6 +32,7 @@ export class Resumes implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
   private resumeAccessPolicy = inject(ResumeAccessPolicyService);
   private resumeUpgrade = inject(ResumeUpgradeService);
+  private billingService = inject(BillingService);
 
   tones: string[] = ['Modern', 'Minimal', 'Creative'];
   resumes: Resume[] = [];
@@ -39,6 +41,7 @@ export class Resumes implements AfterViewInit {
   selectedTemplateId: ResumeTemplateId | undefined;
   currentUser: AppUser | null = null;
   resumeCount = 0;
+  private entitlementsRefreshInFlight: Promise<boolean> | null = null;
   plan$ = this.authFacade.user$.pipe(
     map((user) => (this.resumeAccessPolicy.canUsePaidResumeFeatures(user) ? user?.plan ?? 'free' : 'free')),
   );
@@ -70,13 +73,15 @@ export class Resumes implements AfterViewInit {
   }
 
   ngOnInit() {
-    this.resumesFacade.loadResumes();
+    this.resumesFacade.ensureLoaded('Resumes.ngOnInit');
     combineLatest([this.authFacade.user$, this.resumesFacade.resumes$])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([user, resumes]) => {
         this.currentUser = user;
         this.resumeCount = resumes.length;
       });
+
+    void this.refreshEntitlementsForRecentUpgrade();
 
     this.storageFacade.set('resumes', JSON.stringify(this.resumes));
   }
@@ -87,9 +92,13 @@ export class Resumes implements AfterViewInit {
     }
   }
 
-  handleViewModeChange(viewMode: string) {
+  async handleViewModeChange(viewMode: string) {
     if (viewMode !== 'create' && viewMode !== 'list') {
       return;
+    }
+
+    if (viewMode === 'create') {
+      await this.refreshEntitlementsForRecentUpgrade();
     }
 
     if (
@@ -111,11 +120,12 @@ export class Resumes implements AfterViewInit {
 
     this.viewMode = viewMode;
     if (this.viewMode === 'create' && !this.selectedTemplateId) {
-      this.openTemplateModal();
+      await this.openTemplateModal();
     }
   }
 
-  openTemplateModal() {
+  async openTemplateModal() {
+    await this.refreshEntitlementsForRecentUpgrade();
     this.templateModal?.openModal();
   }
 
@@ -139,8 +149,54 @@ export class Resumes implements AfterViewInit {
     }
   }
 
+  handleResumeSaved() {
+    this.selectedTemplateId = undefined;
+    this.viewMode = 'list';
+  }
+
   setViewMode() {
     this.viewMode = this.viewMode === 'list' ? 'create' : 'list';
+  }
+
+  private async refreshEntitlementsForRecentUpgrade() {
+    const expectedPlan = this.resumeUpgrade.getExpectedPlanForEntitlementRetry();
+    if (!expectedPlan || this.resumeAccessPolicy.canUsePaidResumeFeatures(this.currentUser)) {
+      return false;
+    }
+
+    if (!this.entitlementsRefreshInFlight) {
+      this.entitlementsRefreshInFlight = this.billingService
+        .syncEntitlements()
+        .then((result) => {
+          if (this.currentUser) {
+            this.currentUser = {
+              ...this.currentUser,
+              plan: result.plan,
+              subscriptionStatus: result.subscriptionStatus,
+              providerSubscriptionId: result.providerSubscriptionId,
+              providerVariantId: result.providerVariantId,
+              providerCustomerId: result.providerCustomerId,
+              entitlementsUpdatedAt: result.entitlementsUpdatedAt,
+            };
+          }
+
+          this.authFacade.initAuth({ force: true, source: 'Resumes.refreshEntitlementsForRecentUpgrade' });
+
+          if (result.subscriptionStatus === 'active' && (result.plan === 'pro' || result.plan === 'premium')) {
+            this.resumeUpgrade.markRecentUpgrade(expectedPlan);
+            this.resumeUpgrade.clearPendingPlan();
+            return true;
+          }
+
+          return false;
+        })
+        .catch(() => false)
+        .finally(() => {
+          this.entitlementsRefreshInFlight = null;
+        });
+    }
+
+    return this.entitlementsRefreshInFlight;
   }
 
   private templateRequiresPremium(templateId: ResumeTemplateId) {

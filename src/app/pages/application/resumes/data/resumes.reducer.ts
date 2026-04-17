@@ -15,6 +15,8 @@ export interface ResumesState extends EntityState<Resume> {
   resumes: Resume[];
   status: ResumesStatus;
   error: string | null;
+  stale: boolean;
+  loadedAt: string | null;
   // UI / AI
   formValue: any | null;
   generating: boolean;
@@ -37,6 +39,8 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   resumes: [],
   status: ResumesStatus.Init,
   error: null,
+  stale: true,
+  loadedAt: null,
   formValue: null,
   generating: false,
   generatedResult: null,
@@ -100,6 +104,8 @@ export const resumesReducer = createReducer(
       ...state,
       status: ResumesStatus.Loaded,
       error: null,
+      stale: false,
+      loadedAt: new Date().toISOString(),
     }),
   ),
 
@@ -107,6 +113,7 @@ export const resumesReducer = createReducer(
     ...state,
     status: ResumesStatus.Error,
     error: error,
+    stale: true,
   })),
 
   on(ResumesActions.saveResume, (state) => ({
@@ -121,6 +128,7 @@ export const resumesReducer = createReducer(
     saving: false,
     saveSucceeded: true,
     error: null,
+    stale: true,
   })),
 
   on(ResumesActions.saveResumeFailure, (state, { error }) => ({
@@ -140,6 +148,7 @@ export const resumesReducer = createReducer(
     ...state,
     tailoring: false,
     tailorError: null,
+    stale: true,
   })),
 
   on(ResumesActions.tailorResumeFailure, (state, { error }) => ({

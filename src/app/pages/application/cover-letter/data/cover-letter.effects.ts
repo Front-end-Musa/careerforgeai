@@ -11,21 +11,34 @@ import {
   loadAllCoverLettersFailure,
   loadAllCoverLettersSuccess,
 } from './cover-letter.actions';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 
 @Injectable()
 export class CoverLetterEffects {
   actions = inject(Actions);
   apiService = inject(CoverLetterService);
   aiService = inject(AiAgentService);
+  trace = inject(ActionTraceService);
 
   getCoverLettersEffect = createEffect(() =>
     this.actions.pipe(
       ofType(loadAllCoverLetters),
-      switchMap(() =>
+      tap((action) => this.trace.traceEffect(action, 'CoverLetterEffects.getCoverLettersEffect')),
+      exhaustMap(() =>
         this.apiService.getAllCoverLetters().pipe(
-          map((coverLetters) => loadAllCoverLettersSuccess({ coverLetters })),
-          catchError((error) => of(loadAllCoverLettersFailure({ error }))),
+          map((coverLetters) => {
+            const nextAction = loadAllCoverLettersSuccess({ coverLetters });
+            this.trace.traceEffect(nextAction, 'CoverLetterEffects.getCoverLettersEffect.success');
+            return nextAction;
+          }),
+          catchError((error) =>
+            of(loadAllCoverLettersFailure({ error })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'CoverLetterEffects.getCoverLettersEffect.failure'),
+              ),
+            ),
+          ),
         ),
       ),
     ),
@@ -34,10 +47,27 @@ export class CoverLetterEffects {
   deleteCoverLetterEffect = createEffect(() =>
     this.actions.pipe(
       ofType(deleteCoverLetter),
-      switchMap(({ id }) =>
+      tap((action) => this.trace.traceEffect(action, 'CoverLetterEffects.deleteCoverLetterEffect')),
+      exhaustMap(({ id }) =>
         this.apiService.deleteCoverLetter(id).pipe(
-          map(() => loadAllCoverLetters()), // Reload cover letters after deletion
-          catchError((error) => of(loadAllCoverLettersFailure({ error }))),
+          map(() => {
+            const nextAction = loadAllCoverLetters();
+            this.trace.traceEffect(
+              nextAction,
+              'CoverLetterEffects.deleteCoverLetterEffect.refreshAfterDelete',
+            );
+            return nextAction;
+          }),
+          catchError((error) =>
+            of(loadAllCoverLettersFailure({ error })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(
+                  action,
+                  'CoverLetterEffects.deleteCoverLetterEffect.failure',
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     ),
@@ -46,12 +76,37 @@ export class CoverLetterEffects {
   generateCoverLetterEffect = createEffect(() =>
     this.actions.pipe(
       ofType(generateCoverLetter),
-      switchMap(({ resumeText, jobDescription, companyName, position, tone }) =>
+      tap((action) => this.trace.traceEffect(action, 'CoverLetterEffects.generateCoverLetterEffect')),
+      exhaustMap(({ resumeText, jobDescription, companyName, position, tone, resumeId, resumeLabel }) =>
         this.aiService
-          .generateCoverLetter(resumeText, jobDescription, companyName, position, tone)
+          .generateCoverLetter(
+            resumeText,
+            jobDescription,
+            companyName,
+            position,
+            tone,
+            resumeId,
+            resumeLabel,
+          )
           .pipe(
-            map((coverLetter) => generateCoverLetterSuccess({ coverLetter })),
-            catchError((error) => of(generateCoverLetterFailure({ error }))),
+            map((coverLetter) => {
+              const nextAction = generateCoverLetterSuccess({ coverLetter });
+              this.trace.traceEffect(
+                nextAction,
+                'CoverLetterEffects.generateCoverLetterEffect.success',
+              );
+              return nextAction;
+            }),
+            catchError((error) =>
+              of(generateCoverLetterFailure({ error })).pipe(
+                tap((action) =>
+                  this.trace.traceEffect(
+                    action,
+                    'CoverLetterEffects.generateCoverLetterEffect.failure',
+                  ),
+                ),
+              ),
+            ),
           ),
       ),
     ),

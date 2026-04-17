@@ -1,4 +1,5 @@
-import { Component, inject, Input, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, Input, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Job } from '../../../../core/interfaces/job.interface';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AddJobModal } from '../add-job-modal/add-job-modal';
@@ -17,6 +18,7 @@ export class JobCard {
   @Input() job!: Job;
   private dialog = inject(MatDialog);
   private jobsFacade = inject(JobsFacade);
+  private destroyRef = inject(DestroyRef);
   showActions: WritableSignal<boolean> = signal<boolean>(false);
 
   toggleActions() {
@@ -31,7 +33,7 @@ export class JobCard {
       panelClass: 'cf-app-dialog',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
       if (!result) return;
 
       if (result.action === 'save') {

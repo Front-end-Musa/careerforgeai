@@ -11,6 +11,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Observable, switchMap } from 'rxjs';
+import { CoverLetter } from '../interfaces/cover-letter.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class CoverLetterService {
     private auth: Auth,
   ) {}
 
-  getAllCoverLetters() {
+  getAllCoverLetters(): Observable<CoverLetter[]> {
     const colRef = collection(this.firestore, 'coverLetters');
     return user(this.auth).pipe(
       switchMap((currentUser) => {
@@ -33,7 +34,7 @@ export class CoverLetterService {
           where('userId', '==', currentUser.uid),
           orderBy('createdAt', 'desc'),
         );
-        return collectionData(q, { idField: 'id' });
+        return collectionData(q, { idField: 'id' }) as Observable<CoverLetter[]>;
       }),
     );
   }

@@ -20,7 +20,6 @@ export class Application {
   authStatus = AuthStatus;
 
   ngOnInit() {
-    this.authFacade.initAuth();
     this.status$ = this.authFacade.status$;
   }
 }

@@ -58,7 +58,9 @@ export class Upgrade {
 
   continueToCheckout() {
     this.billingFacade.clearError();
-    this.billingFacade.startCheckout(this.selectedPlan());
+    const plan = this.selectedPlan();
+    this.resumeUpgrade.setPendingPlan(plan);
+    this.billingFacade.startCheckout(plan);
   }
 
   reasonMessage(reason: UpgradeQueryReason) {

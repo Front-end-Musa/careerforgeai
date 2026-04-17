@@ -28,7 +28,6 @@ export class ResumesList implements OnInit {
   error$: Observable<string | null> = this.resumesFacade.error$;
 
   ngOnInit(): void {
-    this.resumesFacade.loadResumes();
     this.resumesFacade.resumes$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((resumes: Resume[]) => {

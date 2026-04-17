@@ -1,0 +1,279 @@
+@if (renderContext === 'picker') {
+  @if (isHarshibarTemplate) {
+    <div class="harshibar-picker">
+      <div class="harshibar-mini-sheet">
+        <h3>{{ headingName }}</h3>
+        <p>{{ headingTitle }}</p>
+        <div class="mini-rule"></div>
+
+        <div class="mini-section">
+          <span>EXPERIENCE</span>
+          <div class="mini-line wide"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+        </div>
+
+        <div class="mini-section">
+          <span>PROJECTS</span>
+          <div class="mini-line wide"></div>
+          <div class="mini-line"></div>
+        </div>
+
+        <div class="mini-section">
+          <span>EDUCATION</span>
+          <div class="mini-line wide"></div>
+        </div>
+      </div>
+    </div>
+  } @else if (isJakeTemplate) {
+    <div class="jake-picker">
+      <div class="jake-mini-sheet">
+        <h3>{{ headingName }}</h3>
+        <div class="jake-mini-contacts"></div>
+
+        <div class="jake-mini-section">
+          <span>Education</span>
+          <div class="jake-mini-line wide"></div>
+          <div class="jake-mini-line"></div>
+        </div>
+
+        <div class="jake-mini-section">
+          <span>Experience</span>
+          <div class="jake-mini-line wide"></div>
+          <div class="jake-mini-line"></div>
+          <div class="jake-mini-line"></div>
+        </div>
+
+        <div class="jake-mini-section">
+          <span>Technical Skills</span>
+          <div class="jake-mini-line wide"></div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="latex-picker-card">
+      <div class="latex-picker-header">
+        <span class="latex-chip">LaTeX</span>
+        <strong>{{ template.name }}</strong>
+      </div>
+      <div class="latex-code-lines">
+        @for (line of sourceLines; track $index) {
+          <span>{{ line }}</span>
+        }
+      </div>
+    </div>
+  }
+} @else {
+  <div class="latex-preview-shell">
+    @if (isJakeTemplate) {
+      <section class="latex-paper jake-paper">
+        <div class="jake-header">
+          <h1>{{ headingName }}</h1>
+
+          @if (harshibarContacts.length) {
+            <div class="jake-contacts">
+              @for (contact of harshibarContacts; track $index) {
+                <span>{{ contact.value }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (educationEntries.length) {
+          <section class="jake-section">
+            <div class="jake-section-title">Education</div>
+
+            @for (entry of educationEntries; track $index) {
+              <article class="jake-entry">
+                <div class="jake-entry-row">
+                  <strong>{{ entry.school || 'School' }}</strong>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+                <div class="jake-entry-subrow">{{ entry.degree || '' }}</div>
+              </article>
+            }
+          </section>
+        }
+
+        @if (experienceEntries.length) {
+          <section class="jake-section">
+            <div class="jake-section-title">Experience</div>
+
+            @for (entry of experienceEntries; track $index) {
+              <article class="jake-entry">
+                <div class="jake-entry-row">
+                  <strong>{{ entry.role || 'Role' }}</strong>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+                <div class="jake-entry-subrow">{{ entry.company || 'Company' }}</div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="jake-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (projectEntries.length) {
+          <section class="jake-section">
+            <div class="jake-section-title">Projects</div>
+
+            @for (entry of projectEntries; track $index) {
+              <article class="jake-entry">
+                <div class="jake-entry-row">
+                  <strong>{{ entry.name || 'Project' }}</strong>
+                  <span>{{ entry.role || '' }}</span>
+                </div>
+
+                @if (hasBullets(getProjectBullets(entry.description))) {
+                  <ul class="jake-bullets">
+                    @for (bullet of getProjectBullets(entry.description); track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (primarySkills.length || languageSkills.length || toolSkills.length) {
+          <section class="jake-section">
+            <div class="jake-section-title">Technical Skills</div>
+            <div class="jake-skills">
+              @if (languageSkills.length) {
+                <p><strong>Languages:</strong> {{ languageSkills.join(', ') }}</p>
+              }
+              @if (toolSkills.length) {
+                <p><strong>Developer Tools:</strong> {{ toolSkills.join(', ') }}</p>
+              }
+              @if (primarySkills.length) {
+                <p><strong>Frameworks & Libraries:</strong> {{ primarySkills.join(', ') }}</p>
+              }
+            </div>
+          </section>
+        }
+      </section>
+    } @else {
+      <section class="latex-paper harshibar-paper">
+        <div class="harshibar-header">
+          <h1>{{ headingName }}</h1>
+          <p>{{ headingTitle }}</p>
+
+          @if (harshibarContacts.length) {
+            <div class="harshibar-contacts">
+              @for (contact of harshibarContacts; track $index) {
+                <span><strong>{{ contact.icon }}</strong> <span>{{ contact.value }}</span></span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (resume?.summary?.trim()) {
+          <section class="harshibar-section">
+            <div class="harshibar-section-title">SUMMARY</div>
+            <p class="harshibar-summary">{{ resume?.summary }}</p>
+          </section>
+        }
+
+        @if (experienceEntries.length) {
+          <section class="harshibar-section">
+            <div class="harshibar-section-title">EXPERIENCE</div>
+
+            @for (entry of experienceEntries; track $index) {
+              <article class="harshibar-entry">
+                <div class="harshibar-entry-row">
+                  <strong>{{ entry.company || 'Company' }}</strong>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+                <div class="harshibar-entry-row harshibar-entry-subrow">
+                  <em>{{ entry.role || 'Role' }}</em>
+                  <span>{{ resume?.contact?.location || '' }}</span>
+                </div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="harshibar-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (projectEntries.length) {
+          <section class="harshibar-section">
+            <div class="harshibar-section-title">PROJECTS</div>
+
+            @for (entry of projectEntries; track $index) {
+              <article class="harshibar-entry">
+                <div class="harshibar-entry-row">
+                  <strong>{{ entry.name || 'Project' }}</strong>
+                  <span>{{ entry.role || '' }}</span>
+                </div>
+
+                @if (hasBullets(getProjectBullets(entry.description))) {
+                  <ul class="harshibar-bullets">
+                    @for (bullet of getProjectBullets(entry.description); track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (educationEntries.length) {
+          <section class="harshibar-section">
+            <div class="harshibar-section-title">EDUCATION</div>
+
+            @for (entry of educationEntries; track $index) {
+              <article class="harshibar-entry">
+                <div class="harshibar-entry-row">
+                  <strong>{{ entry.school || 'School' }}</strong>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+                <div class="harshibar-entry-row harshibar-entry-subrow">
+                  <em>{{ entry.degree || '' }}</em>
+                </div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="harshibar-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (primarySkills.length || languageSkills.length || toolSkills.length) {
+          <section class="harshibar-section">
+            <div class="harshibar-section-title">SKILLS</div>
+            <div class="harshibar-skills">
+              @if (primarySkills.length) {
+                <p><strong>Skills</strong> : {{ primarySkills.join(', ') }}</p>
+              }
+              @if (languageSkills.length) {
+                <p><strong>Languages</strong> : {{ languageSkills.join(', ') }}</p>
+              }
+              @if (toolSkills.length) {
+                <p><strong>Tools</strong> : {{ toolSkills.join(', ') }}</p>
+              }
+            </div>
+          </section>
+        }
+      </section>
+    }
+  </div>
+}

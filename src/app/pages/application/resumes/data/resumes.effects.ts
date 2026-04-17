@@ -2,26 +2,33 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
+import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 
 @Injectable()
 export class ResumeEffects {
   actions$ = inject(Actions);
   apiService = inject(ResumeService);
   aiService = inject(AiAgentService);
+  trace = inject(ActionTraceService);
 
   generateResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.generateResume),
-      switchMap(({ request }) =>
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.generateResumeEffect')),
+      exhaustMap(({ request }) =>
         this.aiService.generateResume(request).pipe(
-          map((result) => resumesActions.generateResumeSuccess({ result })),
+          map((result) => {
+            const nextAction = resumesActions.generateResumeSuccess({ result });
+            this.trace.traceEffect(nextAction, 'ResumeEffects.generateResumeEffect.success');
+            return nextAction;
+          }),
           catchError((error) =>
-            of(
-              resumesActions.generateResumeFailure({
-                error: this.toErrorMessage(error),
-              }),
+            of(resumesActions.generateResumeFailure({ error: this.toErrorMessage(error) })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.generateResumeEffect.failure'),
+              ),
             ),
           ),
         ),
@@ -32,11 +39,18 @@ export class ResumeEffects {
   loadResumes = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.loadResumes),
-      switchMap(() =>
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.loadResumes')),
+      exhaustMap(() =>
         this.apiService.getResumesForUser().pipe(
-          map((resumes) => resumesActions.loadResumesSuccess({ resumes })),
+          map((resumes) => {
+            const nextAction = resumesActions.loadResumesSuccess({ resumes });
+            this.trace.traceEffect(nextAction, 'ResumeEffects.loadResumes.success');
+            return nextAction;
+          }),
           catchError((error) =>
-            of(resumesActions.loadResumesFailure({ error: this.toErrorMessage(error) })),
+            of(resumesActions.loadResumesFailure({ error: this.toErrorMessage(error) })).pipe(
+              tap((action) => this.trace.traceEffect(action, 'ResumeEffects.loadResumes.failure')),
+            ),
           ),
         ),
       ),
@@ -46,15 +60,22 @@ export class ResumeEffects {
   saveResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.saveResume),
-      switchMap(({ resume, resumeId }) => {
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.saveResumeEffect')),
+      exhaustMap(({ resume, resumeId }) => {
         if (resumeId) {
           return this.apiService.updateResume(resumeId, resume).pipe(
-            map(() => resumesActions.saveResumeSuccess({ resumeId })),
+            map(() => {
+              const nextAction = resumesActions.saveResumeSuccess({ resumeId });
+              this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
+              return nextAction;
+            }),
             catchError((error) =>
-              of(
-                resumesActions.saveResumeFailure({
-                  error: error instanceof Error ? error.message : String(error),
-                }),
+              of(resumesActions.saveResumeFailure({
+                error: error instanceof Error ? error.message : String(error),
+              })).pipe(
+                tap((action) =>
+                  this.trace.traceEffect(action, 'ResumeEffects.saveResumeEffect.failure'),
+                ),
               ),
             ),
           );
@@ -62,24 +83,36 @@ export class ResumeEffects {
 
         if (resume.meta?.source === 'ai') {
           return this.aiService.saveGeneratedResume(resume).pipe(
-            map((createdResumeId) => resumesActions.saveResumeSuccess({ resumeId: createdResumeId })),
+            map((createdResumeId) => {
+              const nextAction = resumesActions.saveResumeSuccess({ resumeId: createdResumeId });
+              this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
+              return nextAction;
+            }),
             catchError((error) =>
-              of(
-                resumesActions.saveResumeFailure({
-                  error: error instanceof Error ? error.message : String(error),
-                }),
+              of(resumesActions.saveResumeFailure({
+                error: error instanceof Error ? error.message : String(error),
+              })).pipe(
+                tap((action) =>
+                  this.trace.traceEffect(action, 'ResumeEffects.saveResumeEffect.failure'),
+                ),
               ),
             ),
           );
         }
 
         return this.apiService.createResume(resume).pipe(
-          map((createdResumeId) => resumesActions.saveResumeSuccess({ resumeId: createdResumeId })),
+          map((createdResumeId) => {
+            const nextAction = resumesActions.saveResumeSuccess({ resumeId: createdResumeId });
+            this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
+            return nextAction;
+          }),
           catchError((error) =>
-            of(
-              resumesActions.saveResumeFailure({
-                error: error instanceof Error ? error.message : String(error),
-              }),
+            of(resumesActions.saveResumeFailure({
+              error: error instanceof Error ? error.message : String(error),
+            })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.saveResumeEffect.failure'),
+              ),
             ),
           ),
         );
@@ -90,20 +123,24 @@ export class ResumeEffects {
   tailorResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.tailorResume),
-      switchMap(({ resumeId, resume, companyName, position, jobDescription }) =>
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.tailorResumeEffect')),
+      exhaustMap(({ resumeId, resume, companyName, position, jobDescription }) =>
         this.aiService.tailorResumeToJob(resume, companyName, position, jobDescription).pipe(
           switchMap((tailoredResume) => {
             const { id: _, ...resumeChanges } = tailoredResume;
-            return [
-              resumesActions.tailorResumeSuccess({ resumeId, tailoredResume }),
-              resumesActions.saveResume({ resume: resumeChanges, resumeId }),
-            ];
+            const successAction = resumesActions.tailorResumeSuccess({ resumeId, tailoredResume });
+            const saveAction = resumesActions.saveResume({ resume: resumeChanges, resumeId });
+            this.trace.traceEffect(successAction, 'ResumeEffects.tailorResumeEffect.success');
+            this.trace.traceEffect(saveAction, 'ResumeEffects.tailorResumeEffect.followupSave');
+            return [successAction, saveAction];
           }),
           catchError((error) =>
-            of(
-              resumesActions.tailorResumeFailure({
-                error: error instanceof Error ? error.message : String(error),
-              }),
+            of(resumesActions.tailorResumeFailure({
+              error: error instanceof Error ? error.message : String(error),
+            })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.tailorResumeEffect.failure'),
+              ),
             ),
           ),
         ),
@@ -114,18 +151,32 @@ export class ResumeEffects {
   deleteResumeEffect = createEffect(() =>
     this.actions$.pipe(
       ofType(resumesActions.deleteResume),
-      switchMap(({ resumeId }) =>
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.deleteResumeEffect')),
+      exhaustMap(({ resumeId }) =>
         this.apiService.deleteResume(resumeId).pipe(
-          map(() => resumesActions.deleteResumeSuccess({ resumeId })),
+          map(() => {
+            const nextAction = resumesActions.deleteResumeSuccess({ resumeId });
+            this.trace.traceEffect(nextAction, 'ResumeEffects.deleteResumeEffect.success');
+            return nextAction;
+          }),
           catchError((error) =>
-            of(
-              resumesActions.deleteResumeFailure({
-                error: error instanceof Error ? error.message : String(error),
-              }),
+            of(resumesActions.deleteResumeFailure({
+              error: error instanceof Error ? error.message : String(error),
+            })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.deleteResumeEffect.failure'),
+              ),
             ),
           ),
         ),
       ),
+    ),
+  );
+
+  refreshAfterWriteEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.saveResumeSuccess, resumesActions.deleteResumeSuccess),
+      map(() => resumesActions.loadResumes()),
     ),
   );
 

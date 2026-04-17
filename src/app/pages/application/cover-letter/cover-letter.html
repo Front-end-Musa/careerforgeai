@@ -5,6 +5,24 @@
       <h2 class="section-title">Job Details</h2>
       <p class="output-state">{{ coverLetterUsageLabel }} • Resets {{ nextResetLabel() }}</p>
       <form class="details-form" [formGroup]="coverLetterForm">
+        <div class="form-field resume-field">
+          <mat-label>Resume</mat-label>
+          <select class="resume-select" formControlName="resumeId">
+            <option value="">Select a resume</option>
+            @for (resume of resumes$ | async; track resume.id ?? $index) {
+            <option [value]="resume.id">
+              {{ resume.personalInfo.fullName || 'Untitled resume' }}{{
+                resume.personalInfo.jobTitle ? ' - ' + resume.personalInfo.jobTitle : ''
+              }}
+            </option>
+            }
+          </select>
+
+          @if ((resumes$ | async)?.length === 0) {
+            <p class="field-hint">Create a resume first to generate a cover letter.</p>
+          }
+        </div>
+
         <div class="form-field company-name-field">
           <mat-label>Company Name</mat-label>
           <input

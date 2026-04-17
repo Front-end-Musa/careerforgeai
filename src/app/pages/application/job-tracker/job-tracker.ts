@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
@@ -20,7 +21,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { JobsFacade } from './data/jobs.facade';
 import { MatDialog } from '@angular/material/dialog';
 import { JobCard } from './job-card/job-card';
@@ -36,6 +37,7 @@ export class JobTracker implements OnInit {
   htmlContent!: SafeHtml;
   private dialog = inject(MatDialog);
   private jobsFacade = inject(JobsFacade);
+  private destroyRef = inject(DestroyRef);
 
   jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
   appliedJobs: Signal<Job[]> = computed(() =>
@@ -68,7 +70,7 @@ export class JobTracker implements OnInit {
       panelClass: 'cf-app-dialog',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
       if (!result) return;
 
       if (result.action === 'save') {
@@ -162,6 +164,6 @@ export class JobTracker implements OnInit {
   }
 
   ngOnInit() {
-    this.jobsFacade.loadJobs();
+    this.jobsFacade.ensureLoaded('JobTracker.ngOnInit');
   }
 }
