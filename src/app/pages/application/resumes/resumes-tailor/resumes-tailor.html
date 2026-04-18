@@ -64,7 +64,7 @@
         <div class="actions">
           <button type="button" mat-stroked-button routerLink="/application/resumes">Cancel</button>
           <button type="submit" mat-flat-button color="primary" [disabled]="submitting$ | async">
-            {{ canTailorResume ? 'Apply Tailoring' : 'Upgrade to Tailor' }}
+            {{ (submitting$ | async) ? 'Applying tailoring...' : (canTailorResume ? 'Apply Tailoring' : 'Upgrade to Tailor') }}
           </button>
         </div>
       </form>

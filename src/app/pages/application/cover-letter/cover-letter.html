@@ -57,7 +57,12 @@
         <div class="form-field tone-field">
           <app-tone-choose [tones]="tones" (toneSelected)="selectTone($event)"></app-tone-choose>
         </div>
-        <app-generate-btn [submitForm]="coverLetterForm" (click)="onSubmit()"></app-generate-btn>
+        <app-generate-btn
+          [submitForm]="coverLetterForm"
+          [loading]="(generating$ | async) ?? false"
+          [loadingLabel]="'Generating cover letter...'"
+          (generate)="onSubmit()"
+        ></app-generate-btn>
       </form>
     </div>
 

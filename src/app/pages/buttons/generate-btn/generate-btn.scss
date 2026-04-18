@@ -33,6 +33,10 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+
+  &.loading {
+    opacity: 0.8;
+  }
 }
 
 .generate.compact {
@@ -52,4 +56,19 @@
 
 .label {
   white-space: nowrap;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(29, 78, 216, 0.2);
+  border-top-color: #1d4ed8;
+  border-radius: 50%;
+  animation: generate-spin 0.7s linear infinite;
+}
+
+@keyframes generate-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

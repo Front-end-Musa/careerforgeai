@@ -11,12 +11,14 @@ import { FormGroup } from '@angular/forms';
 export class GenerateBtn {
   @Input() submitForm?: FormGroup;
   @Input() disabled: boolean = false;
+  @Input() loading: boolean = false;
   @Input() label: string = 'Generate with AI';
+  @Input() loadingLabel: string = 'Generating...';
   @Input() compact: boolean = false;
   @Output() generate = new EventEmitter<void>();
 
   onSubmit() {
-    if (this.disabled) {
+    if (this.disabled || this.loading) {
       return;
     }
 

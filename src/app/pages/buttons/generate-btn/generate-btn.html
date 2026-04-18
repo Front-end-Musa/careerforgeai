@@ -1,10 +1,15 @@
 <button
   class="generate"
   [class.compact]="compact"
+  [class.loading]="loading"
   type="button"
   (click)="onSubmit()"
-  [disabled]="disabled"
+  [disabled]="disabled || loading"
 >
-  <span class="badge">AI</span>
-  <span class="label">{{ label }}</span>
+  @if (loading) {
+    <span class="spinner" aria-hidden="true"></span>
+  } @else {
+    <span class="badge">AI</span>
+  }
+  <span class="label">{{ loading ? loadingLabel : label }}</span>
 </button>

@@ -19,8 +19,10 @@
             <app-generate-btn
               class="header-generate"
               [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+              [loading]="(isGenerating$ | async) ?? false"
               (generate)="generateWithAI()"
               [label]="getGenerateLabel('Generate Full Resume', missingFullResumeParts)"
+              [loadingLabel]="'Generating resume...'"
             ></app-generate-btn>
             @if (!(isGenerating$ | async) && missingFullResumeParts.length) {
               <p class="generate-helper">{{ getGenerateMessage(missingFullResumeParts) }}</p>
@@ -179,8 +181,10 @@
                     <div class="generate-action">
                       <app-generate-btn
                         [disabled]="!canGenerateSummary() || ((isGenerating$ | async) ?? false)"
+                        [loading]="(isGenerating$ | async) ?? false"
                         (generate)="generateSummaryWithAI()"
                         [label]="getGenerateLabel('Generate summary', missingSummaryParts, true)"
+                        [loadingLabel]="'Generating summary...'"
                         [compact]="true"
                       ></app-generate-btn>
                       @if (!(isGenerating$ | async) && missingSummaryParts.length) {
@@ -226,8 +230,10 @@
                             <div class="generate-action">
                               <app-generate-btn
                                 [disabled]="!canGenerateExperience(entryIndex) || ((isGenerating$ | async) ?? false)"
+                                [loading]="(isGenerating$ | async) ?? false"
                                 (generate)="generateExperienceWithAI(entryIndex)"
                                 [label]="getGenerateLabel('Generate with AI', missingExperienceParts, true)"
+                                [loadingLabel]="'Generating bullets...'"
                                 [compact]="true"
                               ></app-generate-btn>
                               @if (!(isGenerating$ | async) && missingExperienceParts.length) {
@@ -278,8 +284,10 @@
                             <div class="generate-action">
                               <app-generate-btn
                                 [disabled]="!canGenerateEducation(entryIndex) || ((isGenerating$ | async) ?? false)"
+                                [loading]="(isGenerating$ | async) ?? false"
                                 (generate)="generateEducationWithAI(entryIndex)"
                                 [label]="getGenerateLabel('Generate with AI', missingEducationParts, true)"
+                                [loadingLabel]="'Generating notes...'"
                                 [compact]="true"
                               ></app-generate-btn>
                               @if (!(isGenerating$ | async) && missingEducationParts.length) {
@@ -588,8 +596,10 @@
     <div class="generate-action">
       <app-generate-btn
         [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+        [loading]="(isGenerating$ | async) ?? false"
         (generate)="generateWithAI()"
         [label]="getGenerateLabel('Generate', mobileMissingFullResumeParts, true)"
+        [loadingLabel]="'Generating...'"
         [compact]="true"
       ></app-generate-btn>
       @if (!(isGenerating$ | async) && mobileMissingFullResumeParts.length) {
