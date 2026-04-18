@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { combineLatest, filter, map, skip, take } from 'rxjs';
+import { ResumesStatus } from '../data/resumes.reducer';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { AppUser } from '../../../../core/interfaces/user.interface';
 import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
@@ -64,19 +65,25 @@ export class ResumesTailor {
       return;
     }
 
+    this.resumesFacade.ensureLoaded('ResumesTailor.constructor');
     this.resumesFacade
-      .getResumeById(resumeId)
-      .pipe(take(1))
+      .resumeById$(resumeId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((resume) => {
+        this.resume.set(resume ?? null);
+      });
+
+    combineLatest([this.resumesFacade.resumeById$(resumeId), this.resumesFacade.status$])
+      .pipe(
+        filter(([, status]) => status === ResumesStatus.Loaded || status === ResumesStatus.Error),
+        take(1),
+      )
+      .subscribe(([resume]) => {
         if (!resume) {
           this.router.navigate(['/application/resumes']);
           return;
         }
-
-        this.resume.set(resume);
       });
-
-    this.resumesFacade.ensureLoaded('ResumesTailor.constructor');
     combineLatest([this.authFacade.user$, this.resumesFacade.resumes$])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([user, resumes]) => {

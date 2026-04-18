@@ -2,14 +2,11 @@ import { Component, Input, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { finalize, take } from 'rxjs';
 import { Resume } from '../../../../../core/interfaces/resumes.interface';
 import { ResumesFacade } from '../../data/resumes.facade';
-import { ResumeService } from '../../../../../core/services/resume.service';
 import { EntitlementsService } from '../../../../../core/services/entitlements.service';
 import { ResumeAccessPolicyService } from '../../../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../../../core/services/resume-upgrade.service';
-import { NotificationsService } from '../../../../../core/services/notifications.service';
 import { getTemplateLabel } from '../../data/resume-template-catalog';
 
 @Component({
@@ -21,13 +18,11 @@ import { getTemplateLabel } from '../../data/resume-template-catalog';
 export class ResumeCard {
   @Input() resume!: Resume;
   private resumesFacade = inject(ResumesFacade);
-  private resumeService = inject(ResumeService);
   private entitlementsService = inject(EntitlementsService);
   private resumeAccessPolicy = inject(ResumeAccessPolicyService);
   private resumeUpgrade = inject(ResumeUpgradeService);
-  private notifications = inject(NotificationsService);
   private user = toSignal(this.entitlementsService.user$, { initialValue: null });
-  isDownloading = false;
+  private downloadingResumeId = toSignal(this.resumesFacade.downloadingResumeId$, { initialValue: null });
 
   get displayName() {
     return this.resume.personalInfo.fullName || 'Untitled resume';
@@ -49,6 +44,10 @@ export class ResumeCard {
     return this.resumeAccessPolicy.canExportResume(this.user());
   }
 
+  get isDownloading() {
+    return this.downloadingResumeId() === this.resume.id;
+  }
+
   downloadResume() {
     if (!this.resume.id || this.isDownloading) {
       return;
@@ -64,33 +63,7 @@ export class ResumeCard {
       return;
     }
 
-    this.isDownloading = true;
-    this.resumeService
-      .downloadResume(this.resume.id)
-      .pipe(
-        take(1),
-        finalize(() => {
-          this.isDownloading = false;
-        }),
-      )
-      .subscribe({
-        next: ({ fileName, contentType, content }) => {
-          if (typeof window === 'undefined') {
-            return;
-          }
-
-          const blob = new Blob([content], { type: contentType });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = fileName;
-          link.click();
-          window.URL.revokeObjectURL(url);
-        },
-        error: () => {
-          this.notifications.showError('Unable to download this resume right now.');
-        },
-      });
+    this.resumesFacade.downloadResume(this.resume.id);
   }
 
   deleteResume() {

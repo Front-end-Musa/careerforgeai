@@ -62,3 +62,23 @@ export const selectTailorError = createSelector(
   selectResumesFeature,
   (state: ResumesState) => state.tailorError,
 );
+
+export const selectDownloadingResumeId = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.downloadingResumeId,
+);
+
+export const selectDownloadError = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.downloadError,
+);
+
+export const selectIsExporting = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.exporting,
+);
+
+export const selectExportError = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.exportError,
+);

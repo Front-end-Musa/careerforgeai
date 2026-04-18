@@ -7,6 +7,7 @@ import { ResumeService } from '../../../../core/services/resume.service';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { ResumeGenerationResult } from '../../../../core/interfaces/resume-generation.interface';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 describe('ResumeEffects', () => {
   let actions$: Observable<any>;
@@ -60,6 +61,7 @@ describe('ResumeEffects', () => {
         provideMockActions(() => actions$),
         { provide: ResumeService, useValue: {} },
         { provide: AiAgentService, useValue: aiServiceMock },
+        { provide: NotificationsService, useValue: jasmine.createSpyObj('NotificationsService', ['showError']) },
       ],
     });
 

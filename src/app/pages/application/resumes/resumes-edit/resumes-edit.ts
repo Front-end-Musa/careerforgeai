@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, map, take } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ResumeTemplateId } from '../../../../core/interfaces/resumes.interface';
 import { AppUser } from '../../../../core/interfaces/user.interface';
@@ -53,10 +53,13 @@ export class ResumesEdit implements OnInit, AfterViewInit {
     }
 
     this.resumesFacade
-      .getResumeById(this.resumeId)
-      .pipe(take(1))
+      .resumeById$(this.resumeId)
+      .pipe(
+        filter((resume): resume is NonNullable<typeof resume> => !!resume),
+        take(1),
+      )
       .subscribe((resume) => {
-        this.selectedTemplateId = resume?.templateId;
+        this.selectedTemplateId = resume.templateId;
       });
   }
 

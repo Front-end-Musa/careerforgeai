@@ -2,9 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, from, map, of, switchMap, tap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 @Injectable()
 export class ResumeEffects {
@@ -12,6 +13,7 @@ export class ResumeEffects {
   apiService = inject(ResumeService);
   aiService = inject(AiAgentService);
   trace = inject(ActionTraceService);
+  notifications = inject(NotificationsService);
 
   generateResumeEffect = createEffect(() =>
     this.actions$.pipe(
@@ -178,6 +180,98 @@ export class ResumeEffects {
       ofType(resumesActions.saveResumeSuccess, resumesActions.deleteResumeSuccess),
       map(() => resumesActions.loadResumes()),
     ),
+  );
+
+  downloadResumeEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.downloadResume),
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.downloadResumeEffect')),
+      exhaustMap(({ resumeId }) =>
+        this.apiService.downloadResume(resumeId).pipe(
+          map((file) => {
+            const nextAction = resumesActions.downloadResumeSuccess({ resumeId, file });
+            this.trace.traceEffect(nextAction, 'ResumeEffects.downloadResumeEffect.success');
+            return nextAction;
+          }),
+          catchError((error) =>
+            of(resumesActions.downloadResumeFailure({
+              resumeId,
+              error: this.toErrorMessage(error),
+            })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.downloadResumeEffect.failure'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  downloadResumeSuccessEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(resumesActions.downloadResumeSuccess),
+        tap(({ file }) => {
+          if (typeof window === 'undefined') {
+            return;
+          }
+
+          const blob = new Blob([file.content], { type: file.contentType });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = file.fileName;
+          link.click();
+          window.URL.revokeObjectURL(url);
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  downloadResumeFailureEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(resumesActions.downloadResumeFailure),
+        tap(() => {
+          this.notifications.showError('Unable to download this resume right now.');
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  exportResumeToPdfEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(resumesActions.exportResumeToPdf),
+      tap((action) => this.trace.traceEffect(action, 'ResumeEffects.exportResumeToPdfEffect')),
+      exhaustMap(({ resumeId, formGroup }) =>
+        from(this.apiService.exportToPdf(resumeId, formGroup)).pipe(
+          map(() => {
+            const nextAction = resumesActions.exportResumeToPdfSuccess();
+            this.trace.traceEffect(nextAction, 'ResumeEffects.exportResumeToPdfEffect.success');
+            return nextAction;
+          }),
+          catchError((error) =>
+            of(resumesActions.exportResumeToPdfFailure({ error: this.toErrorMessage(error) })).pipe(
+              tap((action) =>
+                this.trace.traceEffect(action, 'ResumeEffects.exportResumeToPdfEffect.failure'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  exportResumeFailureEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(resumesActions.exportResumeToPdfFailure),
+        tap(({ error }) => {
+          this.notifications.showError(error || 'Unable to export this resume right now.');
+        }),
+      ),
+    { dispatch: false },
   );
 
   private toErrorMessage(error: unknown): string {

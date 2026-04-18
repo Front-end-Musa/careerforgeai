@@ -387,6 +387,7 @@ function validateResumeGenerationRequest(data: unknown): {
 function getPolarClient(): Polar {
   return new Polar({
     accessToken: polarToken.value(),
+    server: "production",
   });
 }
 
@@ -1038,8 +1039,8 @@ export const createCheckout = onCall({secrets: [polarToken], invoker: "public"},
     await ensurePolarCustomerForUid(uid, polar);
     const checkout = await polar.checkouts.create({
       products: [priceId],
-      successUrl: "https://resume-crafts.com/checkouts/success",
-      returnUrl: "https://resume-crafts.com/#pricing",
+      successUrl: "https://resume-crafts.com/application/settings",
+      returnUrl: "https://resume-crafts.com/application/settings",
       externalCustomerId: uid,
     });
 

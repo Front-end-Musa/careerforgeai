@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, DestroyRef, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, map } from 'rxjs';
 import { Resume, ResumeTemplateId } from '../../../core/interfaces/resumes.interface';
 import { AuthFacade } from '../../auth/data/auth.facade';
 import { DirName } from '../dir-name/dir-name';
@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AppUser } from '../../../core/interfaces/user.interface';
 import { ResumeAccessPolicyService } from '../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../core/services/resume-upgrade.service';
-import { BillingService } from '../../../core/services/billing.service';
+import { BillingFacade } from '../../landing/pricing-plans/data/billing.facade';
 
 @Component({
   selector: 'app-resumes',
@@ -32,7 +32,7 @@ export class Resumes implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
   private resumeAccessPolicy = inject(ResumeAccessPolicyService);
   private resumeUpgrade = inject(ResumeUpgradeService);
-  private billingService = inject(BillingService);
+  private billingFacade = inject(BillingFacade);
 
   tones: string[] = ['Modern', 'Minimal', 'Creative'];
   resumes: Resume[] = [];
@@ -165,22 +165,15 @@ export class Resumes implements AfterViewInit {
     }
 
     if (!this.entitlementsRefreshInFlight) {
-      this.entitlementsRefreshInFlight = this.billingService
-        .syncEntitlements()
+      this.billingFacade.syncEntitlements();
+      this.entitlementsRefreshInFlight = Promise.race([
+        firstValueFrom(this.billingFacade.syncResult$.pipe(filter((result) => result !== null))),
+        firstValueFrom(this.billingFacade.syncError$.pipe(filter((error) => !!error), map(() => null))),
+      ])
         .then((result) => {
-          if (this.currentUser) {
-            this.currentUser = {
-              ...this.currentUser,
-              plan: result.plan,
-              subscriptionStatus: result.subscriptionStatus,
-              providerSubscriptionId: result.providerSubscriptionId,
-              providerVariantId: result.providerVariantId,
-              providerCustomerId: result.providerCustomerId,
-              entitlementsUpdatedAt: result.entitlementsUpdatedAt,
-            };
+          if (!result) {
+            return false;
           }
-
-          this.authFacade.initAuth({ force: true, source: 'Resumes.refreshEntitlementsForRecentUpgrade' });
 
           if (result.subscriptionStatus === 'active' && (result.plan === 'pro' || result.plan === 'premium')) {
             this.resumeUpgrade.markRecentUpgrade(expectedPlan);

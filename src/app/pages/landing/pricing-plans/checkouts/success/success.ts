@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthFacade } from '../../../../auth/data/auth.facade';
-import { BillingService } from '../../../../../core/services/billing.service';
 import { ResumeUpgradeService } from '../../../../../core/services/resume-upgrade.service';
-import { PaidPlan } from '../../data/billing.actions';
+import { BillingEntitlementsSyncResult, PaidPlan } from '../../data/billing.actions';
+import { BillingFacade } from '../../data/billing.facade';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-success',
@@ -13,15 +15,15 @@ import { PaidPlan } from '../../data/billing.actions';
   styleUrl: './success.scss',
 })
 export class Success implements OnInit {
-  private billing = inject(BillingService);
-  private authFacade = inject(AuthFacade);
   private resumeUpgrade = inject(ResumeUpgradeService);
+  private billingFacade = inject(BillingFacade);
+  private destroyRef = inject(DestroyRef);
 
   syncing = signal(true);
   error = signal<string | null>(null);
   continuePath = signal('/application/resumes');
 
-  async ngOnInit() {
+  ngOnInit() {
     const pendingPath = this.resumeUpgrade.getPendingPath();
     const expectedPlan = this.resumeUpgrade.getPendingPlan();
     if (pendingPath) {
@@ -29,20 +31,38 @@ export class Success implements OnInit {
       this.resumeUpgrade.clearPendingPath();
     }
 
-    try {
-      const result = await this.billing.syncEntitlements();
-      this.assertExpectedEntitlements(result, expectedPlan);
-      if (expectedPlan) {
-        this.resumeUpgrade.markRecentUpgrade(expectedPlan);
-        this.resumeUpgrade.clearPendingPlan();
-      }
-      this.authFacade.initAuth({ force: true, source: 'Success.ngOnInit' });
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.error.set(message);
-    } finally {
-      this.syncing.set(false);
-    }
+    this.billingFacade.syncResult$
+      .pipe(
+        filter((result): result is BillingEntitlementsSyncResult => result !== null),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((result) => {
+        try {
+          this.assertExpectedEntitlements(result, expectedPlan);
+          if (expectedPlan) {
+            this.resumeUpgrade.markRecentUpgrade(expectedPlan);
+            this.resumeUpgrade.clearPendingPlan();
+          }
+          this.error.set(null);
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.error.set(message);
+        } finally {
+          this.syncing.set(false);
+        }
+      });
+
+    this.billingFacade.syncError$
+      .pipe(
+        filter((error): error is string => !!error),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((error) => {
+        this.error.set(error);
+        this.syncing.set(false);
+      });
+
+    this.billingFacade.syncEntitlements();
   }
 
   private assertExpectedEntitlements(

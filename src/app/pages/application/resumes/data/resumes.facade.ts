@@ -1,10 +1,23 @@
 import { inject, Injectable } from '@angular/core';
 import { Store, createFeatureSelector } from '@ngrx/store';
-import { clearResumeGenerationResult, deleteResume, generateResume, loadResumes, saveResume, tailorResume } from './resumes.actions';
+import {
+  clearResumeGenerationResult,
+  deleteResume,
+  downloadResume,
+  exportResumeToPdf,
+  generateResume,
+  loadResumes,
+  saveResume,
+  tailorResume,
+} from './resumes.actions';
 import { resumesAdapter } from './resumes.reducer';
 import { startWith } from 'rxjs';
 import { ResumesState, ResumesStatus } from './resumes.reducer';
 import {
+  selectDownloadError,
+  selectDownloadingResumeId,
+  selectExportError,
+  selectIsExporting,
   selectGeneratedResumeText,
   selectResumesGenerating,
   selectIsLoading,
@@ -15,9 +28,9 @@ import {
   selectIsTailoring,
   selectTailorError,
   selectResumesStale,
+  selectResumeById,
 } from './resumes.selectors';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
-import { ResumeService } from '../../../../core/services/resume.service';
 import { FormGroup } from '@angular/forms';
 import { ResumeGenerationRequest } from '../../../../core/interfaces/resume-generation.interface';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
@@ -27,7 +40,6 @@ import { ActionTraceService } from '../../../../core/state/debug/action-trace.se
 })
 export class ResumesFacade {
   private store = inject(Store);
-  private resumeService = inject(ResumeService);
   private trace = inject(ActionTraceService);
   private selectResumesState = createFeatureSelector<ResumesState>('resumes');
   private selectAllResumes = resumesAdapter.getSelectors(this.selectResumesState).selectAll;
@@ -43,6 +55,10 @@ export class ResumesFacade {
   tailorError$ = this.store.select(selectTailorError);
   status$ = this.store.select(selectResumesStatus);
   error$ = this.store.select(selectResumesError);
+  downloadingResumeId$ = this.store.select(selectDownloadingResumeId);
+  downloadError$ = this.store.select(selectDownloadError);
+  exporting$ = this.store.select(selectIsExporting);
+  exportError$ = this.store.select(selectExportError);
 
   ensureLoaded(source = 'ResumesFacade.ensureLoaded', force = false) {
     const status = this.status();
@@ -89,12 +105,20 @@ export class ResumesFacade {
     this.store.dispatch(action);
   }
 
-  getResumeById(id: string) {
-    return this.resumeService.getResumeById(id);
+  resumeById$(id: string) {
+    return this.store.select(selectResumeById(id));
   }
 
   exportResumeToPdf(resumeId: string, formGroup: FormGroup) {
-    return this.resumeService.exportToPdf(resumeId, formGroup);
+    const action = exportResumeToPdf({ resumeId, formGroup });
+    this.trace.traceDispatch(action, 'ResumesFacade.exportResumeToPdf');
+    this.store.dispatch(action);
+  }
+
+  downloadResume(resumeId: string) {
+    const action = downloadResume({ resumeId });
+    this.trace.traceDispatch(action, 'ResumesFacade.downloadResume');
+    this.store.dispatch(action);
   }
 
   deleteResume(resumeId: string) {

@@ -25,6 +25,10 @@ export interface ResumesState extends EntityState<Resume> {
   saveSucceeded: boolean;
   tailoring: boolean;
   tailorError: string | null;
+  downloadingResumeId: string | null;
+  downloadError: string | null;
+  exporting: boolean;
+  exportError: string | null;
 }
 
 export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
@@ -48,6 +52,10 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   saveSucceeded: false,
   tailoring: false,
   tailorError: null,
+  downloadingResumeId: null,
+  downloadError: null,
+  exporting: false,
+  exportError: null,
 });
 
 
@@ -155,5 +163,41 @@ export const resumesReducer = createReducer(
     ...state,
     tailoring: false,
     tailorError: error,
+  })),
+
+  on(ResumesActions.downloadResume, (state, { resumeId }) => ({
+    ...state,
+    downloadingResumeId: resumeId,
+    downloadError: null,
+  })),
+
+  on(ResumesActions.downloadResumeSuccess, (state) => ({
+    ...state,
+    downloadingResumeId: null,
+    downloadError: null,
+  })),
+
+  on(ResumesActions.downloadResumeFailure, (state, { error }) => ({
+    ...state,
+    downloadingResumeId: null,
+    downloadError: error,
+  })),
+
+  on(ResumesActions.exportResumeToPdf, (state) => ({
+    ...state,
+    exporting: true,
+    exportError: null,
+  })),
+
+  on(ResumesActions.exportResumeToPdfSuccess, (state) => ({
+    ...state,
+    exporting: false,
+    exportError: null,
+  })),
+
+  on(ResumesActions.exportResumeToPdfFailure, (state, { error }) => ({
+    ...state,
+    exporting: false,
+    exportError: error,
   })),
 );

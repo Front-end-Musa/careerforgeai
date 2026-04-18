@@ -99,7 +99,7 @@ export const tailorResumeFailure = createAction(
 
 export const exportResumeToPdf = createAction(
   '[Resume] Export To PDF',
-  props<{ formGroup: any }>()
+  props<{ resumeId: string; formGroup: any }>()
 );
 
 export const exportResumeToPdfSuccess = createAction(
@@ -109,4 +109,22 @@ export const exportResumeToPdfSuccess = createAction(
 export const exportResumeToPdfFailure = createAction(
   '[Resume] Export To PDF Failure',
   props<{ error: string }>()
+);
+
+export const downloadResume = createAction(
+  '[Resume] Download',
+  props<{ resumeId: string }>()
+);
+
+export const downloadResumeSuccess = createAction(
+  '[Resume] Download Success',
+  props<{
+    resumeId: string;
+    file: { fileName: string; contentType: string; content: string };
+  }>()
+);
+
+export const downloadResumeFailure = createAction(
+  '[Resume] Download Failure',
+  props<{ resumeId: string; error: string }>()
 );

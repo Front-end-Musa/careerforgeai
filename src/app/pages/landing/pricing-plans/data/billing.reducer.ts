@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as BillingActions from './billing.actions';
-import type { PaidPlan } from './billing.actions';
+import type { BillingEntitlementsSyncResult, PaidPlan } from './billing.actions';
 
 export enum BillingStatus {
   Init = 'init',
@@ -14,6 +14,10 @@ export interface BillingState {
   loading: boolean;
   error: string | null;
   selectedPlan: PaidPlan | null;
+  portalLoading: boolean;
+  syncingEntitlements: boolean;
+  syncError: string | null;
+  syncResult: BillingEntitlementsSyncResult | null;
 }
 
 const initialState: BillingState = {
@@ -21,6 +25,10 @@ const initialState: BillingState = {
   loading: false,
   error: null,
   selectedPlan: null,
+  portalLoading: false,
+  syncingEntitlements: false,
+  syncError: null,
+  syncResult: null,
 };
 
 export const billingReducer = createReducer(
@@ -49,5 +57,36 @@ export const billingReducer = createReducer(
   on(BillingActions.clearBillingError, (state) => ({
     ...state,
     error: null,
+  })),
+  on(BillingActions.openCustomerPortal, (state) => ({
+    ...state,
+    portalLoading: true,
+    error: null,
+  })),
+  on(BillingActions.openCustomerPortalSuccess, (state) => ({
+    ...state,
+    portalLoading: false,
+    error: null,
+  })),
+  on(BillingActions.openCustomerPortalFailure, (state, { error }) => ({
+    ...state,
+    portalLoading: false,
+    error,
+  })),
+  on(BillingActions.syncEntitlements, (state) => ({
+    ...state,
+    syncingEntitlements: true,
+    syncError: null,
+  })),
+  on(BillingActions.syncEntitlementsSuccess, (state, { result }) => ({
+    ...state,
+    syncingEntitlements: false,
+    syncError: null,
+    syncResult: result,
+  })),
+  on(BillingActions.syncEntitlementsFailure, (state, { error }) => ({
+    ...state,
+    syncingEntitlements: false,
+    syncError: error,
   })),
 );

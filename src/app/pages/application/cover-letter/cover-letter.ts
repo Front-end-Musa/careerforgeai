@@ -9,6 +9,8 @@ import { ToneChoose } from '../../buttons/tone-choose/tone-choose';
 import { CoverLetterFacade } from './data/cover-letter.facade';
 import { EntitlementsService } from '../../../core/services/entitlements.service';
 import { ResumesFacade } from '../resumes/data/resumes.facade';
+import { firstValueFrom } from 'rxjs';
+import { buildCoverLetterResumeSelection } from './data/cover-letter-resume-selection.util';
 
 @Component({
   selector: 'app-cover-letter',
@@ -83,7 +85,8 @@ export class CoverLetter implements OnInit, OnDestroy {
   async onSubmit() {
     if (this.coverLetterForm.valid) {
       const formData = this.coverLetterForm.value;
-      const resumeSelection = await this.coverLetterFacade.getResumeSelectionById(formData.resumeId);
+      const selectedResume = await firstValueFrom(this.resumesFacade.resumeById$(formData.resumeId));
+      const resumeSelection = selectedResume ? buildCoverLetterResumeSelection(selectedResume) : null;
       if (!resumeSelection) {
         return;
       }

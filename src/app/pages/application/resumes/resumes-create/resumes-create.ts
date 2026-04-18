@@ -55,6 +55,7 @@ import { ResumeAccessPolicyService } from '../../../../core/services/resume-acce
 import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { DateField } from '../../../../lib/date-field/date-field';
 import { getTemplateById, getTemplateLabel, isLatexTemplate } from '../data/resume-template-catalog';
+import { ResumesStatus } from '../data/resumes.reducer';
 
 type SectionControl = FormGroup<{
   id: FormControl<string>;
@@ -190,6 +191,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.resumesFacade.ensureLoaded('ResumesCreate.ngOnInit');
     if (this.templateId) {
       this.previewTemplate = this.templateId;
       this.resumeGroup.controls.templateId.setValue(this.templateId);
@@ -1319,14 +1321,12 @@ export class ResumesCreate implements OnInit, OnChanges {
 
   private loadResumeForEdit(id: string) {
     this.resumesFacade
-      .getResumeById(id)
-      .pipe(take(1))
+      .resumeById$(id)
+      .pipe(
+        filter((resume): resume is Resume => !!resume),
+        take(1),
+      )
       .subscribe((resume) => {
-        if (!resume) {
-          this.router.navigate(['/application/resumes']);
-          return;
-        }
-
         const sections = normalizeResumeSections(resume);
         const projectsSection = sections.find((section) => section.type === 'projects');
         const certificationsSection = sections.find((section) => section.type === 'certifications');
@@ -1399,6 +1399,24 @@ export class ResumesCreate implements OnInit, OnChanges {
         this.customSectionsArray.clear();
         customSections.forEach((section) => {
           this.customSectionsArray.push(this.createCustomSectionGroup(section));
+        });
+      });
+
+    this.resumesFacade.status$
+      .pipe(
+        filter((status) => status === ResumesStatus.Loaded || status === ResumesStatus.Error),
+        take(1),
+      )
+      .subscribe(() => {
+        const resumeId = this.resumeId;
+        if (!resumeId) {
+          return;
+        }
+
+        this.resumesFacade.resumeById$(resumeId).pipe(take(1)).subscribe((resume) => {
+          if (!resume) {
+            this.router.navigate(['/application/resumes']);
+          }
         });
       });
   }
