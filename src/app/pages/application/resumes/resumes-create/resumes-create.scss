@@ -77,6 +77,19 @@
   gap: 12px;
 }
 
+.generate-action {
+  display: grid;
+  gap: 6px;
+}
+
+.generate-helper {
+  margin: 0;
+  max-width: 320px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #597087;
+}
+
 .builder-status {
   padding: 16px 18px;
   margin-bottom: 18px;
@@ -236,6 +249,10 @@
   margin-top: 12px;
 }
 
+.entry-actions .generate-action {
+  margin-right: auto;
+}
+
 .custom-section-body {
   display: grid;
   gap: 14px;
@@ -380,5 +397,9 @@ mat-form-field {
 
   .mobile-action-bar > * {
     flex: 1;
+  }
+
+  .mobile-action-bar .generate-helper {
+    max-width: none;
   }
 }

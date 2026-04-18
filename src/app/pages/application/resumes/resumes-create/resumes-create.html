@@ -14,12 +14,18 @@
 
       <div class="builder-actions">
         @if (!isEditMode) {
-          <app-generate-btn
-            class="header-generate"
-            [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
-            (generate)="generateWithAI()"
-            label="Generate Full Resume"
-          ></app-generate-btn>
+          @let missingFullResumeParts = getMissingFullResumeParts();
+          <div class="generate-action">
+            <app-generate-btn
+              class="header-generate"
+              [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+              (generate)="generateWithAI()"
+              [label]="getGenerateLabel('Generate Full Resume', missingFullResumeParts)"
+            ></app-generate-btn>
+            @if (!(isGenerating$ | async) && missingFullResumeParts.length) {
+              <p class="generate-helper">{{ getGenerateMessage(missingFullResumeParts) }}</p>
+            }
+          </div>
         }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -169,12 +175,18 @@
                   </mat-form-field>
 
                   @if (!isEditMode) {
-                    <app-generate-btn
-                      [disabled]="!canGenerateSummary() || ((isGenerating$ | async) ?? false)"
-                      (generate)="generateSummaryWithAI()"
-                      label="Generate summary"
-                      [compact]="true"
-                    ></app-generate-btn>
+                    @let missingSummaryParts = getMissingSummaryParts();
+                    <div class="generate-action">
+                      <app-generate-btn
+                        [disabled]="!canGenerateSummary() || ((isGenerating$ | async) ?? false)"
+                        (generate)="generateSummaryWithAI()"
+                        [label]="getGenerateLabel('Generate summary', missingSummaryParts, true)"
+                        [compact]="true"
+                      ></app-generate-btn>
+                      @if (!(isGenerating$ | async) && missingSummaryParts.length) {
+                        <p class="generate-helper">{{ getGenerateMessage(missingSummaryParts) }}</p>
+                      }
+                    </div>
                   }
                 }
 
@@ -210,12 +222,18 @@
                         </mat-form-field>
                         <div class="entry-actions">
                           @if (!isEditMode) {
-                            <app-generate-btn
-                              [disabled]="!canGenerateExperience(entryIndex) || ((isGenerating$ | async) ?? false)"
-                              (generate)="generateExperienceWithAI(entryIndex)"
-                              label="Generate with AI"
-                              [compact]="true"
-                            ></app-generate-btn>
+                            @let missingExperienceParts = getMissingExperienceParts(entryIndex);
+                            <div class="generate-action">
+                              <app-generate-btn
+                                [disabled]="!canGenerateExperience(entryIndex) || ((isGenerating$ | async) ?? false)"
+                                (generate)="generateExperienceWithAI(entryIndex)"
+                                [label]="getGenerateLabel('Generate with AI', missingExperienceParts, true)"
+                                [compact]="true"
+                              ></app-generate-btn>
+                              @if (!(isGenerating$ | async) && missingExperienceParts.length) {
+                                <p class="generate-helper">{{ getGenerateMessage(missingExperienceParts) }}</p>
+                              }
+                            </div>
                           }
                           <button type="button" mat-stroked-button (click)="removeEntry('experience', entryIndex)">Remove</button>
                         </div>
@@ -256,12 +274,18 @@
                         </mat-form-field>
                         <div class="entry-actions">
                           @if (!isEditMode) {
-                            <app-generate-btn
-                              [disabled]="!canGenerateEducation(entryIndex) || ((isGenerating$ | async) ?? false)"
-                              (generate)="generateEducationWithAI(entryIndex)"
-                              label="Generate with AI"
-                              [compact]="true"
-                            ></app-generate-btn>
+                            @let missingEducationParts = getMissingEducationParts(entryIndex);
+                            <div class="generate-action">
+                              <app-generate-btn
+                                [disabled]="!canGenerateEducation(entryIndex) || ((isGenerating$ | async) ?? false)"
+                                (generate)="generateEducationWithAI(entryIndex)"
+                                [label]="getGenerateLabel('Generate with AI', missingEducationParts, true)"
+                                [compact]="true"
+                              ></app-generate-btn>
+                              @if (!(isGenerating$ | async) && missingEducationParts.length) {
+                                <p class="generate-helper">{{ getGenerateMessage(missingEducationParts) }}</p>
+                              }
+                            </div>
                           }
                           <button type="button" mat-stroked-button (click)="removeEntry('education', entryIndex)">Remove</button>
                         </div>
@@ -560,12 +584,18 @@
 
 <div class="mobile-action-bar">
   @if (!isEditMode) {
-    <app-generate-btn
-      [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
-      (generate)="generateWithAI()"
-      label="Generate"
-      [compact]="true"
-    ></app-generate-btn>
+    @let mobileMissingFullResumeParts = getMissingFullResumeParts();
+    <div class="generate-action">
+      <app-generate-btn
+        [disabled]="!canGenerateFullResume() || ((isGenerating$ | async) ?? false)"
+        (generate)="generateWithAI()"
+        [label]="getGenerateLabel('Generate', mobileMissingFullResumeParts, true)"
+        [compact]="true"
+      ></app-generate-btn>
+      @if (!(isGenerating$ | async) && mobileMissingFullResumeParts.length) {
+        <p class="generate-helper">{{ getGenerateMessage(mobileMissingFullResumeParts) }}</p>
+      }
+    </div>
   }
   @if (canStoreCurrentResume) {
     <button type="button" mat-flat-button color="primary" (click)="saveResume()">

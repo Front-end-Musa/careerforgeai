@@ -6,6 +6,10 @@ import { ResumesCreate } from './resumes-create';
 import { ResumesFacade } from '../data/resumes.facade';
 import { ResumeGenerationResult } from '../../../../core/interfaces/resume-generation.interface';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
+import { EntitlementsService } from '../../../../core/services/entitlements.service';
+import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
+import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
+import { ResumesStatus } from '../data/resumes.reducer';
 
 describe('ResumesCreate', () => {
   let component: ResumesCreate;
@@ -17,10 +21,41 @@ describe('ResumesCreate', () => {
     error$: new BehaviorSubject<string | null>(null),
     saving$: new BehaviorSubject(false),
     saveSucceeded$: new BehaviorSubject(false),
+    status$: new BehaviorSubject(ResumesStatus.Loaded),
     generateResumeRequest: jasmine.createSpy('generateResumeRequest'),
     clearGeneratedResult: jasmine.createSpy('clearGeneratedResult'),
     saveResumeData: jasmine.createSpy('saveResumeData'),
-    getResumeById: jasmine.createSpy('getResumeById').and.returnValue(of(null)),
+    exportResumeToPdf: jasmine.createSpy('exportResumeToPdf'),
+    ensureLoaded: jasmine.createSpy('ensureLoaded'),
+    resumeById$: jasmine.createSpy('resumeById$').and.returnValue(of(null)),
+  };
+
+  const entitlementsServiceMock = {
+    entitlements$: of({
+      resumeGenerationsPerPeriod: 1,
+      coverLettersPerPeriod: 3,
+      canUseJobTracker: false,
+      canStoreGeneratedResume: false,
+      canDownloadResume: false,
+    }),
+    usage$: of({
+      resumeGenerationsUsed: 0,
+      coverLettersUsed: 0,
+      resumeGenerationsRemaining: 1,
+      coverLettersRemaining: 3,
+      usagePeriodKey: null,
+      usagePeriodStartedAt: null,
+      usagePeriodEndsAt: null,
+    }),
+    nextResetLabel$: of('this period'),
+  };
+
+  const resumeAccessPolicyMock = {
+    upgradeMessage: jasmine.createSpy('upgradeMessage').and.returnValue('Upgrade required.'),
+  };
+
+  const resumeUpgradeMock = {
+    startUpgrade: jasmine.createSpy('startUpgrade'),
   };
 
   beforeEach(async () => {
@@ -29,16 +64,24 @@ describe('ResumesCreate', () => {
     resumesFacadeMock.error$.next(null);
     resumesFacadeMock.saving$.next(false);
     resumesFacadeMock.saveSucceeded$.next(false);
+    resumesFacadeMock.status$.next(ResumesStatus.Loaded);
     resumesFacadeMock.generateResumeRequest.calls.reset();
     resumesFacadeMock.clearGeneratedResult.calls.reset();
     resumesFacadeMock.saveResumeData.calls.reset();
-    resumesFacadeMock.getResumeById.calls.reset();
-    resumesFacadeMock.getResumeById.and.returnValue(of(null));
+    resumesFacadeMock.exportResumeToPdf.calls.reset();
+    resumesFacadeMock.ensureLoaded.calls.reset();
+    resumesFacadeMock.resumeById$.calls.reset();
+    resumesFacadeMock.resumeById$.and.returnValue(of(null));
+    resumeAccessPolicyMock.upgradeMessage.calls.reset();
+    resumeUpgradeMock.startUpgrade.calls.reset();
 
     await TestBed.configureTestingModule({
       imports: [ResumesCreate],
       providers: [
         { provide: ResumesFacade, useValue: resumesFacadeMock },
+        { provide: EntitlementsService, useValue: entitlementsServiceMock },
+        { provide: ResumeAccessPolicyService, useValue: resumeAccessPolicyMock },
+        { provide: ResumeUpgradeService, useValue: resumeUpgradeMock },
         { provide: Location, useValue: { back: jasmine.createSpy('back') } },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
       ],
@@ -49,6 +92,18 @@ describe('ResumesCreate', () => {
     fixture = TestBed.createComponent(ResumesCreate);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  }
+
+  function helperTexts() {
+    return Array.from(fixture.nativeElement.querySelectorAll('.generate-helper')).map((element) =>
+      element.textContent.trim(),
+    );
+  }
+
+  function buttonLabels() {
+    return Array.from(fixture.nativeElement.querySelectorAll('.generate .label')).map((element) =>
+      element.textContent.trim(),
+    );
   }
 
   it('renders the default core builder sections', () => {
@@ -157,7 +212,7 @@ describe('ResumesCreate', () => {
       },
     } as Resume;
 
-    resumesFacadeMock.getResumeById.and.returnValue(of(legacyResume));
+    resumesFacadeMock.resumeById$.and.returnValue(of(legacyResume));
     fixture = TestBed.createComponent(ResumesCreate);
     component = fixture.componentInstance;
     component.mode = 'edit';
@@ -194,5 +249,61 @@ describe('ResumesCreate', () => {
         mode: 'full',
       }),
     );
+  });
+
+  it('shows exact missing fields for full resume generation and hides them once complete', () => {
+    createComponent();
+
+    expect(helperTexts()).toContain(
+      'Add full name, job title, email, location, and skills, experience company and role, or education school and degree to generate.',
+    );
+    expect(buttonLabels()).toContain('Add details');
+
+    component.resumeGroup.patchValue({
+      personalInfo: {
+        fullName: 'Jane Doe',
+        jobTitle: 'Frontend Engineer',
+      },
+      contact: {
+        email: 'jane@example.com',
+        location: 'Remote',
+      },
+      skills: 'Angular, TypeScript',
+    });
+    fixture.detectChanges();
+
+    expect(helperTexts()).not.toContain(
+      'Add full name, job title, email, location, and skills, experience company and role, or education school and degree to generate.',
+    );
+    expect(buttonLabels()).toContain('Generate Full Resume');
+  });
+
+  it('shows summary helper text with exact missing fields', () => {
+    createComponent();
+
+    expect(helperTexts()).toContain('Add full name, job title, and skills to generate.');
+  });
+
+  it('shows experience helper text with row-specific requirements', () => {
+    createComponent();
+    component.addEntry('experience');
+    fixture.detectChanges();
+
+    expect(helperTexts()).toContain('Add full name, job title, skills, company, and role to generate.');
+  });
+
+  it('shows education helper text with row-specific requirements', () => {
+    createComponent();
+    component.addEntry('education');
+    fixture.detectChanges();
+
+    expect(helperTexts()).toContain('Add full name, job title, skills, school, and degree to generate.');
+  });
+
+  it('keeps compact button labels short while helper text stays detailed', () => {
+    createComponent();
+
+    expect(buttonLabels()).toContain('Add details');
+    expect(helperTexts()).toContain('Add full name, job title, and skills to generate.');
   });
 });

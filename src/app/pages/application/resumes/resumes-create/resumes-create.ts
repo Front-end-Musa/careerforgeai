@@ -651,6 +651,76 @@ export class ResumesCreate implements OnInit, OnChanges {
     );
   }
 
+  getMissingFullResumeParts() {
+    const missingParts: string[] = [];
+
+    if (!this.resumeGroup.get('personalInfo.fullName')?.value?.trim()) {
+      missingParts.push('full name');
+    }
+    if (!this.resumeGroup.get('personalInfo.jobTitle')?.value?.trim()) {
+      missingParts.push('job title');
+    }
+    if (!this.resumeGroup.get('contact.email')?.value?.trim()) {
+      missingParts.push('email');
+    }
+    if (!this.resumeGroup.get('contact.location')?.value?.trim()) {
+      missingParts.push('location');
+    }
+    if (!this.hasGenerationSeed()) {
+      missingParts.push('skills, experience company and role, or education school and degree');
+    }
+
+    return missingParts;
+  }
+
+  getMissingSummaryParts() {
+    return this.getMissingBasicGenerationParts();
+  }
+
+  getMissingExperienceParts(index: number) {
+    const missingParts = [...this.getMissingBasicGenerationParts()];
+    const group = this.experienceArray.at(index) as FormGroup | undefined;
+
+    if (!group?.get('company')?.value?.trim()) {
+      missingParts.push('company');
+    }
+    if (!group?.get('role')?.value?.trim()) {
+      missingParts.push('role');
+    }
+
+    return missingParts;
+  }
+
+  getMissingEducationParts(index: number) {
+    const missingParts = [...this.getMissingBasicGenerationParts()];
+    const group = this.educationArray.at(index) as FormGroup | undefined;
+
+    if (!group?.get('school')?.value?.trim()) {
+      missingParts.push('school');
+    }
+    if (!group?.get('degree')?.value?.trim()) {
+      missingParts.push('degree');
+    }
+
+    return missingParts;
+  }
+
+  getGenerateMessage(missingParts: string[]) {
+    return missingParts.length ? `Add ${this.formatMissingPartsList(missingParts)} to generate.` : '';
+  }
+
+  getGenerateLabel(defaultLabel: string, missingParts: string[], compact: boolean = false) {
+    if (!missingParts.length) {
+      return defaultLabel;
+    }
+
+    if (missingParts.length === 1 && !compact) {
+      return `Add ${missingParts[0]}`;
+    }
+
+    return 'Add details';
+  }
+
   requestTemplateChange() {
     this.changeTemplate.emit();
   }
@@ -1141,6 +1211,45 @@ export class ResumesCreate implements OnInit, OnChanges {
       return value.toISOString();
     }
     return new Date().toISOString();
+  }
+
+  private getMissingBasicGenerationParts() {
+    const missingParts: string[] = [];
+
+    if (!this.resumeGroup.get('personalInfo.fullName')?.value?.trim()) {
+      missingParts.push('full name');
+    }
+    if (!this.resumeGroup.get('personalInfo.jobTitle')?.value?.trim()) {
+      missingParts.push('job title');
+    }
+    if (!this.getNormalizedSkillSet(this.resumeGroup.getRawValue()).length) {
+      missingParts.push('skills');
+    }
+
+    return missingParts;
+  }
+
+  private hasGenerationSeed() {
+    return Boolean(
+      this.getNormalizedSkillSet(this.resumeGroup.getRawValue()).length ||
+        this.experienceArray.controls.some((group) => {
+          return Boolean(group.get('company')?.value?.trim() && group.get('role')?.value?.trim());
+        }) ||
+        this.educationArray.controls.some((group) => {
+          return Boolean(group.get('school')?.value?.trim() && group.get('degree')?.value?.trim());
+        }),
+    );
+  }
+
+  private formatMissingPartsList(parts: string[]) {
+    if (parts.length <= 1) {
+      return parts[0] ?? '';
+    }
+    if (parts.length === 2) {
+      return `${parts[0]} and ${parts[1]}`;
+    }
+
+    return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`;
   }
 
   private dispatchGeneration(request: ResumeGenerationRequest) {
