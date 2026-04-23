@@ -1,0 +1,23 @@
+<section class="latex-source-panel">
+  <div class="source-header">
+    <div class="source-copy">
+      <p class="eyebrow">Overleaf Source</p>
+      <h3 [innerHTML]="latexWordmark"></h3>
+      <p>{{ templateName }} template source updates as you edit.</p>
+    </div>
+
+    <button type="button" mat-stroked-button (click)="copySource()">
+      <mat-icon>{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+      {{ copied ? 'Copied' : 'Copy .tex' }}
+    </button>
+  </div>
+
+  <div class="source-code">
+    @for (line of sourceLines; track line.number) {
+      <div class="source-line">
+        <span class="line-number">{{ line.number }}</span>
+        <code>{{ line.value || ' ' }}</code>
+      </div>
+    }
+  </div>
+</section>

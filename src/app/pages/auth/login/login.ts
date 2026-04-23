@@ -17,6 +17,7 @@ import { AuthFacade } from '../data/auth.facade';
 import { AuthStatus } from '../data/auth.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/login-with-google-btn';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     RouterLink,
     AsyncPipe,
     MatProgressSpinnerModule,
-],
+    LoginWithGoogleBtn
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -41,6 +43,7 @@ export class Login {
   authFacade = inject(AuthFacade);
   authStatus = AuthStatus;
   status$ = this.authFacade.status$;
+  error$ = this.authFacade.error$;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.loginForm = new FormGroup({

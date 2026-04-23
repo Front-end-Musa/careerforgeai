@@ -57,7 +57,7 @@ export const RESUME_TEMPLATES: readonly ResumeTemplateOption[] = [
   {
     id: 'overleaf-compact',
     name: 'Harshibar Creator',
-    description: 'Real LaTeX template based on Harshibar’s resume layout.',
+    description: 'Compact Overleaf-style LaTeX resume with sharp section rules and mono contact details.',
     requiredPlan: 'free',
     family: 'latex',
     renderer: 'latex',
@@ -66,7 +66,7 @@ export const RESUME_TEMPLATES: readonly ResumeTemplateOption[] = [
   {
     id: 'overleaf-jake',
     name: "Jake's Resume",
-    description: 'Classic Overleaf LaTeX resume by Jake Gutierrez with ATS-friendly structure.',
+    description: 'Classic Overleaf-inspired one-column LaTeX resume with ATS-friendly structure.',
     requiredPlan: 'free',
     family: 'latex',
     renderer: 'latex',
@@ -75,7 +75,7 @@ export const RESUME_TEMPLATES: readonly ResumeTemplateOption[] = [
   {
     id: 'overleaf-academic',
     name: 'Overleaf Academic',
-    description: 'LaTeX template tuned for academic and research resumes.',
+    description: 'Research-forward LaTeX template with publication-style spacing and credential-heavy sections.',
     requiredPlan: 'pro',
     family: 'latex',
     renderer: 'latex',
@@ -84,7 +84,7 @@ export const RESUME_TEMPLATES: readonly ResumeTemplateOption[] = [
   {
     id: 'overleaf-executive',
     name: 'Overleaf Executive',
-    description: 'LaTeX export with a more formal executive presentation.',
+    description: 'Executive LaTeX layout with premium typography, leadership summary, and formal hierarchy.',
     requiredPlan: 'premium',
     family: 'latex',
     renderer: 'latex',

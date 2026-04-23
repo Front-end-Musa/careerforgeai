@@ -1,0 +1,16 @@
+<button
+  mat-anchor
+  class="social-btn google-btn"
+  type="button"
+  (click)="onLoginWithGoogle()"
+  [class.loading]="(status$ | async) === authStatus.Loading"
+  [disabled]="(status$ | async) === authStatus.Loading"
+>
+  @if ((status$ | async) === authStatus.Loading) {
+    <span class="btn-spinner" aria-hidden="true"></span>
+    <span>Connecting...</span>
+  } @else {
+    <span class="material-symbols-outlined">mail_outline</span>
+    <span>Google</span>
+  }
+</button>

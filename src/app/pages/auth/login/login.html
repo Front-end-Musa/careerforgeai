@@ -63,13 +63,16 @@
           </button>
         </form>
 
+        @if (error$ | async; as error) {
+          <div class="form-error">
+            {{ error }}
+          </div>
+        }
+
         <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
 
         <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
-          <button mat-anchor class="social-btn google-btn">
-            <span class="material-symbols-outlined">mail_outline</span>
-            Google
-          </button>
+          <app-login-with-google-btn></app-login-with-google-btn>
           <button mat-anchor class="social-btn github-btn">
             <span class="material-symbols-outlined">code</span> Github
           </button>

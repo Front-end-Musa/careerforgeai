@@ -16,19 +16,16 @@ import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
 import { AuthStatus } from '../data/auth.reducer';
 import { AsyncPipe } from '@angular/common';
+import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/login-with-google-btn';
 
 const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-const nonWhitespaceValidator: ValidatorFn = (
-  control: AbstractControl,
-): ValidationErrors | null => {
+const nonWhitespaceValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value = `${control.value ?? ''}`.trim();
   return value.length > 0 ? null : { whitespace: true };
 };
 
-const passwordMatchValidator: ValidatorFn = (
-  control: AbstractControl,
-): ValidationErrors | null => {
+const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('password')?.value;
   const repeatPassword = control.get('repeatPassword')?.value;
 
@@ -41,7 +38,16 @@ const passwordMatchValidator: ValidatorFn = (
 
 @Component({
   selector: 'app-signup',
-  imports: [MatCardModule, MatLabel, ReactiveFormsModule, MatError, Logo, RouterLink, AsyncPipe],
+  imports: [
+    MatCardModule,
+    MatLabel,
+    ReactiveFormsModule,
+    MatError,
+    Logo,
+    RouterLink,
+    AsyncPipe,
+    LoginWithGoogleBtn,
+  ],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
@@ -85,10 +91,7 @@ export class Signup {
       name,
       email,
       password,
-      role:
-        email == 'rufatulymusa567@gmail.com' && password == 'playwithme'
-          ? 'Admin'
-          : 'User',
+      role: email == 'rufatulymusa567@gmail.com' && password == 'playwithme' ? 'Admin' : 'User',
       profileViews: 0,
       plan: 'free',
       subscriptionStatus: 'none',

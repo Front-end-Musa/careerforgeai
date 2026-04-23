@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, HostListener, Input, OnDestroy, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,6 +21,8 @@ type HeaderType = 'nav';
 })
 export class Header implements OnDestroy {
   @Input({ required: true }) headerType: HeaderType | null = null;
+  @ViewChild('burgerToggle') burgerToggle?: ElementRef<HTMLButtonElement>;
+  @ViewChild('firstMobileMenuAction') firstMobileMenuAction?: ElementRef<HTMLElement>;
   authStatus = AuthStatus;
   status$ = new Observable<AuthStatus>();
   menuOpen = signal(false);
@@ -35,17 +37,27 @@ export class Header implements OnDestroy {
   }
 
   toggleMenu() {
-    this.menuOpen.update((open) => !open);
+    if (this.menuOpen()) {
+      this.closeMenu();
+      return;
+    }
+
+    this.menuOpen.set(true);
     this.syncBodyLock();
+    this.focusFirstMobileAction();
   }
 
-  closeMenu() {
+  closeMenu(restoreFocus: boolean = true) {
     if (!this.menuOpen()) {
       return;
     }
 
     this.menuOpen.set(false);
     this.syncBodyLock();
+
+    if (restoreFocus) {
+      this.restoreBurgerFocus();
+    }
   }
 
   onMobileSectionClick(sectionId: string) {
@@ -54,7 +66,7 @@ export class Header implements OnDestroy {
   }
 
   onMobileRouteClick() {
-    this.closeMenu();
+    this.closeMenu(false);
   }
 
   @HostListener('document:keydown.escape')
@@ -85,5 +97,25 @@ export class Header implements OnDestroy {
 
   scrollTo(sectionId: string) {
     this.landingDataFacade.scrollTo(sectionId);
+  }
+
+  private focusFirstMobileAction() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      this.firstMobileMenuAction?.nativeElement.focus();
+    });
+  }
+
+  private restoreBurgerFocus() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      this.burgerToggle?.nativeElement.focus();
+    });
   }
 }

@@ -16,6 +16,9 @@ import {
   loginUser,
   loginUserFailure,
   loginUserSuccess,
+  loginWithGoogle,
+  loginWithGoogleFailure,
+  loginWithGoogleSuccess,
   logout,
   logoutFailure,
   logoutSuccess,
@@ -58,7 +61,7 @@ export class AuthEffects {
   loginSuccessNavigate$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(loginUserSuccess),
+        ofType(loginUserSuccess, loginWithGoogleSuccess),
         tap(() => this.router.navigate(['/application/dashboard'])),
       ),
     { dispatch: false },
@@ -71,6 +74,18 @@ export class AuthEffects {
         tap(() => this.router.navigate(['/application/dashboard'])),
       ),
     { dispatch: false },
+  );
+
+  loginWithGoogleEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginWithGoogle),
+      switchMap(() =>
+        this.authService$.loginWithGoogle().pipe(
+          map(({ user, token }) => loginWithGoogleSuccess({ user, token })),
+          catchError((error: FirebaseError) => of(loginWithGoogleFailure({ error: error.message }))),
+        ),
+      ),
+    ),
   );
 
   logoutEffect = createEffect(() =>
@@ -134,6 +149,8 @@ export class AuthEffects {
           initUserFailure,
           loginUserSuccess,
           loginUserFailure,
+          loginWithGoogleSuccess,
+          loginWithGoogleFailure,
           registerUserSuccess,
           registerUserFailure,
           logoutSuccess,

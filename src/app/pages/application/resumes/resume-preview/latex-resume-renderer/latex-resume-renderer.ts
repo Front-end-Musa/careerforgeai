@@ -7,6 +7,11 @@ import {
 } from '../../data/resume-template-catalog';
 import { buildLatexPreviewSource } from '../../data/resume-latex-preview';
 
+type ContactChip = {
+  icon: string;
+  value: string;
+};
+
 @Component({
   selector: 'app-latex-resume-renderer',
   standalone: true,
@@ -24,7 +29,7 @@ export class LatexResumeRenderer {
   }
 
   get sourceLines() {
-    return this.latexSource.split('\n').slice(0, this.renderContext === 'picker' ? 12 : undefined);
+    return this.latexSource.split('\n').slice(0, this.renderContext === 'picker' ? 14 : undefined);
   }
 
   get isHarshibarTemplate() {
@@ -35,6 +40,14 @@ export class LatexResumeRenderer {
     return this.template.id === 'overleaf-jake';
   }
 
+  get isAcademicTemplate() {
+    return this.template.id === 'overleaf-academic';
+  }
+
+  get isExecutiveTemplate() {
+    return this.template.id === 'overleaf-executive';
+  }
+
   get headingName() {
     return this.resume?.personalInfo?.fullName || 'Your Name';
   }
@@ -43,17 +56,21 @@ export class LatexResumeRenderer {
     return this.resume?.personalInfo?.jobTitle || 'Professional Title';
   }
 
-  get harshibarContacts() {
+  get summary() {
+    return this.resume?.summary?.trim() || '';
+  }
+
+  get contactChips() {
     const contact = this.resume?.contact;
 
     return [
-      contact?.phone ? { icon: '✆', value: contact.phone } : null,
-      contact?.email ? { icon: '✉', value: contact.email } : null,
+      contact?.phone ? { icon: 'tel', value: contact.phone } : null,
+      contact?.email ? { icon: '@', value: contact.email } : null,
       contact?.linkedin ? { icon: 'in', value: contact.linkedin } : null,
       contact?.github ? { icon: 'gh', value: contact.github } : null,
-      contact?.website ? { icon: '↗', value: contact.website } : null,
-      contact?.location ? { icon: '⌂', value: contact.location } : null,
-    ].filter((entry): entry is { icon: string; value: string } => Boolean(entry));
+      contact?.website ? { icon: 'web', value: contact.website } : null,
+      contact?.location ? { icon: 'loc', value: contact.location } : null,
+    ].filter((entry): entry is ContactChip => Boolean(entry));
   }
 
   get experienceEntries() {
@@ -68,8 +85,16 @@ export class LatexResumeRenderer {
     return this.resume?.education ?? [];
   }
 
+  get certificationEntries() {
+    return this.resume?.certifications ?? [];
+  }
+
   get primarySkills() {
     return this.resume?.skills ?? [];
+  }
+
+  get certificationNames() {
+    return this.certificationEntries.map((entry) => entry.name).filter(Boolean);
   }
 
   get languageSkills() {
@@ -78,6 +103,15 @@ export class LatexResumeRenderer {
 
   get toolSkills() {
     return this.resume?.skillGroups?.tools ?? [];
+  }
+
+  get executiveHighlights() {
+    const bullets = this.experienceEntries
+      .flatMap((entry) => entry.description ?? [])
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+
+    return bullets.slice(0, 3);
   }
 
   formatDateRange(startDate?: string, endDate?: string) {
@@ -105,5 +139,15 @@ export class LatexResumeRenderer {
     }
 
     return [];
+  }
+
+  splitSkills(skills: string[], groupSize = 4) {
+    const rows: string[][] = [];
+
+    for (let index = 0; index < skills.length; index += groupSize) {
+      rows.push(skills.slice(index, index + groupSize));
+    }
+
+    return rows;
   }
 }

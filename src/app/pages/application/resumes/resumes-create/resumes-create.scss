@@ -297,6 +297,8 @@
 }
 
 .preview-content {
+  display: grid;
+  gap: 18px;
   overflow: auto;
   max-height: calc(100vh - 180px);
 }
@@ -397,6 +399,7 @@ mat-form-field {
 
   .mobile-action-bar > * {
     flex: 1;
+    min-width: 0;
   }
 
   .mobile-action-bar .generate-helper {

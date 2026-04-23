@@ -50,6 +50,51 @@
         </div>
       </div>
     </div>
+  } @else if (isAcademicTemplate) {
+    <div class="academic-picker">
+      <div class="academic-mini-sheet">
+        <div class="academic-mini-topline"></div>
+        <h3>{{ headingName }}</h3>
+        <p>{{ headingTitle }}</p>
+
+        <div class="academic-mini-section">
+          <span>RESEARCH INTERESTS</span>
+          <div class="academic-mini-line wide"></div>
+        </div>
+
+        <div class="academic-mini-section">
+          <span>ACADEMIC APPOINTMENTS</span>
+          <div class="academic-mini-line wide"></div>
+          <div class="academic-mini-line"></div>
+        </div>
+
+        <div class="academic-mini-section">
+          <span>EDUCATION</span>
+          <div class="academic-mini-line wide"></div>
+        </div>
+      </div>
+    </div>
+  } @else if (isExecutiveTemplate) {
+    <div class="executive-picker">
+      <div class="executive-mini-sheet">
+        <div class="executive-mini-stripe"></div>
+        <h3>{{ headingName }}</h3>
+        <p>{{ headingTitle }}</p>
+
+        <div class="executive-mini-summary"></div>
+
+        <div class="executive-mini-section">
+          <span>EXECUTIVE EXPERIENCE</span>
+          <div class="executive-mini-line wide"></div>
+          <div class="executive-mini-line"></div>
+        </div>
+
+        <div class="executive-mini-section">
+          <span>SELECT WINS</span>
+          <div class="executive-mini-line wide"></div>
+        </div>
+      </div>
+    </div>
   } @else {
     <div class="latex-picker-card">
       <div class="latex-picker-header">
@@ -70,9 +115,9 @@
         <div class="jake-header">
           <h1>{{ headingName }}</h1>
 
-          @if (harshibarContacts.length) {
+          @if (contactChips.length) {
             <div class="jake-contacts">
-              @for (contact of harshibarContacts; track $index) {
+              @for (contact of contactChips; track $index) {
                 <span>{{ contact.value }}</span>
               }
             </div>
@@ -159,25 +204,265 @@
           </section>
         }
       </section>
+    } @else if (isAcademicTemplate) {
+      <section class="latex-paper academic-paper">
+        <div class="academic-topline"></div>
+        <div class="academic-header">
+          <div>
+            <p class="academic-kicker">Curriculum Vitae</p>
+            <h1>{{ headingName }}</h1>
+            <p class="academic-title">{{ headingTitle }}</p>
+          </div>
+
+          @if (contactChips.length) {
+            <div class="academic-contacts">
+              @for (contact of contactChips; track $index) {
+                <span>
+                  <strong>{{ contact.icon }}</strong>
+                  <span>{{ contact.value }}</span>
+                </span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (summary) {
+          <section class="academic-section">
+            <div class="academic-section-title">Research Profile</div>
+            <p class="academic-summary">{{ summary }}</p>
+          </section>
+        }
+
+        @if (experienceEntries.length) {
+          <section class="academic-section">
+            <div class="academic-section-title">Academic Appointments</div>
+
+            @for (entry of experienceEntries; track $index) {
+              <article class="academic-entry">
+                <div class="academic-entry-row">
+                  <div>
+                    <strong>{{ entry.role || 'Role' }}</strong>
+                    <p>{{ entry.company || 'Institution' }}</p>
+                  </div>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="academic-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (educationEntries.length) {
+          <section class="academic-section">
+            <div class="academic-section-title">Education</div>
+
+            @for (entry of educationEntries; track $index) {
+              <article class="academic-entry">
+                <div class="academic-entry-row">
+                  <div>
+                    <strong>{{ entry.degree || 'Degree' }}</strong>
+                    <p>{{ entry.school || 'School' }}</p>
+                  </div>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="academic-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (projectEntries.length) {
+          <section class="academic-section">
+            <div class="academic-section-title">Selected Projects</div>
+
+            @for (entry of projectEntries; track $index) {
+              <article class="academic-entry">
+                <div class="academic-entry-row academic-entry-row-inline">
+                  <strong>{{ entry.name || 'Project' }}</strong>
+                  <span>{{ entry.role || '' }}</span>
+                </div>
+
+                @if (entry.link) {
+                  <p class="academic-link">{{ entry.link }}</p>
+                }
+
+                @if (hasBullets(getProjectBullets(entry.description))) {
+                  <ul class="academic-bullets">
+                    @for (bullet of getProjectBullets(entry.description); track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        @if (certificationEntries.length) {
+          <section class="academic-section">
+            <div class="academic-section-title">Certifications</div>
+
+            @for (entry of certificationEntries; track $index) {
+              <article class="academic-inline-entry">
+                <strong>{{ entry.name }}</strong>
+                <span>{{ entry.issuer }}{{ entry.issuer && entry.issueDate ? ' • ' : '' }}{{ entry.issueDate }}</span>
+              </article>
+            }
+          </section>
+        }
+
+        @if (primarySkills.length || languageSkills.length || toolSkills.length) {
+          <section class="academic-section">
+            <div class="academic-section-title">Capabilities</div>
+            <div class="academic-skills">
+              @for (skillRow of splitSkills(primarySkills, 4); track $index) {
+                <p>{{ skillRow.join(' • ') }}</p>
+              }
+              @if (languageSkills.length) {
+                <p><strong>Languages:</strong> {{ languageSkills.join(', ') }}</p>
+              }
+              @if (toolSkills.length) {
+                <p><strong>Tools:</strong> {{ toolSkills.join(', ') }}</p>
+              }
+            </div>
+          </section>
+        }
+      </section>
+    } @else if (isExecutiveTemplate) {
+      <section class="latex-paper executive-paper">
+        <div class="executive-stripe"></div>
+        <div class="executive-header">
+          <div>
+            <p class="executive-kicker">Executive Resume</p>
+            <h1>{{ headingName }}</h1>
+            <p class="executive-title">{{ headingTitle }}</p>
+          </div>
+
+          @if (contactChips.length) {
+            <div class="executive-contacts">
+              @for (contact of contactChips; track $index) {
+                <span>{{ contact.value }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (summary) {
+          <section class="executive-summary-panel">
+            <p>{{ summary }}</p>
+          </section>
+        }
+
+        @if (executiveHighlights.length) {
+          <section class="executive-section">
+            <div class="executive-section-title">Selected Wins</div>
+            <div class="executive-highlight-grid">
+              @for (highlight of executiveHighlights; track $index) {
+                <article class="executive-highlight-card">{{ highlight }}</article>
+              }
+            </div>
+          </section>
+        }
+
+        @if (experienceEntries.length) {
+          <section class="executive-section">
+            <div class="executive-section-title">Executive Experience</div>
+
+            @for (entry of experienceEntries; track $index) {
+              <article class="executive-entry">
+                <div class="executive-entry-row">
+                  <div>
+                    <strong>{{ entry.role || 'Role' }}</strong>
+                    <p>{{ entry.company || 'Company' }}</p>
+                  </div>
+                  <span>{{ formatDateRange(entry.startDate, entry.endDate) }}</span>
+                </div>
+
+                @if (hasBullets(entry.description)) {
+                  <ul class="executive-bullets">
+                    @for (bullet of entry.description || []; track $index) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+              </article>
+            }
+          </section>
+        }
+
+        <div class="executive-lower-grid">
+          @if (educationEntries.length) {
+            <section class="executive-section compact">
+              <div class="executive-section-title">Education</div>
+
+              @for (entry of educationEntries; track $index) {
+                <article class="executive-inline-entry">
+                  <strong>{{ entry.degree || 'Degree' }}</strong>
+                  <span>{{ entry.school || 'School' }}</span>
+                  <small>{{ formatDateRange(entry.startDate, entry.endDate) }}</small>
+                </article>
+              }
+            </section>
+          }
+
+          @if (primarySkills.length || languageSkills.length || toolSkills.length || certificationEntries.length) {
+            <section class="executive-section compact">
+              <div class="executive-section-title">Board-Ready Profile</div>
+              <div class="executive-skill-cloud">
+                @for (skill of primarySkills; track $index) {
+                  <span>{{ skill }}</span>
+                }
+              </div>
+
+              @if (languageSkills.length) {
+                <p class="executive-meta-line"><strong>Languages:</strong> {{ languageSkills.join(', ') }}</p>
+              }
+              @if (toolSkills.length) {
+                <p class="executive-meta-line"><strong>Tools:</strong> {{ toolSkills.join(', ') }}</p>
+              }
+              @if (certificationNames.length) {
+                <p class="executive-meta-line">
+                  <strong>Credentials:</strong>
+                  {{ certificationNames.join(', ') }}
+                </p>
+              }
+            </section>
+          }
+        </div>
+      </section>
     } @else {
       <section class="latex-paper harshibar-paper">
         <div class="harshibar-header">
           <h1>{{ headingName }}</h1>
           <p>{{ headingTitle }}</p>
 
-          @if (harshibarContacts.length) {
+          @if (contactChips.length) {
             <div class="harshibar-contacts">
-              @for (contact of harshibarContacts; track $index) {
+              @for (contact of contactChips; track $index) {
                 <span><strong>{{ contact.icon }}</strong> <span>{{ contact.value }}</span></span>
               }
             </div>
           }
         </div>
 
-        @if (resume?.summary?.trim()) {
+        @if (summary) {
           <section class="harshibar-section">
             <div class="harshibar-section-title">SUMMARY</div>
-            <p class="harshibar-summary">{{ resume?.summary }}</p>
+            <p class="harshibar-summary">{{ summary }}</p>
           </section>
         }
 

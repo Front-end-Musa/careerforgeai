@@ -99,7 +99,7 @@ export const tailorResumeFailure = createAction(
 
 export const exportResumeToPdf = createAction(
   '[Resume] Export To PDF',
-  props<{ resumeId: string; formGroup: any }>()
+  props<{ resumeId?: string | null; formGroup: any }>()
 );
 
 export const exportResumeToPdfSuccess = createAction(

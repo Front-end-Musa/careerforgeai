@@ -21,6 +21,16 @@ export const loginUserFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const loginWithGoogle = createAction('[Users] Login With Google');
+export const loginWithGoogleSuccess = createAction(
+  '[Users] Login With Google Success',
+  props<{ user: AppUser; token: string }>(),
+);
+export const loginWithGoogleFailure = createAction(
+  '[Users] Login With Google Failure',
+  props<{ error: string }>(),
+);
+
 export const initUser = createAction('[Users] Init User');
 export const initUserSuccess = createAction(
   '[Users] Init User Success',
@@ -46,3 +56,4 @@ export const deleteAccountFailure = createAction(
   '[Users] Delete Account Failure',
   props<{ error: string }>(),
 );
+

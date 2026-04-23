@@ -100,13 +100,13 @@ export class ResumeService {
     );
   }
 
-  async exportToPdf(resumeId: string, formGroup: FormGroup): Promise<void> {
+  async exportToPdf(resumeId: string | null | undefined, formGroup: FormGroup): Promise<void> {
     if (typeof window === 'undefined') {
       return;
     }
 
     const templateId = formGroup.get('templateId')?.value;
-    if (isLatexTemplate(templateId)) {
+    if (resumeId && isLatexTemplate(templateId)) {
       const result = await this.renderResumePdfFn({ resumeId });
       this.saveBase64File(
         result.data.content,
@@ -115,8 +115,6 @@ export class ResumeService {
       );
       return;
     }
-
-    await this.downloadResumeFn({ resumeId });
 
     const previewElement = document.querySelector(
       '.resume-export-surface .resume-preview',

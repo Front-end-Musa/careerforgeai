@@ -5,8 +5,10 @@ import {
   authState,
   createUserWithEmailAndPassword,
   deleteUser,
+  GoogleAuthProvider,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   User,
 } from '@angular/fire/auth';
@@ -18,17 +20,17 @@ import {
   catchError,
   EMPTY,
   take,
-  filter,
   firstValueFrom,
   throwError,
+  map,
 } from 'rxjs';
 import { AppUser, LoginUser } from '../interfaces/user.interface';
 import {
   deleteDoc,
   doc,
-  docData,
   DocumentReference,
   Firestore,
+  getDoc,
   setDoc,
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -40,6 +42,7 @@ import { getPlanEntitlements } from './plan-entitlements';
 })
 export class AuthService {
   private auth = inject(Auth);
+  private provider = new GoogleAuthProvider();
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
   private callableService = inject(CallableService);
@@ -77,6 +80,26 @@ export class AuthService {
         console.error('Firebase error:', err.code, err.message);
         throw err;
       }),
+    );
+  }
+
+  loginWithGoogle(): Observable<any> {
+    return from(
+      signInWithPopup(this.auth, this.provider)
+        .then(async (result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          if (!credential) {
+            throw new Error('No credential returned from Google sign-in');
+          }
+
+          const token = credential.accessToken ?? '';
+          const user = await this.ensureGoogleAppUser(result.user);
+          return { user, token };
+        })
+        .catch((err) => {
+          console.error('Google login error:', err.code, err.message);
+          throw err;
+        }),
     );
   }
 
@@ -124,16 +147,30 @@ export class AuthService {
 
     return authState(this.auth).pipe(
       take(1),
-      switchMap((firebaseUser) => (firebaseUser ? this.getUser$(firebaseUser.uid) : of(null))),
+      switchMap((firebaseUser) => {
+        if (!firebaseUser) {
+          return of(null);
+        }
+
+        return from(this.resolveCurrentAppUser(firebaseUser));
+      }),
     );
   }
 
-  getUser$(uid: string): Observable<AppUser> {
+  getUser$(uid: string): Observable<AppUser | null> {
     const userRef = doc(this.firestore, 'users', uid);
 
-    return docData(userRef, { idField: 'uid' }).pipe(
-      filter((user): user is AppUser => !!user),
-      take(1),
+    return from(getDoc(userRef)).pipe(
+      map((snapshot) => {
+        if (!snapshot.exists()) {
+          return null;
+        }
+
+        return {
+          ...(snapshot.data() as AppUser),
+          uid: snapshot.id,
+        };
+      }),
     );
   }
 
@@ -189,7 +226,81 @@ export class AuthService {
       );
     }
 
-    return await firstValueFrom(this.getUser$(uid));
+    return await this.requireAppUser(uid);
+  }
+
+  private async resolveCurrentAppUser(firebaseUser: User): Promise<AppUser | null> {
+    const appUser = await firstValueFrom(this.getUser$(firebaseUser.uid));
+    if (appUser) {
+      return appUser;
+    }
+
+    if (!this.isGoogleUser(firebaseUser)) {
+      return null;
+    }
+
+    return this.ensureGoogleAppUser(firebaseUser);
+  }
+
+  private async ensureGoogleAppUser(firebaseUser: User): Promise<AppUser> {
+    const existingUser = await firstValueFrom(this.getUser$(firebaseUser.uid));
+    if (existingUser) {
+      return existingUser;
+    }
+
+    const userRef = doc(this.firestore, 'users', firebaseUser.uid);
+    const email = firebaseUser.email ?? '';
+    const name = firebaseUser.displayName?.trim() || email.split('@')[0] || 'Google User';
+    const entitlements = getPlanEntitlements('free');
+
+    await setDoc(userRef, {
+      name,
+      email,
+      createdAt: new Date(),
+      role: 'User',
+      profileViews: 0,
+      plan: 'free',
+      subscriptionStatus: 'none',
+      currentPeriodEnd: null,
+      providerCustomerId: '',
+      providerSubscriptionId: '',
+      providerVariantId: '',
+      entitlements,
+      resumeGenerationsUsed: 0,
+      coverLettersUsed: 0,
+      usagePeriodKey: null,
+      usagePeriodStartedAt: null,
+      usagePeriodEndsAt: null,
+      freeGenerationsUsed: 0,
+      fullResumeGenerationsUsed: 0,
+      emailVerified: firebaseUser.emailVerified,
+      entitlementsUpdatedAt: null,
+    });
+
+    try {
+      await this.ensurePolarCustomerFn();
+    } catch (error) {
+      await this.compensateFailedRegistration(userRef, null);
+      await signOut(this.auth);
+      throw new Error(
+        'Unable to complete Google signup because billing setup failed. Please try again in a moment.',
+      );
+    }
+
+    return await this.requireAppUser(firebaseUser.uid);
+  }
+
+  private async requireAppUser(uid: string): Promise<AppUser> {
+    const user = await firstValueFrom(this.getUser$(uid));
+    if (!user) {
+      throw new Error('Unable to load your account profile. Please try again.');
+    }
+
+    return user;
+  }
+
+  private isGoogleUser(firebaseUser: User): boolean {
+    return firebaseUser.providerData.some((profile) => profile.providerId === 'google.com');
   }
 
   private async compensateFailedRegistration(

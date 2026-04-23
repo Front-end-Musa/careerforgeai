@@ -1,0 +1,26 @@
+.google-btn {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.google-btn.loading {
+  cursor: wait;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: google-spin 0.8s linear infinite;
+}
+
+@keyframes google-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

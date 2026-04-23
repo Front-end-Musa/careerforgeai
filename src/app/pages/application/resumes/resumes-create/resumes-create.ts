@@ -54,7 +54,9 @@ import { EntitlementsService } from '../../../../core/services/entitlements.serv
 import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { DateField } from '../../../../lib/date-field/date-field';
+import { LatexPreview } from '../../../../lib/latex-preview/latex-preview';
 import { getTemplateById, getTemplateLabel, isLatexTemplate } from '../data/resume-template-catalog';
+import { buildLatexPreviewSource } from '../data/resume-latex-preview';
 import { ResumesStatus } from '../data/resumes.reducer';
 
 type SectionControl = FormGroup<{
@@ -85,6 +87,7 @@ type CustomSectionControl = FormGroup<{
     GenerateBtn,
     ResumePreview,
     DateField,
+    LatexPreview,
   ],
   templateUrl: './resumes-create.html',
   styleUrl: './resumes-create.scss',
@@ -776,7 +779,16 @@ export class ResumesCreate implements OnInit, OnChanges {
       return;
     }
 
-    if (!this.resumeId) {
+    if (!this.canDownloadCurrentResume) {
+      this.redirectToUpgrade('download');
+      return;
+    }
+
+    await this.resumesFacade.exportResumeToPdf(this.resumeGroup, this.resumeId);
+  }
+
+  downloadLatexSource() {
+    if (typeof window === 'undefined' || !this.isLatexPreviewTemplate) {
       return;
     }
 
@@ -785,7 +797,18 @@ export class ResumesCreate implements OnInit, OnChanges {
       return;
     }
 
-    await this.resumesFacade.exportResumeToPdf(this.resumeId, this.resumeGroup);
+    const source = buildLatexPreviewSource(this.previewTemplate, this.buildResumePayload(this.resumeGroup.getRawValue()));
+    const blob = new Blob([source], {
+      type: 'application/x-tex;charset=utf-8',
+    });
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+
+    anchor.href = downloadUrl;
+    anchor.download = this.buildLatexFileName();
+    anchor.click();
+
+    window.URL.revokeObjectURL(downloadUrl);
   }
 
   private requiredPlan(templateId: ResumeTemplateId) {
@@ -823,6 +846,17 @@ export class ResumesCreate implements OnInit, OnChanges {
       return 2;
     }
     return 1;
+  }
+
+  private buildLatexFileName() {
+    const fullName = this.resumeGroup.get('personalInfo.fullName')?.value?.trim() || 'resume';
+    const templateSlug = this.previewTemplate.replace(/[^a-z0-9-]+/gi, '-').toLowerCase();
+    const nameSlug = fullName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    return `${nameSlug || 'resume'}-${templateSlug}.tex`;
   }
 
   private redirectToUpgrade(reason: 'save' | 'download' | 'second_resume' | 'template_lock' | 'tailor') {

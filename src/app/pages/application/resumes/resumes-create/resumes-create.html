@@ -29,6 +29,18 @@
             }
           </div>
         }
+        @if (isLatexPreviewTemplate) {
+          <button type="button" mat-stroked-button (click)="downloadLatexSource()">Download .tex</button>
+        }
+        @if (canDownloadCurrentResume) {
+          <button type="button" mat-stroked-button (click)="exportToPdf()">
+            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
+          </button>
+        } @else {
+          <button type="button" mat-stroked-button (click)="exportToPdf()">
+            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
+          </button>
+        }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
             {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
@@ -547,16 +559,17 @@
       </button>
 
       <div class="footer-actions">
-        @if (isEditMode) {
-          @if (canDownloadCurrentResume) {
-            <button type="button" mat-stroked-button (click)="exportToPdf()">
-              {{ isLatexPreviewTemplate ? 'Compile & Download PDF' : 'Export PDF' }}
-            </button>
-          } @else {
-            <button type="button" mat-stroked-button (click)="exportToPdf()">
-              {{ isLatexPreviewTemplate ? 'Compile & Download PDF' : 'Export PDF' }}
-            </button>
-          }
+        @if (isLatexPreviewTemplate) {
+          <button type="button" mat-stroked-button (click)="downloadLatexSource()">Download .tex</button>
+        }
+        @if (canDownloadCurrentResume) {
+          <button type="button" mat-stroked-button (click)="exportToPdf()">
+            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
+          </button>
+        } @else {
+          <button type="button" mat-stroked-button (click)="exportToPdf()">
+            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
+          </button>
         }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -572,6 +585,8 @@
   </form>
 
   <aside class="preview-panel">
+    @let previewResume = (preview$ | async);
+
     <div class="preview-header">
       <div>
         <p class="eyebrow">{{ previewHeading }}</p>
@@ -583,9 +598,16 @@
 
     <div class="preview-content">
       <app-resume-preview
-        [resume]="(preview$ | async) || undefined"
+        [resume]="previewResume || undefined"
         [templateId]="previewTemplate"
       ></app-resume-preview>
+
+      @if (isLatexPreviewTemplate) {
+        <cf-latex-preview
+          [resume]="previewResume || undefined"
+          [templateId]="previewTemplate"
+        ></cf-latex-preview>
+      }
     </div>
   </aside>
 </div>
@@ -606,6 +628,14 @@
         <p class="generate-helper">{{ getGenerateMessage(mobileMissingFullResumeParts) }}</p>
       }
     </div>
+  }
+  @if (isLatexPreviewTemplate) {
+    <button type="button" mat-stroked-button (click)="downloadLatexSource()">.tex</button>
+  }
+  @if (canDownloadCurrentResume) {
+    <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>
+  } @else {
+    <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>
   }
   @if (canStoreCurrentResume) {
     <button type="button" mat-flat-button color="primary" (click)="saveResume()">

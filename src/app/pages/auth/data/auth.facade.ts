@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAuthError, selectAuthStatus, selectUser } from './auth.selectors';
 import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
-import { deleteAccount, initUser, loginUser, logout, registerUser } from './auth.actions';
+import { deleteAccount, initUser, loginUser, loginWithGoogle, logout, registerUser } from './auth.actions';
 import { AuthStatus } from './auth.reducer';
 import { ActionTraceService } from '../../../core/state/debug/action-trace.service';
 
@@ -22,6 +22,10 @@ export class AuthFacade {
 
   login(user: LoginUser) {
     this.store.dispatch(loginUser({ user }));
+  }
+
+  loginWithGoogle() {
+    this.store.dispatch(loginWithGoogle());
   }
 
   initAuth(options?: { force?: boolean; source?: string }): void {

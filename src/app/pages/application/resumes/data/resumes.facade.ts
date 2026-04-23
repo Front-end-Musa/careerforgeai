@@ -109,7 +109,7 @@ export class ResumesFacade {
     return this.store.select(selectResumeById(id));
   }
 
-  exportResumeToPdf(resumeId: string, formGroup: FormGroup) {
+  exportResumeToPdf(formGroup: FormGroup, resumeId?: string | null) {
     const action = exportResumeToPdf({ resumeId, formGroup });
     this.trace.traceDispatch(action, 'ResumesFacade.exportResumeToPdf');
     this.store.dispatch(action);

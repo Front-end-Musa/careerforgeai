@@ -11,6 +11,9 @@ import {
   loginUser,
   loginUserFailure,
   loginUserSuccess,
+  loginWithGoogle,
+  loginWithGoogleFailure,
+  loginWithGoogleSuccess,
   logout,
   logoutFailure,
   logoutSuccess,
@@ -30,12 +33,14 @@ export interface AuthState {
   user: AppUser | null;
   status: AuthStatus;
   error: string | null;
+  googleToken?: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
   status: AuthStatus.Init,
   error: null,
+  googleToken: null,
 };
 
 export const authReducer = createReducer(
@@ -75,6 +80,27 @@ export const authReducer = createReducer(
     user: null,
     status: AuthStatus.Error,
     error,
+  })),
+  on(loginWithGoogle, (state) => ({
+    ...state,
+    status: AuthStatus.Loading,
+    user: null,
+    error: null,
+    googleToken: null,
+  })),
+  on(loginWithGoogleSuccess, (state, { user, token }) => ({
+    ...state,
+    user,
+    status: AuthStatus.Loaded,
+    error: null,
+    googleToken: token,
+  })),
+  on(loginWithGoogleFailure, (state, { error }) => ({
+    ...state,
+    user: null,
+    status: AuthStatus.Error,
+    error,
+    googleToken: null,
   })),
   on(initUser, (state) => ({
     ...state,
@@ -123,7 +149,7 @@ export const authReducer = createReducer(
   })),
   on(authResolvedNoUser, (state) => ({
     ...state,
-    status: AuthStatus.Init,
+    status: AuthStatus.Loaded,
     user: null,
   })),
 );
