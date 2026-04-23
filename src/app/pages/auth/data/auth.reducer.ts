@@ -149,7 +149,7 @@ export const authReducer = createReducer(
   })),
   on(authResolvedNoUser, (state) => ({
     ...state,
-    status: AuthStatus.Loaded,
+    status: AuthStatus.Init,
     user: null,
   })),
 );
