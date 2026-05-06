@@ -1,88 +1,72 @@
 import { Routes } from '@angular/router';
+import { SEO_METADATA } from './core/seo/seo-page.config';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/landing/landing').then((c) => c.Landing),
     data: {
-      seo: {
-        title: 'ResumeCrafts AI | AI Resume Builder & Cover Letter Generator',
-        description:
-          'Build ATS-ready resumes and personalized cover letters with AI. ResumeCrafts AI helps job seekers create professional applications faster.',
-        keywords:
-          'AI resume builder, cover letter generator, ATS resume, job search tools, ResumeCrafts AI',
-        robots: 'index, follow',
-        canonicalPath: '/',
-        ogType: 'website',
-        jsonLd: [
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Organization',
-            name: 'ResumeCrafts AI',
-            url: 'https://resume-crafts.com',
-            logo: 'https://resume-crafts.com/assets/hero-image.png',
-          },
-          {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: 'ResumeCrafts AI',
-            url: 'https://resume-crafts.com',
-          },
-          {
-            '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'ResumeCrafts AI',
-            applicationCategory: 'BusinessApplication',
-            operatingSystem: 'Web',
-            offers: {
-              '@type': 'Offer',
-              price: '0',
-              priceCurrency: 'USD',
-            },
-            url: 'https://resume-crafts.com',
-          },
-        ],
-      },
+      seo: SEO_METADATA['/'],
+    },
+  },
+  {
+    path: 'ai-resume-builder',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/ai-resume-builder'],
+      seoPage: 'ai-resume-builder',
+    },
+  },
+  {
+    path: 'ats-resume-templates',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/ats-resume-templates'],
+      seoPage: 'ats-resume-templates',
+    },
+  },
+  {
+    path: 'cover-letter-generator',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/cover-letter-generator'],
+      seoPage: 'cover-letter-generator',
+    },
+  },
+  {
+    path: 'job-application-tracker',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/job-application-tracker'],
+      seoPage: 'job-application-tracker',
+    },
+  },
+  {
+    path: 'pricing',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/pricing'],
+      seoPage: 'pricing',
     },
   },
   {
     path: 'auth',
     data: {
-      seo: {
-        title: 'Sign In or Sign Up | ResumeCrafts AI',
-        description: 'Access your ResumeCrafts AI account to manage resumes and cover letters.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/auth',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/auth'],
     },
     children: [
       {
         path: 'login',
         loadComponent: () => import('./pages/auth/login/login').then((c) => c.Login),
         data: {
-          seo: {
-            title: 'Log In | ResumeCrafts AI',
-            description:
-              'Log in to ResumeCrafts AI to continue building your job application assets.',
-            robots: 'noindex, nofollow',
-            canonicalPath: '/auth/login',
-            ogType: 'website',
-          },
+          seo: SEO_METADATA['/auth/login'],
         },
       },
       {
         path: 'signup',
         loadComponent: () => import('./pages/auth/signup/signup').then((c) => c.Signup),
         data: {
-          seo: {
-            title: 'Create Account | ResumeCrafts AI',
-            description:
-              'Create your ResumeCrafts AI account and start generating professional resumes and cover letters.',
-            robots: 'noindex, nofollow',
-            canonicalPath: '/auth/signup',
-            ogType: 'website',
-          },
+          seo: SEO_METADATA['/auth/signup'],
         },
       },
     ],
@@ -92,13 +76,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/landing/pricing-plans/upgrade/upgrade').then((c) => c.Upgrade),
     data: {
-      seo: {
-        title: 'Choose Your Plan | ResumeCrafts AI',
-        description: 'Choose a paid plan before continuing to secure checkout.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/upgrade',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/upgrade'],
     },
   },
   {
@@ -106,13 +84,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/landing/pricing-plans/upgrade/upgrade').then((c) => c.Upgrade),
     data: {
-      seo: {
-        title: 'Choose Your Plan | ResumeCrafts AI',
-        description: 'Choose a paid plan before continuing to secure checkout.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/update',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/update'],
     },
   },
   {
@@ -122,13 +94,7 @@ export const routes: Routes = [
         (c) => c.CHECKOUT_ROUTES,
       ),
     data: {
-      seo: {
-        title: 'Checkout | ResumeCrafts AI',
-        description: 'Complete your purchase to unlock ResumeCrafts AI premium features.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/checkouts',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/checkouts'],
     },
   },
   {
@@ -136,13 +102,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/landing/legal/privacy-policy/privacy-policy').then((c) => c.PrivacyPolicy),
     data: {
-      seo: {
-        title: 'Privacy Policy | ResumeCrafts AI',
-        description: 'Read how ResumeCrafts AI collects, uses, and protects your data.',
-        robots: 'index, follow',
-        canonicalPath: '/privacy-policy',
-        ogType: 'article',
-      },
+      seo: SEO_METADATA['/privacy-policy'],
     },
   },
   {
@@ -152,13 +112,7 @@ export const routes: Routes = [
         (c) => c.TermsOfService,
       ),
     data: {
-      seo: {
-        title: 'Terms of Service | ResumeCrafts AI',
-        description: 'Read the Terms of Service for using ResumeCrafts AI.',
-        robots: 'index, follow',
-        canonicalPath: '/terms-of-service',
-        ogType: 'article',
-      },
+      seo: SEO_METADATA['/terms-of-service'],
     },
   },
   {
@@ -166,13 +120,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/application/resumes/resumes-create/resumes-create').then((c) => c.ResumesCreate),
     data: {
-      seo: {
-        title: 'Resume Generator | ResumeCrafts AI',
-        description: 'Generate a resume with AI without signing in.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/application/resume-generator',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/application/resume-generator'],
     },
   },
   {
@@ -180,13 +128,7 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/application/application.routes').then((r) => r.APPLICATION_ROUTES),
     data: {
-      seo: {
-        title: 'Dashboard | ResumeCrafts AI',
-        description: 'Manage your resumes, cover letters, and applications in ResumeCrafts AI.',
-        robots: 'noindex, nofollow',
-        canonicalPath: '/application',
-        ogType: 'website',
-      },
+      seo: SEO_METADATA['/application'],
     },
   },
 ];

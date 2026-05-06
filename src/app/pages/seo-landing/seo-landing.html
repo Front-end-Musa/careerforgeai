@@ -1,0 +1,110 @@
+<main class="seo-page">
+  <header class="seo-header">
+    <div class="wrapper seo-header-inner">
+      <a routerLink="/" aria-label="ResumeCrafts AI home">
+        <app-logo></app-logo>
+      </a>
+
+      <nav aria-label="Public pages">
+        <a routerLink="/ai-resume-builder">Builder</a>
+        <a routerLink="/ats-resume-templates">Templates</a>
+        <a routerLink="/cover-letter-generator">Cover letters</a>
+        <a routerLink="/pricing">Pricing</a>
+      </nav>
+
+      <a class="header-action" routerLink="/auth/signup">Sign Up</a>
+    </div>
+  </header>
+
+  <section class="seo-hero">
+    <div class="wrapper hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">{{ content.eyebrow }}</p>
+        <h1>{{ content.title }}</h1>
+        <p class="hero-description">{{ content.description }}</p>
+
+        <div class="hero-actions">
+          <app-landing-cta
+            [label]="content.ctaLabel"
+            [ariaLabel]="content.ctaLabel"
+            [helperTexts]="content.proof"
+          ></app-landing-cta>
+          <a class="secondary-link" [routerLink]="content.secondaryLink">
+            {{ content.secondaryLabel }}
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-preview" aria-label="ResumeCrafts AI workflow preview">
+        <div class="preview-toolbar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="preview-content">
+          <p>{{ content.eyebrow }}</p>
+          <strong>{{ content.title }}</strong>
+          <div class="preview-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seo-section">
+    <div class="wrapper section-grid">
+      @for (section of content.sections; track section.title) {
+        <article class="info-card">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.body }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  @if (content.showTemplates) {
+    <app-resume-templates></app-resume-templates>
+  }
+
+  @if (content.showPricing) {
+    <app-pricing-plans></app-pricing-plans>
+  }
+
+  <section class="seo-section faq-band">
+    <div class="wrapper">
+      <header class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2>What job seekers ask before starting</h2>
+      </header>
+
+      <div class="faq-list">
+        @for (faq of content.faqs; track faq.question) {
+          <article class="faq-item">
+            <h3>{{ faq.question }}</h3>
+            <p>{{ faq.answer }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seo-section related-band">
+    <div class="wrapper related-layout">
+      <div>
+        <p class="eyebrow">Explore</p>
+        <h2>Continue through the ResumeCrafts AI workflow</h2>
+      </div>
+
+      <nav class="related-links" aria-label="Related SEO pages">
+        @for (link of relatedLinks; track link.path) {
+          <a [routerLink]="link.path">{{ link.label }}</a>
+        }
+      </nav>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</main>

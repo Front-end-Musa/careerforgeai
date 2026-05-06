@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { BASE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../seo/seo-page.config';
 
 export interface SeoMetadata {
   title: string;
@@ -16,8 +17,8 @@ export interface SeoMetadata {
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
-  private readonly baseUrl = 'https://resume-crafts.com';
-  private readonly defaultImage = `${this.baseUrl}/assets/hero-image.png`;
+  private readonly baseUrl = BASE_URL;
+  private readonly defaultImage = DEFAULT_OG_IMAGE;
 
   constructor(
     private readonly titleService: Title,
@@ -36,12 +37,12 @@ export class SeoService {
 
     this.meta.updateTag({ name: 'description', content: metadata.description });
     this.meta.updateTag({ name: 'robots', content: robots });
-    this.meta.updateTag({ name: 'author', content: 'ResumeCrafts AI' });
+    this.meta.updateTag({ name: 'author', content: SITE_NAME });
     if (metadata.keywords) {
       this.meta.updateTag({ name: 'keywords', content: metadata.keywords });
     }
 
-    this.meta.updateTag({ property: 'og:site_name', content: 'ResumeCrafts AI' });
+    this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
     this.meta.updateTag({ property: 'og:type', content: ogType });
     this.meta.updateTag({ property: 'og:title', content: metadata.title });
     this.meta.updateTag({ property: 'og:description', content: metadata.description });

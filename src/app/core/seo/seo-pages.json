@@ -1,0 +1,160 @@
+[
+  {
+    "path": "/",
+    "title": "ResumeCrafts AI | AI Resume Builder & Cover Letter Generator",
+    "description": "Build ATS-ready resumes and personalized cover letters with AI. ResumeCrafts AI helps job seekers create professional applications faster.",
+    "keywords": "AI resume builder, cover letter generator, ATS resume, job search tools, ResumeCrafts AI",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 1,
+    "schema": "home"
+  },
+  {
+    "path": "/ai-resume-builder",
+    "title": "AI Resume Builder for ATS-Friendly Applications | ResumeCrafts AI",
+    "description": "Create an ATS-friendly resume with AI, polished templates, editable sections, and paid PDF export tools built for serious job applications.",
+    "keywords": "AI resume builder, ATS-friendly resume builder, resume generator, AI resume generator",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 0.9,
+    "schema": "software"
+  },
+  {
+    "path": "/ats-resume-templates",
+    "title": "ATS Resume Templates for Modern Job Applications | ResumeCrafts AI",
+    "description": "Choose from 11 resume templates, including ATS-friendly free layouts and polished Pro and Premium formats for job seekers.",
+    "keywords": "ATS resume templates, resume templates, professional resume templates, AI resume templates",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 0.85,
+    "schema": "software"
+  },
+  {
+    "path": "/cover-letter-generator",
+    "title": "AI Cover Letter Generator for Targeted Applications | ResumeCrafts AI",
+    "description": "Generate tailored cover letters from your resume, job description, company, role, and preferred tone with ResumeCrafts AI.",
+    "keywords": "AI cover letter generator, cover letter generator, tailored cover letter, job application letter",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 0.85,
+    "schema": "software"
+  },
+  {
+    "path": "/job-application-tracker",
+    "title": "Job Application Tracker for Organized Search Pipelines | ResumeCrafts AI",
+    "description": "Track companies and application stages in a focused job-search workspace alongside your resumes and cover letters.",
+    "keywords": "job application tracker, job search tracker, application pipeline, resume tracker",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 0.8,
+    "schema": "software"
+  },
+  {
+    "path": "/pricing",
+    "title": "ResumeCrafts AI Pricing | Free, Pro, and Premium Plans",
+    "description": "Compare ResumeCrafts AI plans for resume building, AI resume generations, cover letters, PDF export, templates, and job tracking.",
+    "keywords": "ResumeCrafts AI pricing, AI resume builder pricing, free resume builder, resume builder plans",
+    "robots": "index, follow",
+    "ogType": "website",
+    "sitemap": true,
+    "changefreq": "weekly",
+    "priority": 0.8,
+    "schema": "software"
+  },
+  {
+    "path": "/privacy-policy",
+    "title": "Privacy Policy | ResumeCrafts AI",
+    "description": "Read how ResumeCrafts AI collects, uses, and protects your data.",
+    "robots": "index, follow",
+    "ogType": "article",
+    "sitemap": true,
+    "changefreq": "monthly",
+    "priority": 0.35,
+    "schema": "legal"
+  },
+  {
+    "path": "/terms-of-service",
+    "title": "Terms of Service | ResumeCrafts AI",
+    "description": "Read the Terms of Service for using ResumeCrafts AI.",
+    "robots": "index, follow",
+    "ogType": "article",
+    "sitemap": true,
+    "changefreq": "monthly",
+    "priority": 0.35,
+    "schema": "legal"
+  },
+  {
+    "path": "/auth",
+    "title": "Sign In or Sign Up | ResumeCrafts AI",
+    "description": "Access your ResumeCrafts AI account to manage resumes and cover letters.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/auth/login",
+    "title": "Log In | ResumeCrafts AI",
+    "description": "Log in to ResumeCrafts AI to continue building your job application assets.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/auth/signup",
+    "title": "Create Account | ResumeCrafts AI",
+    "description": "Create your ResumeCrafts AI account and start generating professional resumes and cover letters.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/upgrade",
+    "title": "Choose Your Plan | ResumeCrafts AI",
+    "description": "Choose a paid plan before continuing to secure checkout.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/update",
+    "title": "Choose Your Plan | ResumeCrafts AI",
+    "description": "Choose a paid plan before continuing to secure checkout.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/checkouts",
+    "title": "Checkout | ResumeCrafts AI",
+    "description": "Complete your purchase to unlock ResumeCrafts AI premium features.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/application/resume-generator",
+    "title": "Resume Generator | ResumeCrafts AI",
+    "description": "Generate a resume with AI without signing in.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  },
+  {
+    "path": "/application",
+    "title": "Dashboard | ResumeCrafts AI",
+    "description": "Manage your resumes, cover letters, and applications in ResumeCrafts AI.",
+    "robots": "noindex, nofollow",
+    "ogType": "website",
+    "sitemap": false
+  }
+]

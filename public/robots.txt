@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /auth
+Disallow: /auth/login
+Disallow: /auth/signup
+Disallow: /upgrade
+Disallow: /update
+Disallow: /checkouts
+Disallow: /application/resume-generator
+Disallow: /application
 
 Sitemap: https://resume-crafts.com/sitemap.xml

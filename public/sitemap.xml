@@ -3,6 +3,41 @@
   <url>
     <loc>https://resume-crafts.com/</loc>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/ai-resume-builder</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/ats-resume-templates</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/cover-letter-generator</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/job-application-tracker</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/privacy-policy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.35</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/terms-of-service</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.35</priority>
   </url>
 </urlset>

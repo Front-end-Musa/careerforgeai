@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "nx serve",
+    "prebuild": "node scripts/generate-seo-files.mjs",
     "build": "nx build",
     "watch": "nx build --watch --configuration development",
     "test": "nx test",
