@@ -8,8 +8,9 @@
   @if (status === resumesStatus.Loaded) {
     @if (!resumes().length) {
       <div class="resumes-empty">
+        <span class="material-symbols-outlined">description</span>
         <h3>No resumes yet</h3>
-        <p>Build your first resume in minutes with our templates.</p>
+        <p>Create a reusable career profile, then tailor each version to the role.</p>
         <button mat-flat-button color="primary" (click)="requestCreate()">
           Create your first resume
         </button>
@@ -25,6 +26,6 @@
     }
   }
   @if (status === resumesStatus.Error) {
-    <p>Error loading resumes.</p>
+    <p class="resumes-error">Error loading resumes.</p>
   }
 }

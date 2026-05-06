@@ -23,7 +23,7 @@
             <div class="plan-top">
               <div>
                 <h2>{{ plan.name }}</h2>
-                <p class="price">${{ plan.price }}<span>/month</span></p>
+                <p class="price">${{ plan.price }}<span>/{{ plan.billingPeriod }}</span></p>
               </div>
               <span class="selector">{{ selectedPlan() === plan.planSlug ? 'Selected' : 'Choose' }}</span>
             </div>

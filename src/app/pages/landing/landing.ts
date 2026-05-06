@@ -15,10 +15,22 @@ import { PricingPlans } from './pricing-plans/pricing-plans';
 import { Faq } from './faq/faq';
 import { Contact } from './contact/contact';
 import { SimpleSteps } from './simple-steps/simple-steps';
+import { ResumeTemplates } from './resume-templates/resume-templates';
 
 @Component({
   selector: 'app-landing',
-  imports: [Header, Hero, Features, About, Faq, Contact, Footer, SimpleSteps],
+  imports: [
+    Header,
+    Hero,
+    Features,
+    ResumeTemplates,
+    About,
+    PricingPlans,
+    Faq,
+    Contact,
+    Footer,
+    SimpleSteps,
+  ],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
   encapsulation: ViewEncapsulation.None,
@@ -34,10 +46,12 @@ export class Landing implements AfterViewInit, OnDestroy {
 
     const root = this.hostRef.nativeElement;
     const revealSelector = [
-      '.hero .text',
-      '.hero .picture',
+      '.hero .hero-copy',
+      '.hero .product-card',
       '.features .head',
       '.features .card',
+      '.templates-section .head',
+      '.templates-section .template-card',
       '.about .head',
       '.about .mission-card',
       '.about .feature-card',

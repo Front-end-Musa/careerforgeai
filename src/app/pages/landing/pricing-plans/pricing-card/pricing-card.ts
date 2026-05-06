@@ -15,7 +15,8 @@ export class PricingCard {
 
   @Input() plan!: {
     name: string;
-    price: number;
+    price: string;
+    billingPeriod: 'month' | 'year';
     features: { text: string; included: boolean }[];
     button: string;
   };

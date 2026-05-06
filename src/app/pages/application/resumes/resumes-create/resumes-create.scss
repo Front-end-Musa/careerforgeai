@@ -299,8 +299,29 @@
 .preview-content {
   display: grid;
   gap: 18px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   max-height: calc(100vh - 180px);
+}
+
+.preview-fit-width {
+  --resume-page-width: 210mm;
+  --preview-scale: min(1, calc(100cqw / var(--resume-page-width)));
+
+  container-type: inline-size;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+
+.preview-fit-surface {
+  width: calc(var(--resume-page-width) * var(--preview-scale));
+}
+
+.preview-fit-surface app-resume-preview {
+  display: block;
+  width: var(--resume-page-width);
+  zoom: var(--preview-scale);
 }
 
 .mobile-action-bar {

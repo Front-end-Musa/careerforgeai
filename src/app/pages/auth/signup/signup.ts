@@ -14,9 +14,10 @@ import { Logo } from '../../logos/logo/logo';
 import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
 import { AppUser } from '../../../core/interfaces/user.interface';
-import { AuthStatus } from '../data/auth.reducer';
 import { AsyncPipe } from '@angular/common';
 import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/login-with-google-btn';
+import { LoginWithGithubBtn } from '../libs/login-buttons/login-with-github-btn/login-with-github-btn';
+import { AuthProviderConflict } from '../libs/auth-provider-conflict/auth-provider-conflict';
 
 const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
@@ -47,6 +48,8 @@ const passwordMatchValidator: ValidatorFn = (control: AbstractControl): Validati
     RouterLink,
     AsyncPipe,
     LoginWithGoogleBtn,
+    LoginWithGithubBtn,
+    AuthProviderConflict,
   ],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
@@ -54,8 +57,8 @@ const passwordMatchValidator: ValidatorFn = (control: AbstractControl): Validati
 export class Signup {
   signupForm: FormGroup;
   authFacade = inject(AuthFacade);
-  authStatus = AuthStatus;
-  status$ = this.authFacade.status$;
+  registerLoading$ = this.authFacade.registerLoading$;
+  authBusy$ = this.authFacade.authBusy$;
   error$ = this.authFacade.error$;
 
   constructor() {
@@ -75,6 +78,7 @@ export class Signup {
       },
       { validators: passwordMatchValidator },
     );
+    this.authFacade.restoreProviderConflict();
   }
 
   onSubmit() {

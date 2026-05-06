@@ -14,38 +14,52 @@
           <div class="upsell-banner">{{ upsellMessage }}</div>
         }
 
-        <div class="template-grid">
-          @for (template of templates; track template.id) {
-            <button
-              type="button"
-              class="template-card"
-              [class.locked]="isLocked(template.id)"
-              [class.selected]="selectedTemplateId === template.id"
-              (click)="selectTemplate(template.id)"
-            >
-              <div class="template-preview" [ngStyle]="getPreviewStyle(template)">
-                <app-resume-preview
-                  [resume]="demoResume"
-                  [templateId]="template.id"
-                  renderContext="picker"
-                ></app-resume-preview>
-              </div>
-              <div class="template-meta">
-                <div class="template-header">
-                  <div class="template-name">{{ template.name }}</div>
-                  <span
-                    class="template-badge"
-                    [class.locked-badge]="isLocked(template.id)"
-                  >
-                    {{ requiredPlanLabel(template.id) | titlecase }}
-                  </span>
+        <div class="plan-section-stack">
+          @for (section of planSections; track section.plan) {
+            <section class="plan-section" [attr.data-plan]="section.plan">
+              <div class="plan-section-header">
+                <div>
+                  <h3>{{ section.title }}</h3>
+                  <p>{{ section.description }}</p>
                 </div>
-                <div class="template-description">{{ template.description }}</div>
-                @if (isLocked(template.id)) {
-                  <div class="template-lock">Upgrade to unlock</div>
+                <span>{{ getTemplatesByPlan(section.plan).length }} templates</span>
+              </div>
+
+              <div class="template-grid">
+                @for (template of getTemplatesByPlan(section.plan); track template.id) {
+                  <button
+                    type="button"
+                    class="template-card"
+                    [class.locked]="isLocked(template.id)"
+                    [class.selected]="selectedTemplateId === template.id"
+                    (click)="selectTemplate(template.id)"
+                  >
+                    <div class="template-preview" [ngStyle]="getPreviewStyle(template)">
+                      <app-resume-preview
+                        [resume]="demoResume"
+                        [templateId]="template.id"
+                        renderContext="picker"
+                      ></app-resume-preview>
+                    </div>
+                    <div class="template-meta">
+                      <div class="template-header">
+                        <div class="template-name">{{ template.name }}</div>
+                        <span
+                          class="template-badge"
+                          [class.locked-badge]="isLocked(template.id)"
+                        >
+                          {{ requiredPlanLabel(template.id) | titlecase }}
+                        </span>
+                      </div>
+                      <div class="template-description">{{ template.description }}</div>
+                      @if (isLocked(template.id)) {
+                        <div class="template-lock">Upgrade to unlock</div>
+                      }
+                    </div>
+                  </button>
                 }
               </div>
-            </button>
+            </section>
           }
         </div>
       </div>

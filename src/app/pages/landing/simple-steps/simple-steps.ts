@@ -12,24 +12,24 @@ export class SimpleSteps {
   steps = [
     {
       id: 0,
-      title: 'Enter Your Info',
+      title: 'Start with your story',
       description:
-        'Just fill in basic details about your work experience and education. Takes 2 minutes.',
-      stepIcon: 'create',
+        'Import details manually, upload an old resume, or start from a blank page and organize the essentials.',
+      stepIcon: 'description',
     },
     {
       id: 1,
-      title: 'AI Creates Your Resume',
+      title: 'Let AI do the heavy lifting',
       description:
-        'Our AI writes professional content, formats everything perfectly, and optimizes for ATS..',
-      stepIcon: 'auto_awesome',
+        'Generate summaries, bullets, education notes, full resumes, or cover letters, then edit the wording.',
+      stepIcon: 'auto_fix_high',
     },
     {
       id: 2,
-      title: 'Download & Apply',
+      title: 'Export, apply, and track',
       description:
-        'Download your polished resume and start applying to jobs. Get more interviews guaranteed.',
-      stepIcon: 'download',
+        'Paid plans can save generated resumes and download PDFs. Premium adds the application tracker.',
+      stepIcon: 'send',
     },
   ];
 }

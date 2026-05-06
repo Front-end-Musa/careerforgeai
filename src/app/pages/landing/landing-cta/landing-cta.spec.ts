@@ -33,8 +33,8 @@ describe('LandingCta', () => {
     expect(buttonText.textContent?.trim()).toBe('Create My Resume Now');
     expect(iconText.textContent?.trim()).toBe('auto_awesome');
     expect(helperItems.length).toBe(2);
-    expect(helperItems[0].textContent?.trim()).toBe('No Credit Card Required');
-    expect(helperItems[1].textContent?.trim()).toBe('Ready in 5 Minutes');
+    expect(helperItems[0].textContent?.trim()).toBe('Free plan available');
+    expect(helperItems[1].textContent?.trim()).toBe('AI tools included');
   });
 
   it('renders custom icon and helper texts dynamically', () => {

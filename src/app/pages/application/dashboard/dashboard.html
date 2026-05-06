@@ -1,9 +1,20 @@
 <div class="dashboard">
   <div class="app-section">
-    <header class="head">
-      <h1 class="title">Welcome back, {{ user()?.name }}!</h1>
-      <p class="sub-title">Here's your career progress.</p>
+    <header class="dashboard-hero">
+      <div>
+        <p class="eyebrow">Workspace overview</p>
+        <h1 class="title">Welcome back, {{ user()?.name || 'there' }}</h1>
+        <p class="sub-title">Track the assets and applications that are moving your search forward.</p>
+      </div>
+      <div class="hero-brief" aria-label="Recommended next step">
+        <span class="material-symbols-outlined">trending_up</span>
+        <div>
+          <strong>Next best action</strong>
+          <p>Pick one role, tailor the resume, then draft the matching cover letter.</p>
+        </div>
+      </div>
     </header>
+
     <div class="stats">
       <div class="resume stat">
         <div class="stat-head">
@@ -47,15 +58,31 @@
       </div>
     </div>
     <div class="quick-actions-container">
-      <h3 class="quick-actions-title section-title">Quick Actions</h3>
+      <div class="section-heading">
+        <h3 class="quick-actions-title section-title">Quick Actions</h3>
+        <p>Start from the workflow that matches your current task.</p>
+      </div>
       <div class="quick-actions">
         <div class="action" routerLink="/application/resumes">
           <span class="material-symbols-outlined icon-blue">description</span>
-          <h4 class="action-title">Generate Resume</h4>
+          <div>
+            <h4 class="action-title">Build or tailor a resume</h4>
+            <p>Use the role brief to focus your bullets.</p>
+          </div>
         </div>
         <div class="action" routerLink="/application/cover-letter">
           <span class="material-symbols-outlined green-icon">mail_outline</span>
-          <h4 class="action-title">Create Cover Letter</h4>
+          <div>
+            <h4 class="action-title">Draft a cover letter</h4>
+            <p>Write around the company and target role.</p>
+          </div>
+        </div>
+        <div class="action" routerLink="/application/job-tracker">
+          <span class="material-symbols-outlined purple-icon">view_kanban</span>
+          <div>
+            <h4 class="action-title">Review pipeline</h4>
+            <p>Keep follow-ups and outcomes visible.</p>
+          </div>
         </div>
       </div>
     </div>

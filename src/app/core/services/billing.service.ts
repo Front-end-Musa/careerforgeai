@@ -12,10 +12,8 @@ type SubscriptionStatus = 'none' | 'active' | 'past_due' | 'cancelled';
 export class BillingService {
   private auth = inject(Auth);
   private callableService = inject(CallableService);
-  private proPlanId = 'ac58d79e-1d84-4322-bef6-05147be57cc7';
-  private premiumPlanId = '7ad22fce-484d-472c-ad6e-f08e09e3e264';
   private createCheckoutFn = this.callableService.callable<
-    { plan: PaidPlan; priceId: string },
+    { plan: PaidPlan },
     string
   >('createCheckout');
   private createPortalFn = this.callableService.callable<void, string>('createPortalSession');
@@ -47,7 +45,6 @@ export class BillingService {
     try {
       const result = await this.createCheckoutFn({
         plan: _plan,
-        priceId: _plan === 'pro' ? this.proPlanId : this.premiumPlanId,
       });
       if (typeof result.data !== 'string' || !result.data.trim()) {
         throw new Error('Checkout URL was not returned by the server.');

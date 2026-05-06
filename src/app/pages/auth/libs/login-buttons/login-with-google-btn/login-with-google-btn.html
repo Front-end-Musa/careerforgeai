@@ -3,12 +3,12 @@
   class="social-btn google-btn"
   type="button"
   (click)="onLoginWithGoogle()"
-  [class.loading]="(status$ | async) === authStatus.Loading"
-  [disabled]="(status$ | async) === authStatus.Loading"
+  [class.loading]="(googleLoading$ | async) === true"
+  [disabled]="(authBusy$ | async) === true"
 >
-  @if ((status$ | async) === authStatus.Loading) {
+  @if ((googleLoading$ | async) === true) {
     <span class="btn-spinner" aria-hidden="true"></span>
-    <span>Connecting...</span>
+    <span>Connecting Google...</span>
   } @else {
     <span class="material-symbols-outlined">mail_outline</span>
     <span>Google</span>

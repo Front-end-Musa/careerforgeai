@@ -27,11 +27,11 @@ import {
   selectSaveSucceeded,
   selectIsTailoring,
   selectTailorError,
+  selectTailoredResumeId,
   selectResumesStale,
   selectResumeById,
 } from './resumes.selectors';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
-import { FormGroup } from '@angular/forms';
 import { ResumeGenerationRequest } from '../../../../core/interfaces/resume-generation.interface';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 
@@ -53,6 +53,7 @@ export class ResumesFacade {
   saveSucceeded$ = this.store.select(selectSaveSucceeded);
   tailoring$ = this.store.select(selectIsTailoring);
   tailorError$ = this.store.select(selectTailorError);
+  tailoredResumeId$ = this.store.select(selectTailoredResumeId);
   status$ = this.store.select(selectResumesStatus);
   error$ = this.store.select(selectResumesError);
   downloadingResumeId$ = this.store.select(selectDownloadingResumeId);
@@ -95,12 +96,11 @@ export class ResumesFacade {
 
   tailorResumeData(
     resumeId: string,
-    resume: Resume,
     companyName: string,
     position: string,
     jobDescription: string,
   ) {
-    const action = tailorResume({ resumeId, resume, companyName, position, jobDescription });
+    const action = tailorResume({ resumeId, companyName, position, jobDescription });
     this.trace.traceDispatch(action, 'ResumesFacade.tailorResumeData');
     this.store.dispatch(action);
   }
@@ -109,8 +109,8 @@ export class ResumesFacade {
     return this.store.select(selectResumeById(id));
   }
 
-  exportResumeToPdf(formGroup: FormGroup, resumeId?: string | null) {
-    const action = exportResumeToPdf({ resumeId, formGroup });
+  exportResumeToPdf(resume: Partial<Resume>, resumeId?: string | null) {
+    const action = exportResumeToPdf({ resumeId, resume });
     this.trace.traceDispatch(action, 'ResumesFacade.exportResumeToPdf');
     this.store.dispatch(action);
   }

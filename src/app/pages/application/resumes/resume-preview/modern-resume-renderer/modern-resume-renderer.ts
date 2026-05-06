@@ -55,6 +55,13 @@ export class ModernResumeRenderer {
     return getSkillEntries(this.resume);
   }
 
+  get normalizedSummary() {
+    return (this.resume?.summary ?? '')
+      .replace(/\r\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
   getMainSections(excludedTypes: string[] = []) {
     return this.visibleSections.filter((section) => !excludedTypes.includes(section.type));
   }

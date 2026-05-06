@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { combineLatest, filter, map, skip, take } from 'rxjs';
+import { combineLatest, filter, take } from 'rxjs';
 import { ResumesStatus } from '../data/resumes.reducer';
 import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { AppUser } from '../../../../core/interfaces/user.interface';
@@ -41,16 +41,14 @@ export class ResumesTailor {
   private resumeAccessPolicy = inject(ResumeAccessPolicyService);
   private resumeUpgrade = inject(ResumeUpgradeService);
 
-  readonly saving$ = this.resumesFacade.saving$;
   readonly tailoring$ = this.resumesFacade.tailoring$;
   readonly tailorError$ = this.resumesFacade.tailorError$;
-  readonly submitting$ = combineLatest([this.saving$, this.tailoring$]).pipe(
-    map(([saving, tailoring]) => saving || tailoring),
-  );
+  readonly submitting$ = this.tailoring$;
   readonly resume = signal<Resume | null>(null);
   readonly applySuccess = signal(false);
   readonly currentUser = signal<AppUser | null>(null);
   readonly resumeCount = signal(0);
+  private hasSubmittedTailoring = false;
 
   readonly tailorForm = new FormGroup({
     companyName: new FormControl('', [Validators.required, Validators.minLength(2)]),
@@ -91,14 +89,15 @@ export class ResumesTailor {
         this.resumeCount.set(resumes.length);
       });
 
-    this.resumesFacade.saveSucceeded$
+    this.resumesFacade.tailoredResumeId$
       .pipe(
-        skip(1),
-        filter((saved) => saved),
+        filter((resumeId): resumeId is string => Boolean(resumeId) && this.hasSubmittedTailoring),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => {
+      .subscribe((resumeId) => {
         this.applySuccess.set(true);
+        this.hasSubmittedTailoring = false;
+        this.router.navigate(['/application/resumes', resumeId, 'edit']);
       });
   }
 
@@ -133,10 +132,10 @@ export class ResumesTailor {
 
     const formValue = this.tailorForm.getRawValue();
     this.applySuccess.set(false);
+    this.hasSubmittedTailoring = true;
 
     this.resumesFacade.tailorResumeData(
       currentResume.id,
-      currentResume,
       formValue.companyName ?? '',
       formValue.position ?? '',
       formValue.jobDescription ?? '',

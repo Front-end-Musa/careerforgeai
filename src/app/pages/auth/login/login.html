@@ -1,11 +1,23 @@
 <div class="login">
   <div class="wrapper">
+    <aside class="auth-preview" aria-label="ResumeCrafts workspace preview">
+      <p class="eyebrow">ResumeCrafts AI</p>
+      <h1>Return to the workspace that keeps applications moving.</h1>
+      <div class="preview-card">
+        <div>
+          <span>Next action</span>
+          <strong>Tailor</strong>
+        </div>
+        <p>Update one resume, draft the letter, and track the application without losing context.</p>
+      </div>
+    </aside>
+
     <div class="content">
       <app-logo></app-logo>
 
       <header class="head">
-        <h2 class="title">Welcome Back</h2>
-        <p class="sub-title">Login to accelerate your career</p>
+        <h2 class="title">Welcome back</h2>
+        <p class="sub-title">Open your job-search workspace.</p>
       </header>
 
       <mat-card class="card login-card">
@@ -47,18 +59,19 @@
             }
           </div>
 
-          <button mat-button color="primary" class="send-btn" type="submit">
-            @if (status$ | async; as status) {
-              @if (status === authStatus.Loading) {
-                <mat-progress-spinner
-                  diameter="24"
-                  mode="indeterminate"
-                  class="custom-color-spinner"
-                  color="accent"
-                ></mat-progress-spinner>
-              } @else {
-                Login
-              }
+          <button
+            mat-button
+            color="primary"
+            class="send-btn"
+            type="submit"
+            [class.loading]="(loginLoading$ | async) === true"
+            [disabled]="loginForm.invalid || (authBusy$ | async) === true"
+          >
+            @if ((loginLoading$ | async) === true) {
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span>Logging in...</span>
+            } @else {
+              <span>Log in</span>
             }
           </button>
         </form>
@@ -69,16 +82,16 @@
           </div>
         }
 
-        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+        <app-auth-provider-conflict></app-auth-provider-conflict>
 
-        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+        <p class="continue-with">Or continue with</p>
+
+        <div class="social-login">
           <app-login-with-google-btn></app-login-with-google-btn>
-          <button mat-anchor class="social-btn github-btn">
-            <span class="material-symbols-outlined">code</span> Github
-          </button>
+          <app-login-with-github-btn></app-login-with-github-btn>
         </div>
 
-        <p class="signup" style="text-align: center; margin-top: 14px">
+        <p class="signup">
           Don't have an account? <a routerLink="/auth/signup">Sign up</a>
         </p>
         <p class="support-text">

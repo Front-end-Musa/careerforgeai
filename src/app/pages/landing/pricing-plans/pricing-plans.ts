@@ -7,7 +7,8 @@ import { LandingCta } from '../landing-cta/landing-cta';
 
 interface Plan {
   name: string;
-  price: number;
+  price: string;
+  billingPeriod: 'month' | 'year';
   features: { text: string; included: boolean }[];
   button: string;
   popular: boolean;
@@ -29,17 +30,16 @@ type FeatureKey =
   | 'aiExperience'
   | 'aiEducation'
   | 'aiCoverLetter'
-  | 'unlimitedResumes'
   | 'downloadResume'
   | 'storeGeneratedResume'
   | 'prioritySupport'
-  | 'resumeTailoringSoon'
+  | 'resumeTailoring'
   | 'proTemplates';
 
 const FEATURE_LABELS: Record<FeatureKey, string> = {
   resumeBuilder: 'Resume builder and editor',
-  oneTemplate: '1 resume template',
-  allTemplates: 'All resume templates',
+  oneTemplate: '3 free resume templates',
+  allTemplates: 'All 11 resume templates',
   proTemplates: 'Pro templates',
   jobTracker: 'Job application tracker',
   resumeQuota1: '1 AI resume generation per period',
@@ -52,11 +52,10 @@ const FEATURE_LABELS: Record<FeatureKey, string> = {
   aiExperience: 'AI experience bullets',
   aiEducation: 'AI education bullets',
   aiCoverLetter: 'AI cover letter generator',
-  unlimitedResumes: 'Unlimited resumes',
   downloadResume: 'Resume download',
   storeGeneratedResume: 'Store AI-generated resumes',
   prioritySupport: 'Priority email support',
-  resumeTailoringSoon: 'Resume tailoring (coming soon)',
+  resumeTailoring: 'Resume tailoring',
 };
 
 const FEATURE_ORDER: FeatureKey[] = [
@@ -75,11 +74,10 @@ const FEATURE_ORDER: FeatureKey[] = [
   'aiExperience',
   'aiEducation',
   'aiCoverLetter',
-  'unlimitedResumes',
   'downloadResume',
   'storeGeneratedResume',
   'prioritySupport',
-  'resumeTailoringSoon',
+  'resumeTailoring',
 ];
 
 function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Plan['features'] {
@@ -111,7 +109,8 @@ export class PricingPlans {
   plans: Plan[] = [
     {
       name: 'Free',
-      price: 0,
+      price: '0',
+      billingPeriod: 'month',
       features: buildFeatures([
         'resumeBuilder',
         'oneTemplate',
@@ -124,7 +123,8 @@ export class PricingPlans {
     },
     {
       name: 'Pro',
-      price: 12,
+      price: '7.90',
+      billingPeriod: 'month',
       features: buildFeatures([
         'resumeBuilder',
         'proTemplates',
@@ -134,9 +134,9 @@ export class PricingPlans {
         'aiExperience',
         'aiEducation',
         'aiCoverLetter',
-        'unlimitedResumes',
         'storeGeneratedResume',
         'downloadResume',
+        'resumeTailoring',
       ], ['jobTracker']),
       button: 'Start Pro',
       popular: true,
@@ -144,7 +144,8 @@ export class PricingPlans {
     },
     {
       name: 'Premium',
-      price: 19,
+      price: '59',
+      billingPeriod: 'year',
       features: buildFeatures([
         'resumeBuilder',
         'allTemplates',
@@ -154,11 +155,10 @@ export class PricingPlans {
         'aiExperience',
         'aiEducation',
         'aiCoverLetter',
-        'unlimitedResumes',
         'storeGeneratedResume',
         'downloadResume',
         'jobTracker',
-        'resumeTailoringSoon',
+        'resumeTailoring',
       ]),
       button: 'Start Premium',
       popular: false,
@@ -166,5 +166,5 @@ export class PricingPlans {
     },
   ];
 
-  ctaHelperTexts: string[] = ['No hidden fees', 'Upgrade whenever you are ready'];
+  ctaHelperTexts: string[] = ['Free plan available', 'Upgrade whenever you are ready'];
 }

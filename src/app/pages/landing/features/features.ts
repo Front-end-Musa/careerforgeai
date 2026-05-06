@@ -20,33 +20,33 @@ export class Features {
   features: Feature[] = [
     {
       id: 0,
-      icon: 'book',
-      title: 'AI-Powered Generation',
+      icon: 'auto_fix_high',
+      title: 'AI Writing',
       description:
-        'Our advanced AI writes professional resume content tailored to your experience and target job in seconds.',
+        'Generate summaries, experience bullets, education notes, and complete resume drafts from the details you provide.',
     },
     {
       id: 1,
-      icon: 'insert_drive_file',
-      title: 'AI Cover Letters Generator',
+      icon: 'rule',
+      title: 'Role Tailoring',
       description:
-        'Create personalized cover letters that complement your resume and highlight your best qualities for each job.',
+        'Paid plans can tailor a saved resume with the target company, position, and job description.',
     },
     {
       id: 2,
-      icon: 'description',
-      title: 'Professional Templates',
+      icon: 'mail',
+      title: 'Cover Letters',
       description:
-        'Choose from expertly designed templates that make you stand out while maintaining professional standards.',
+        'Create a cover letter from your resume, the job details, company name, position, and preferred tone.',
     },
     {
       id: 3,
       icon: 'view_kanban',
-      title: 'Job Application Tracker',
+      title: 'Premium Application Pipeline',
       description:
-        'Track all your applications in one place with our intuitive kanban board. Never lose track of opportunities.',
+        'Premium users can track companies and application stages in a kanban-style job tracker.',
     },
   ];
 
-  ctaHelperTexts: string[] = ['Pick a template in seconds', 'Start building for free'];
+  ctaHelperTexts: string[] = ['Start with your resume', 'Build a stronger application'];
 }

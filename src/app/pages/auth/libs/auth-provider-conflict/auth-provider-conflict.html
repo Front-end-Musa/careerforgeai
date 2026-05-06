@@ -1,0 +1,87 @@
+@if (conflict$ | async; as conflict) {
+  <section class="auth-conflict" aria-live="polite">
+    <div class="auth-conflict__content">
+      <h3 class="auth-conflict__title">Connect {{ getProviderLabel(conflict.attemptedProvider) }}</h3>
+      <p class="auth-conflict__message">{{ conflict.message }}</p>
+      <p class="auth-conflict__email">{{ conflict.email }}</p>
+
+      @if (!conflict.credentialAvailable) {
+        <p class="auth-conflict__hint">
+          We could not keep the connection request after refresh. Click
+          {{ getProviderLabel(conflict.attemptedProvider) }} again to continue.
+        </p>
+      } @else {
+        <p class="auth-conflict__hint">
+          After you sign in, {{ getProviderLabel(conflict.attemptedProvider) }} will be added to the
+          same account.
+        </p>
+
+        @if (hasPasswordProvider(conflict.existingProviders)) {
+          <form
+            class="auth-conflict__password"
+            [formGroup]="passwordForm"
+            (ngSubmit)="continueWithPassword(conflict.email)"
+          >
+            <div class="form-field full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                required
+                formControlName="password"
+                [class.invalid]="
+                  passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched
+                "
+                placeholder="Password"
+              />
+              @if (
+                passwordForm.get('password')?.touched &&
+                passwordForm.get('password')?.hasError('required')
+              ) {
+                <mat-error>Password is required</mat-error>
+              }
+            </div>
+
+            <button
+              mat-button
+              color="primary"
+              class="auth-conflict__primary"
+              type="submit"
+              [disabled]="passwordForm.invalid || (authBusy$ | async) === true"
+            >
+              Sign in and connect
+            </button>
+          </form>
+        }
+
+        @if (hasPopupProvider(conflict.existingProviders, 'google.com')) {
+          <button
+            mat-button
+            class="auth-conflict__primary"
+            type="button"
+            [disabled]="(authBusy$ | async) === true"
+            (click)="continueWithPopup('google.com')"
+          >
+            Continue with Google
+          </button>
+        }
+
+        @if (hasPopupProvider(conflict.existingProviders, 'github.com')) {
+          <button
+            mat-button
+            class="auth-conflict__primary"
+            type="button"
+            [disabled]="(authBusy$ | async) === true"
+            (click)="continueWithPopup('github.com')"
+          >
+            Continue with GitHub
+          </button>
+        }
+      }
+
+      <button class="auth-conflict__secondary" type="button" (click)="clearConflict()">
+        Cancel
+      </button>
+    </div>
+  </section>
+}

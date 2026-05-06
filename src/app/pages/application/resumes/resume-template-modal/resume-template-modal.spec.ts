@@ -36,8 +36,14 @@ describe('ResumeTemplateModal', () => {
     component.resumeCount = 0;
 
     expect(component.isLocked('basic')).toBeFalse();
-    expect(component.isLocked('pro-modern')).toBeTrue();
-    expect(component.isLocked('premium-executive')).toBeTrue();
+    expect(component.isLocked('developer-classic')).toBeFalse();
+    expect(component.isLocked('academic-clean')).toBeFalse();
+    expect(component.isLocked('simple-outline')).toBeTrue();
+    expect(component.isLocked('modern-sidebar')).toBeTrue();
+    expect(component.isLocked('centered-professional')).toBeTrue();
+    expect(component.isLocked('boardroom-premium')).toBeTrue();
+    expect(component.isLocked('clean-modern')).toBeTrue();
+    expect(component.isLocked('executive-simple')).toBeTrue();
   });
 
   it('should lock all new template selections when the free draft limit is already used', () => {

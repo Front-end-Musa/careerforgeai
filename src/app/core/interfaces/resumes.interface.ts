@@ -2,20 +2,14 @@ export type ResumeTemplateId =
   | 'basic'
   | 'ats-simple'
   | 'classic-one-column'
-  | 'overleaf-compact'
-  | 'overleaf-jake'
-  | 'overleaf-academic'
-  | 'overleaf-executive'
-  | 'pro-modern'
-  | 'cascade'
-  | 'cubic-pro'
-  | 'tech-savvy'
-  | 'modern-executive'
-  | 'premium-executive'
-  | 'executive-edge'
-  | 'graphical-genius'
-  | 'elite-senior'
-  | 'metamorphic-masterpiece';
+  | 'clean-modern'
+  | 'executive-simple'
+  | 'developer-classic'
+  | 'simple-outline'
+  | 'centered-professional'
+  | 'academic-clean'
+  | 'modern-sidebar'
+  | 'boardroom-premium';
 
 export interface Resume {
   id?: string; // Firestore doc id (optional in data, known in app)
@@ -223,6 +217,7 @@ export interface ResumeMeta {
     companyName: string;
     position: string;
     tailoredAt: string;
+    baseResumeId?: string;
   };
 }
 

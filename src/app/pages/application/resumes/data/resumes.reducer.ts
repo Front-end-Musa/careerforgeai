@@ -25,6 +25,7 @@ export interface ResumesState extends EntityState<Resume> {
   saveSucceeded: boolean;
   tailoring: boolean;
   tailorError: string | null;
+  tailoredResumeId: string | null;
   downloadingResumeId: string | null;
   downloadError: string | null;
   exporting: boolean;
@@ -52,6 +53,7 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   saveSucceeded: false,
   tailoring: false,
   tailorError: null,
+  tailoredResumeId: null,
   downloadingResumeId: null,
   downloadError: null,
   exporting: false,
@@ -150,12 +152,14 @@ export const resumesReducer = createReducer(
     ...state,
     tailoring: true,
     tailorError: null,
+    tailoredResumeId: null,
   })),
 
-  on(ResumesActions.tailorResumeSuccess, (state) => ({
+  on(ResumesActions.tailorResumeSuccess, (state, { tailoredResumeId }) => ({
     ...state,
     tailoring: false,
     tailorError: null,
+    tailoredResumeId,
     stale: true,
   })),
 
@@ -163,6 +167,7 @@ export const resumesReducer = createReducer(
     ...state,
     tailoring: false,
     tailorError: error,
+    tailoredResumeId: null,
   })),
 
   on(ResumesActions.downloadResume, (state, { resumeId }) => ({

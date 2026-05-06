@@ -9,7 +9,7 @@
       <div class="resume-card__subtitle">
         <span>{{ displayName }}</span>
         @if (templateLabel) {
-          <span class="resume-card__separator" aria-hidden="true">•</span>
+          <span class="resume-card__separator" aria-hidden="true">/</span>
           <span>{{ templateLabel }}</span>
         }
       </div>
@@ -35,7 +35,7 @@
       class="resume-card__btn resume-card__btn--secondary"
       [routerLink]="['/application/resumes', resume.id, 'tailor']"
     >
-      AI Tailor
+      Tailor
     </button>
     <button
       class="resume-card__icon-btn resume-card__icon-btn--download"
@@ -46,7 +46,12 @@
     >
       <span class="material-symbols-outlined">download</span>
     </button>
-    <button class="resume-card__icon-btn" type="button" aria-label="Delete resume" (click)="deleteResume()">
+    <button
+      class="resume-card__icon-btn"
+      type="button"
+      aria-label="Delete resume"
+      (click)="deleteResume()"
+    >
       <span class="material-symbols-outlined">delete</span>
     </button>
   </div>

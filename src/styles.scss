@@ -20,6 +20,11 @@
   --brand-700: #1e3a8a;
   --brand-600: #1d4ed8;
   --brand-500: #2563eb;
+  --ink: #111827;
+  --paper: #fffdf8;
+  --paper-warm: #f7f2ea;
+  --accent: #f15b2a;
+  --forest: #0f766e;
   --surface: #f5f7fb;
   --surface-card: #ffffff;
   --surface-muted: #eef2f7;
@@ -124,10 +129,10 @@ button {
 
 button.primary,
 button.auth-link {
-  background: var(--mat-sys-primary);
+  background: var(--ink);
   color: #fff;
-  border-radius: 8px;
-  font-weight: 500;
+  border-radius: 999px;
+  font-weight: 800;
 }
 
 section {
@@ -304,8 +309,8 @@ p {
 
 .form-field input:focus,
 .form-field textarea:focus {
-  border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(241, 91, 42, 0.14);
 }
 
 /* ERROR TEXT */
@@ -319,18 +324,18 @@ mat-error {
 .send-btn {
   width: 100%;
   padding: 14px 0;
-  background: var(--mat-sys-primary);
+  background: var(--ink);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 999px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .send-btn:hover {
-  background: #1e4ed8;
+  background: var(--accent);
 }
 
 /* SUPPORT TEXT */
@@ -487,11 +492,11 @@ mat-error {
 }
 
 .add-job-btn {
-  background: var(--mat-sys-primary);
+  background: var(--ink);
   color: #fff;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -501,7 +506,7 @@ mat-error {
   transition: background 0.2s ease;
 
   &:hover {
-    background: #1e4ed8;
+    background: var(--accent);
   }
 
   .btn-icon {
@@ -517,10 +522,10 @@ mat-error {
 }
 
 .logo {
-  background-color: var(--mat-sys-primary);
+  background-color: var(--ink);
   width: 35px;
   height: 35px;
-  border-radius: 10px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -571,17 +576,17 @@ mat-error {
 .generate {
   width: 100%;
   padding: 14px 0;
-  background: var(--mat-sys-primary);
+  background: var(--ink);
   color: #fff;
   margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 16px;
   border: none;
 }
 
 .icon-blue {
-  color: var(--mat-sys-primary);
-  background-color: #e8eefc;
+  color: var(--accent);
+  background-color: #fff0e8;
 }
 
 .container {

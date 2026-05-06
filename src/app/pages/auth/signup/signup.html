@@ -1,11 +1,23 @@
 <div class="signup">
   <div class="wrapper">
+    <aside class="auth-preview" aria-label="ResumeCrafts workspace preview">
+      <p class="eyebrow">ResumeCrafts AI</p>
+      <h1>Start with one resume you can actually send.</h1>
+      <div class="preview-card">
+        <div>
+          <span>Included</span>
+          <strong>Free</strong>
+        </div>
+        <p>Create a profile, pick a template, and draft your first application asset.</p>
+      </div>
+    </aside>
+
     <div class="content">
       <app-logo></app-logo>
 
       <header class="head">
-        <h2 class="title">Start Your Journey</h2>
-        <p class="sub-title">Step 1 of 2</p>
+        <h2 class="title">Create your workspace</h2>
+        <p class="sub-title">Start with the basics. Tailoring comes next.</p>
       </header>
 
       <mat-card class="card login-card">
@@ -20,7 +32,7 @@
               [class.invalid]="
                 signupForm.get('fullName')?.invalid && signupForm.get('fullName')?.touched
               "
-              placeholder="John Doe"
+              placeholder="Jane Doe"
             />
             @if (
               signupForm.get('fullName')?.touched && signupForm.get('fullName')?.hasError('required')
@@ -97,7 +109,7 @@
                 (signupForm.hasError('passwordMismatch') &&
                   signupForm.get('repeatPassword')?.touched)
               "
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="Password"
             />
             @if (
               signupForm.get('repeatPassword')?.touched &&
@@ -118,10 +130,10 @@
             color="primary"
             class="send-btn"
             type="submit"
-            [class.loading]="(status$ | async) === authStatus.Loading"
-            [disabled]="signupForm.invalid || (status$ | async) === authStatus.Loading"
+            [class.loading]="(registerLoading$ | async) === true"
+            [disabled]="signupForm.invalid || (authBusy$ | async) === true"
           >
-            @if ((status$ | async) === authStatus.Loading) {
+            @if ((registerLoading$ | async) === true) {
               <span class="btn-spinner" aria-hidden="true"></span>
               <span>Creating account...</span>
             } @else {
@@ -136,16 +148,16 @@
           </div>
         }
 
-        <p class="continue-with" style="text-align: center; margin: 16px 0">Or continue with</p>
+        <app-auth-provider-conflict></app-auth-provider-conflict>
 
-        <div class="social-login" style="display: flex; gap: 12px; justify-content: center">
+        <p class="continue-with">Or continue with</p>
+
+        <div class="social-login">
           <app-login-with-google-btn></app-login-with-google-btn>
-          <button mat-anchor class="social-btn github-btn">
-            <span class="material-symbols-outlined">code</span> Github
-          </button>
+          <app-login-with-github-btn></app-login-with-github-btn>
         </div>
 
-        <p class="signup" style="text-align: center; margin-top: 14px">
+        <p class="auth-switch">
           Already have an account? <a routerLink="/auth/login">Log in</a>
         </p>
         <p class="support-text">

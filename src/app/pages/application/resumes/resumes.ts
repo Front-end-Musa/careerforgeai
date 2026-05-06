@@ -17,6 +17,7 @@ import { AppUser } from '../../../core/interfaces/user.interface';
 import { ResumeAccessPolicyService } from '../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../core/services/resume-upgrade.service';
 import { BillingFacade } from '../../landing/pricing-plans/data/billing.facade';
+import { getTemplateById } from './data/resume-template-catalog';
 
 @Component({
   selector: 'app-resumes',
@@ -193,13 +194,7 @@ export class Resumes implements AfterViewInit {
   }
 
   private templateRequiresPremium(templateId: ResumeTemplateId) {
-    return [
-      'premium-executive',
-      'executive-edge',
-      'graphical-genius',
-      'elite-senior',
-      'metamorphic-masterpiece',
-    ].includes(templateId);
+    return getTemplateById(templateId).requiredPlan === 'premium';
   }
 }
 

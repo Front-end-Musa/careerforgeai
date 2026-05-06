@@ -1,10 +1,34 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectAuthError, selectAuthStatus, selectUser } from './auth.selectors';
+import {
+  selectAuthBusy,
+  selectAuthError,
+  selectAuthProviderConflict,
+  selectAuthStatus,
+  selectAttemptedProviderLabel,
+  selectGithubLoading,
+  selectGoogleLoading,
+  selectLoginLoading,
+  selectRegisterLoading,
+  selectUser,
+} from './auth.selectors';
 import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
-import { deleteAccount, initUser, loginUser, loginWithGoogle, logout, registerUser } from './auth.actions';
+import {
+  clearAuthProviderConflict,
+  continueAuthProviderConflictWithPassword,
+  continueAuthProviderConflictWithPopup,
+  deleteAccount,
+  initUser,
+  loginUser,
+  loginWithGithub,
+  loginWithGoogle,
+  logout,
+  registerUser,
+  restoreAuthProviderConflict,
+} from './auth.actions';
 import { AuthStatus } from './auth.reducer';
 import { ActionTraceService } from '../../../core/state/debug/action-trace.service';
+import { AuthProviderId } from '../../../core/interfaces/auth-linking.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {
@@ -15,6 +39,13 @@ export class AuthFacade {
   user$ = this.store.select(selectUser);
   status$ = this.store.select(selectAuthStatus);
   error$ = this.store.select(selectAuthError);
+  providerConflict$ = this.store.select(selectAuthProviderConflict);
+  attemptedProviderLabel$ = this.store.select(selectAttemptedProviderLabel);
+  loginLoading$ = this.store.select(selectLoginLoading);
+  registerLoading$ = this.store.select(selectRegisterLoading);
+  googleLoading$ = this.store.select(selectGoogleLoading);
+  githubLoading$ = this.store.select(selectGithubLoading);
+  authBusy$ = this.store.select(selectAuthBusy);
 
   register(user: AppUser) {
     this.store.dispatch(registerUser({ user }));
@@ -24,8 +55,28 @@ export class AuthFacade {
     this.store.dispatch(loginUser({ user }));
   }
 
+  continueConflictWithPassword(user: LoginUser) {
+    this.store.dispatch(continueAuthProviderConflictWithPassword({ user }));
+  }
+
+  continueConflictWithPopup(provider: AuthProviderId) {
+    this.store.dispatch(continueAuthProviderConflictWithPopup({ provider }));
+  }
+
+  restoreProviderConflict() {
+    this.store.dispatch(restoreAuthProviderConflict());
+  }
+
+  clearProviderConflict() {
+    this.store.dispatch(clearAuthProviderConflict());
+  }
+
   loginWithGoogle() {
     this.store.dispatch(loginWithGoogle());
+  }
+
+  loginWithGithub() {
+    this.store.dispatch(loginWithGithub());
   }
 
   initAuth(options?: { force?: boolean; source?: string }): void {

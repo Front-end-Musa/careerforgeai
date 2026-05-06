@@ -1,4 +1,4 @@
-import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Logo } from '../../logos/logo/logo';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatLabel } from '@angular/material/form-field';
@@ -11,13 +11,12 @@ import {
 } from '@angular/forms';
 import { MatAnchor } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthFacade } from '../data/auth.facade';
-import { AuthStatus } from '../data/auth.reducer';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/login-with-google-btn';
+import { LoginWithGithubBtn } from '../libs/login-buttons/login-with-github-btn/login-with-github-btn';
+import { AuthProviderConflict } from '../libs/auth-provider-conflict/auth-provider-conflict';
 
 @Component({
   selector: 'app-login',
@@ -32,8 +31,9 @@ import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/
     MatError,
     RouterLink,
     AsyncPipe,
-    MatProgressSpinnerModule,
-    LoginWithGoogleBtn
+    LoginWithGoogleBtn,
+    LoginWithGithubBtn,
+    AuthProviderConflict,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -41,15 +41,16 @@ import { LoginWithGoogleBtn } from '../libs/login-buttons/login-with-google-btn/
 export class Login {
   loginForm: FormGroup;
   authFacade = inject(AuthFacade);
-  authStatus = AuthStatus;
-  status$ = this.authFacade.status$;
+  loginLoading$ = this.authFacade.loginLoading$;
+  authBusy$ = this.authFacade.authBusy$;
   error$ = this.authFacade.error$;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
     });
+    this.authFacade.restoreProviderConflict();
   }
 
   onSubmit() {

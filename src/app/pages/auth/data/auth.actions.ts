@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { AppUser, LoginUser } from '../../../core/interfaces/user.interface';
+import { AuthConflictState, AuthProviderId } from '../../../core/interfaces/auth-linking.interface';
 
 export const registerUser = createAction('[Users] Register User', props<{ user: AppUser }>());
 export const registerUserSuccess = createAction(
@@ -28,6 +29,49 @@ export const loginWithGoogleSuccess = createAction(
 );
 export const loginWithGoogleFailure = createAction(
   '[Users] Login With Google Failure',
+  props<{ error: string }>(),
+);
+
+export const loginWithGithub = createAction('[Users] Login With Github');
+export const loginWithGithubSuccess = createAction(
+  '[Users] Login With Github Success',
+  props<{ user: AppUser; token: string }>(),
+);
+export const loginWithGithubFailure = createAction(
+  '[Users] Login With Github Failure',
+  props<{ error: string }>(),
+);
+
+export const authProviderConflictDetected = createAction(
+  '[Users] Auth Provider Conflict Detected',
+  props<{ conflict: AuthConflictState }>(),
+);
+
+export const restoreAuthProviderConflict = createAction('[Users] Restore Auth Provider Conflict');
+export const restoreAuthProviderConflictSuccess = createAction(
+  '[Users] Restore Auth Provider Conflict Success',
+  props<{ conflict: AuthConflictState }>(),
+);
+
+export const clearAuthProviderConflict = createAction('[Users] Clear Auth Provider Conflict');
+
+export const continueAuthProviderConflictWithPassword = createAction(
+  '[Users] Continue Auth Provider Conflict With Password',
+  props<{ user: LoginUser }>(),
+);
+
+export const continueAuthProviderConflictWithPopup = createAction(
+  '[Users] Continue Auth Provider Conflict With Popup',
+  props<{ provider: AuthProviderId }>(),
+);
+
+export const linkPendingProvider = createAction('[Users] Link Pending Provider');
+export const linkPendingProviderSuccess = createAction(
+  '[Users] Link Pending Provider Success',
+  props<{ user: AppUser; token: string }>(),
+);
+export const linkPendingProviderFailure = createAction(
+  '[Users] Link Pending Provider Failure',
   props<{ error: string }>(),
 );
 

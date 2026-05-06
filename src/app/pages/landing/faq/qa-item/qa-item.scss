@@ -1,34 +1,40 @@
 .faq-accordion {
   mat-expansion-panel {
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-    margin-bottom: 12px;
-    background-color: var(--surface-card);
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: none;
+    margin-bottom: 0;
+    background-color: transparent;
   }
 
   mat-expansion-panel-header {
-    padding: 24px 28px;
-    font-size: 1.3em;
+    padding: 24px 0;
+    font-size: 1.2em;
+    font-weight: 800;
+  }
+
+  mat-panel-title {
+    color: #111827;
   }
 
   p {
-    padding: 0 20px 20px;
+    padding: 0 0 22px;
     line-height: 1.6;
-    color: var(--text-muted);
+    color: #64748b;
   }
 }
 
 @media (max-width: 768px) {
   .faq-accordion {
     mat-expansion-panel-header {
-      padding: 18px 16px;
+      padding: 18px 0;
       font-size: 1.05em;
       min-height: 64px;
     }
 
     p {
-      padding: 0 16px 16px;
+      padding: 0 0 16px;
     }
   }
 }

@@ -125,44 +125,27 @@ describe('ResumeEffects', () => {
     });
   });
 
-  it('should dispatch tailor success and save on tailor success', (done) => {
-    const tailoredResume: Resume = {
-      ...resume,
-      summary: 'Tailored summary',
-    };
-    const { id: _, ...resumeChanges } = tailoredResume;
-
-    aiServiceMock.tailorResumeToJob.and.returnValue(of(tailoredResume));
+  it('should dispatch tailor success with the created resume id', (done) => {
+    aiServiceMock.tailorResumeToJob.and.returnValue(of('tailored-resume-1'));
 
     actions$ = of(
       resumesActions.tailorResume({
         resumeId: 'resume-1',
-        resume,
         companyName: 'OpenAI',
         position: 'Frontend Engineer',
         jobDescription: 'Role details',
       }),
     );
 
-    const emitted: any[] = [];
     effects.tailorResumeEffect.subscribe({
       next: (action) => {
-        emitted.push(action);
-        if (emitted.length === 2) {
-          expect(emitted[0]).toEqual(
-            resumesActions.tailorResumeSuccess({
-              resumeId: 'resume-1',
-              tailoredResume,
-            }),
-          );
-          expect(emitted[1]).toEqual(
-            resumesActions.saveResume({
-              resume: resumeChanges,
-              resumeId: 'resume-1',
-            }),
-          );
-          done();
-        }
+        expect(action).toEqual(
+          resumesActions.tailorResumeSuccess({
+            sourceResumeId: 'resume-1',
+            tailoredResumeId: 'tailored-resume-1',
+          }),
+        );
+        done();
       },
       error: done.fail,
     });
@@ -176,7 +159,6 @@ describe('ResumeEffects', () => {
     actions$ = of(
       resumesActions.tailorResume({
         resumeId: 'resume-1',
-        resume,
         companyName: 'OpenAI',
         position: 'Frontend Engineer',
         jobDescription: 'Role details',

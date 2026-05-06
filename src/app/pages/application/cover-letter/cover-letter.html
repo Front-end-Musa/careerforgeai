@@ -1,20 +1,24 @@
 <div class="cover-letter container">
-  <app-dir-name title="AI Cover Letter Generator"></app-dir-name>
-  <div class="wrapper">
+  <app-dir-name title="Cover Letter Studio"></app-dir-name>
+  <div class="cover-letter-layout">
     <div class="app-section">
-      <h2 class="section-title">Job Details</h2>
-      <p class="output-state">{{ coverLetterUsageLabel }} • Resets {{ nextResetLabel() }}</p>
+      <div class="panel-heading">
+        <p class="eyebrow">Input brief</p>
+        <h2 class="section-title">Job Details</h2>
+        <p class="output-state">{{ coverLetterUsageLabel }} / Resets {{ nextResetLabel() }}</p>
+      </div>
+
       <form class="details-form" [formGroup]="coverLetterForm">
         <div class="form-field resume-field">
           <mat-label>Resume</mat-label>
           <select class="resume-select" formControlName="resumeId">
             <option value="">Select a resume</option>
             @for (resume of resumes$ | async; track resume.id ?? $index) {
-            <option [value]="resume.id">
-              {{ resume.personalInfo.fullName || 'Untitled resume' }}{{
-                resume.personalInfo.jobTitle ? ' - ' + resume.personalInfo.jobTitle : ''
-              }}
-            </option>
+              <option [value]="resume.id">
+                {{ resume.personalInfo.fullName || 'Untitled resume' }}{{
+                  resume.personalInfo.jobTitle ? ' - ' + resume.personalInfo.jobTitle : ''
+                }}
+              </option>
             }
           </select>
 
@@ -54,9 +58,11 @@
             formControlName="jobDescription"
           ></textarea>
         </div>
+
         <div class="form-field tone-field">
           <app-tone-choose [tones]="tones" (toneSelected)="selectTone($event)"></app-tone-choose>
         </div>
+
         <app-generate-btn
           [submitForm]="coverLetterForm"
           [loading]="(generating$ | async) ?? false"
@@ -68,7 +74,10 @@
 
     <div class="app-section output-section">
       <div class="output-head">
-        <h2 class="section-title">Generated Cover Letter</h2>
+        <div>
+          <p class="eyebrow">Draft output</p>
+          <h2 class="section-title">Generated Cover Letter</h2>
+        </div>
         @if (generatedText$ | async; as generatedText) {
           <button type="button" class="copy-btn" (click)="copyText(generatedText)">
             {{ copied ? 'Copied' : 'Copy' }}
@@ -81,7 +90,10 @@
       } @else if (generatedText$ | async; as generatedText) {
         <pre class="output-content">{{ generatedText }}</pre>
       } @else {
-        <p class="output-state">Your generated cover letter will appear here.</p>
+        <div class="empty-output">
+          <span class="material-symbols-outlined">edit_note</span>
+          <p>Your generated cover letter will appear here.</p>
+        </div>
       }
 
       @if (error$ | async; as error) {

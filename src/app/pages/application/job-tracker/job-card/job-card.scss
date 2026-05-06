@@ -1,29 +1,64 @@
 .job-item {
   position: relative;
-  padding: 20px;
-  font-weight: 300;
+  padding: 18px;
+  font-weight: 400;
   color: var(--text);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   justify-content: space-between;
   box-sizing: border-box;
   cursor: move;
   font-size: 14px;
   font-family: inherit;
-  background-color: var(--surface-card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98)),
+    var(--surface-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  border-radius: 4px;
+  border-color: rgba(17, 24, 39, 0.12);
+  box-shadow: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .job-main {
+    display: grid;
+    gap: 8px;
+    padding-right: 26px;
+  }
 
   .job-title {
-    font-size: 1.5em;
+    margin: 0;
+    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.25;
   }
   .job-company {
-    font-size: 1em;
+    margin: 0;
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: 800;
   }
   .job-date {
-    font-size: 1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.88rem;
+
+    .material-symbols-outlined {
+      font-size: 1rem;
+    }
   }
   .job-item_actions {
     position: absolute;
@@ -45,11 +80,13 @@
     .menu {
       position: absolute;
       right: 0;
+      z-index: 5;
       background: var(--surface-card);
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      border-radius: 8px;
+      border-radius: 4px;
+      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
       .btn {
         background: none;
         padding: 15px 20px;
@@ -81,7 +118,7 @@
 
   &.preview {
     background: var(--surface-card);
-    border-radius: 12px;
+    border-radius: 4px;
     box-shadow: 0 16px 30px rgba(15, 23, 42, 0.2);
   }
 }

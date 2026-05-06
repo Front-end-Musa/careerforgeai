@@ -5,6 +5,9 @@
   justify-content: space-between;
   height: 100vh;
   position: relative;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(241, 91, 42, 0.12), transparent 32rem),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
 
   .sidebar {
     height: 100vh;
@@ -20,13 +23,14 @@
     height: 100%;
     overflow-y: auto;
     margin-left: 80px;
+    background: transparent;
     transition: filter 0.2s ease;
   }
 
   .content-dim {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.28);
+    background: rgba(17, 24, 39, 0.22);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -41,5 +45,11 @@
   .sidebar:hover + .main-content,
   .sidebar.open + .main-content {
     filter: brightness(0.92);
+  }
+}
+
+@media (max-width: 576px) {
+  .layout .main-content {
+    margin-left: 60px;
   }
 }

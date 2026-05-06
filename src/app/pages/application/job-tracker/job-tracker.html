@@ -7,7 +7,10 @@
   </app-dir-name>
   <div class="app-section">
     <div class="applied-list jobs-list">
-      <h2>Applied</h2>
+      <div class="column-head">
+        <h2>Applied</h2>
+        <span>{{ appliedJobs().length }}</span>
+      </div>
       <div
         id="applied"
         class="applied-items list"
@@ -19,11 +22,16 @@
       >
         @for (job of appliedJobs(); track job.id) {
           <app-job-card [job]="job"></app-job-card>
+        } @empty {
+          <p class="empty-column">Add roles you have applied to.</p>
         }
       </div>
     </div>
     <div class="interviewing-list jobs-list">
-      <h2>Interviewing</h2>
+      <div class="column-head">
+        <h2>Interviewing</h2>
+        <span>{{ interviewingJobs().length }}</span>
+      </div>
       <div
         id="interviewing"
         class="interviewing-items list"
@@ -35,11 +43,16 @@
       >
         @for (job of interviewingJobs(); track job.id) {
           <app-job-card [job]="job"></app-job-card>
+        } @empty {
+          <p class="empty-column">Move cards here when interviews start.</p>
         }
       </div>
     </div>
     <div class="offer-list jobs-list">
-      <h2>Offer</h2>
+      <div class="column-head">
+        <h2>Offer</h2>
+        <span>{{ offerJobs().length }}</span>
+      </div>
       <div
         id="offered"
         class="offer-items list"
@@ -51,11 +64,16 @@
       >
         @for (job of offerJobs(); track job.id) {
           <app-job-card [job]="job"></app-job-card>
+        } @empty {
+          <p class="empty-column">Track offer-stage opportunities here.</p>
         }
       </div>
     </div>
     <div class="rejected-list jobs-list">
-      <h2>Rejected</h2>
+      <div class="column-head">
+        <h2>Rejected</h2>
+        <span>{{ rejectedJobs().length }}</span>
+      </div>
       <div
         id="rejected"
         class="rejected-items list"
@@ -67,6 +85,8 @@
       >
         @for (job of rejectedJobs(); track job.id) {
           <app-job-card [job]="job"></app-job-card>
+        } @empty {
+          <p class="empty-column">Keep closed loops for future review.</p>
         }
       </div>
     </div>

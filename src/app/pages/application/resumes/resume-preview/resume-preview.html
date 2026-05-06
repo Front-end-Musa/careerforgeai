@@ -19,13 +19,6 @@
         [renderContext]="renderContext"
       ></app-modern-resume-renderer>
     }
-    @case ('latex') {
-      <app-latex-resume-renderer
-        [resume]="resume"
-        [template]="template"
-        [renderContext]="renderContext"
-      ></app-latex-resume-renderer>
-    }
     @default {
       <app-premium-resume-renderer
         [resume]="resume"

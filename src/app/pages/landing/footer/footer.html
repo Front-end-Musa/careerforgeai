@@ -1,10 +1,26 @@
 <section class="footer" id="footer">
   <div class="wrapper">
-    <p>&copy; {{ currentYear }} ResumeCrafts AI. All rights reserved.</p>
-    <p>
-      <a routerLink="/privacy-policy">Privacy Policy</a> |
-      <a routerLink="/terms-of-service">Terms of Service</a> |
-      <a routerLink="/" fragment="contact">Contact Us</a>
-    </p>
+    <div class="footer-cta">
+      <h2>Build one application asset you can actually send.</h2>
+      <button type="button" routerLink="/auth/signup">Start for Free</button>
+    </div>
+
+    <div class="footer-grid">
+      <div class="brand-block">
+        <h3>ResumeCrafts AI</h3>
+        <p>
+          A focused workspace for resumes, cover letters, resume tailoring, and premium application
+          tracking.
+        </p>
+      </div>
+
+      <nav aria-label="Footer links">
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <a routerLink="/terms-of-service">Terms of Service</a>
+        <a routerLink="/" fragment="contact">Contact Us</a>
+      </nav>
+    </div>
+
+    <p class="copyright">&copy; {{ currentYear }} ResumeCrafts AI. All rights reserved.</p>
   </div>
 </section>

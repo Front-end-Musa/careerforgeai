@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LandingFacade } from '../data/landing.facade';
 import { LandingCta } from '../landing-cta/landing-cta';
 
 @Component({
@@ -8,10 +7,4 @@ import { LandingCta } from '../landing-cta/landing-cta';
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })
-export class Hero {
-  constructor(private landingFacade: LandingFacade) {}
-
-  scrollTo(sectionId: string) {
-    this.landingFacade.scrollTo(sectionId);
-  }
-}
+export class Hero {}

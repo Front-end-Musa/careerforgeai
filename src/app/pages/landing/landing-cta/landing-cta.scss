@@ -2,31 +2,38 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.9rem;
 }
 
 .start-btn {
   color: #fff;
-  padding: 1.25rem 2rem;
-  font-size: 1.25rem;
-  background-color: var(--mat-sys-primary);
-  border-radius: 8px;
-  font-weight: 500;
+  min-height: 52px;
+  padding: 0 1.35rem;
+  font-size: 0.98rem;
+  background-color: #111827;
+  border-radius: 999px;
+  font-weight: 800;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
+  box-shadow: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
-    background: #1e4ed8;
+    background: #f15b2a;
+    transform: translateY(-1px);
   }
 }
 
 .ai-sign {
   line-height: 1;
+  font-size: 1.1rem;
 }
 
 .button-text {
@@ -35,9 +42,25 @@
 
 .benefits {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.benefits span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.benefits span::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #0f766e;
 }
 
 @media (max-width: 640px) {
@@ -49,8 +72,7 @@
   }
 
   .benefits {
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     text-align: center;
     gap: 6px;
   }

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, exhaustMap, from, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, from, map, of, tap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
@@ -126,15 +126,15 @@ export class ResumeEffects {
     this.actions$.pipe(
       ofType(resumesActions.tailorResume),
       tap((action) => this.trace.traceEffect(action, 'ResumeEffects.tailorResumeEffect')),
-      exhaustMap(({ resumeId, resume, companyName, position, jobDescription }) =>
-        this.aiService.tailorResumeToJob(resume, companyName, position, jobDescription).pipe(
-          switchMap((tailoredResume) => {
-            const { id: _, ...resumeChanges } = tailoredResume;
-            const successAction = resumesActions.tailorResumeSuccess({ resumeId, tailoredResume });
-            const saveAction = resumesActions.saveResume({ resume: resumeChanges, resumeId });
+      exhaustMap(({ resumeId, companyName, position, jobDescription }) =>
+        this.aiService.tailorResumeToJob(resumeId, companyName, position, jobDescription).pipe(
+          map((tailoredResumeId) => {
+            const successAction = resumesActions.tailorResumeSuccess({
+              sourceResumeId: resumeId,
+              tailoredResumeId,
+            });
             this.trace.traceEffect(successAction, 'ResumeEffects.tailorResumeEffect.success');
-            this.trace.traceEffect(saveAction, 'ResumeEffects.tailorResumeEffect.followupSave');
-            return [successAction, saveAction];
+            return successAction;
           }),
           catchError((error) =>
             of(resumesActions.tailorResumeFailure({
@@ -244,8 +244,8 @@ export class ResumeEffects {
     this.actions$.pipe(
       ofType(resumesActions.exportResumeToPdf),
       tap((action) => this.trace.traceEffect(action, 'ResumeEffects.exportResumeToPdfEffect')),
-      exhaustMap(({ resumeId, formGroup }) =>
-        from(this.apiService.exportToPdf(resumeId, formGroup)).pipe(
+      exhaustMap(({ resumeId, resume }) =>
+        from(this.apiService.exportToPdf(resumeId, resume)).pipe(
           map(() => {
             const nextAction = resumesActions.exportResumeToPdfSuccess();
             this.trace.traceEffect(nextAction, 'ResumeEffects.exportResumeToPdfEffect.success');

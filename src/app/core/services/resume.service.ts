@@ -11,37 +11,28 @@ import {
   deleteDoc,
 } from '@angular/fire/firestore';
 import { Auth, user } from '@angular/fire/auth';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { FirebaseError } from 'firebase/app';
 import { Resume } from '../interfaces/resumes.interface';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { FormGroup } from '@angular/forms';
-import { isLatexTemplate } from '../../pages/application/resumes/data/resume-template-catalog';
+import { CallableService } from './callable.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResumeService {
-  private functions = inject(Functions);
-  private createResumeFn = httpsCallable<{ resume: Partial<Resume> }, { resumeId: string }>(
-    this.functions,
-    'createResume',
-  );
-  private updateResumeFn = httpsCallable<
+  private callableService = inject(CallableService);
+  private saveGeneratedResumeFn = this.callableService.callable<
+    { resume: Partial<Resume> },
+    { resumeId: string }
+  >('saveGeneratedResume');
+  private updateResumeFn = this.callableService.callable<
     { resumeId: string; changes: Partial<Resume> },
     { success: boolean }
-  >(this.functions, 'updateResume');
-  private downloadResumeFn = httpsCallable<
+  >('updateResume');
+  private downloadResumeFn = this.callableService.callable<
     { resumeId: string },
     { fileName: string; contentType: string; content: string }
-  >(this.functions, 'downloadResume');
-  private renderResumePdfFn = httpsCallable<
-    { resumeId: string },
-    { fileName: string; contentType: string; content: string; encoding?: 'base64' | 'utf8' }
-  >(this.functions, 'renderResumePdf');
-
+  >('downloadResume');
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -70,7 +61,7 @@ export class ResumeService {
   }
 
   createResume(resume: Partial<Resume>): Observable<string> {
-    return from(this.createResumeFn({ resume })).pipe(
+    return from(this.saveGeneratedResumeFn({ resume })).pipe(
       map((result) => result.data.resumeId),
       catchError((err) => {
         console.error('Error creating resume:', err);
@@ -100,19 +91,8 @@ export class ResumeService {
     );
   }
 
-  async exportToPdf(resumeId: string | null | undefined, formGroup: FormGroup): Promise<void> {
+  async exportToPdf(resumeId: string | null | undefined, resume: Partial<Resume>): Promise<void> {
     if (typeof window === 'undefined') {
-      return;
-    }
-
-    const templateId = formGroup.get('templateId')?.value;
-    if (resumeId && isLatexTemplate(templateId)) {
-      const result = await this.renderResumePdfFn({ resumeId });
-      this.saveBase64File(
-        result.data.content,
-        result.data.fileName,
-        result.data.contentType || 'application/pdf',
-      );
       return;
     }
 
@@ -122,6 +102,11 @@ export class ResumeService {
     if (!previewElement) {
       return;
     }
+
+    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+      import('html2canvas'),
+      import('jspdf'),
+    ]);
 
     const canvas = await html2canvas(previewElement, {
       scale: Math.max(window.devicePixelRatio, 2),
@@ -148,7 +133,7 @@ export class ResumeService {
       renderedHeight += pageContentHeight;
     }
 
-    const fullName = formGroup.get('personalInfo.fullName')?.value?.trim();
+    const fullName = resume.personalInfo?.fullName?.trim();
     const sanitizedName = (fullName || 'resume').replace(/[^\w\-]+/g, '_');
     pdf.save(`${sanitizedName}.pdf`);
   }

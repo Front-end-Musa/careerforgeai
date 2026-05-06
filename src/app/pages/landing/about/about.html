@@ -1,25 +1,37 @@
 <section class="about" id="about" #about>
   <div class="wrapper">
     <header class="head">
-      <h2 class="title">About ResumeCrafts AI</h2>
-      <p class="sub-title">Empowering job seekers with AI-powered career tools</p>
+      <p class="section-kicker">Workspace</p>
+      <h2 class="title">Everything stays connected</h2>
+      <p class="sub-title">A practical workspace for resumes, cover letters, and tracked applications.</p>
     </header>
 
-    <!-- Big mission card -->
     <div class="mission-card">
-      <h3 class="mission-title">Our Mission</h3>
-      <p class="mission-text">
-        CareerForge AI was founded in 2025 with a simple mission: make job searching faster, easier,
-        and more successful using artificial intelligence. We believe everyone deserves access to
-        powerful career tools that help them present their best selves to potential employers.
-      </p>
-      <p class="mission-text">
-        We believe everyone deserves access to powerful career tools that help them present their
-        best selves to potential employers.
-      </p>
+      <div class="brief-copy">
+        <p class="brief-label">ResumeCrafts AI</p>
+        <h3 class="mission-title">Build, tailor, and manage without starting over</h3>
+        <p class="mission-text">
+          ResumeCrafts AI gives you a structured editor, AI writing actions, paid resume tailoring,
+          cover letter generation, and premium application tracking.
+        </p>
+      </div>
+
+      <div class="brief-board" aria-label="Resume workspace preview">
+        <div class="brief-row strong">
+          <span>Templates</span>
+          <strong>11 available</strong>
+        </div>
+        <div class="brief-row">
+          <span>Cover letters</span>
+          <strong>3 to 35/month</strong>
+        </div>
+        <div class="brief-row warning">
+          <span>Job tracker</span>
+          <strong>Premium plan</strong>
+        </div>
+      </div>
     </div>
 
-    <!-- 3 feature cards -->
     <div class="features">
       @for (mission of missions; track $index) {
         <div class="feature-card">
@@ -34,9 +46,9 @@
       class="section-cta"
       [link]="['/application/dashboard']"
       icon="verified"
-      label="Create My Resume with Confidence"
+      label="Build My Resume"
       [helperTexts]="ctaHelperTexts"
-      ariaLabel="Create My Resume with Confidence"
+      ariaLabel="Build My Resume"
     ></app-landing-cta>
   </div>
 </section>

@@ -1,37 +1,76 @@
 <section class="hero" id="hero" #hero>
   <div class="wrapper">
-    <div class="main-text">
-      <h1 class="title">
-        Create Your Perfect Resume <br>
-        <span class="blue-text">In Just 5 Minutes</span>
-      </h1>
-
+    <div class="hero-copy">
+      <div class="rating-row" aria-label="Product highlights">
+        <span class="avatar-stack" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span>AI resume builder, templates, cover letters, and tracking</span>
+      </div>
+      <h1 class="title">The resume that gets you ready to apply.</h1>
       <p class="description">
-        Stop struggling with blank pages. Let AI write your resume based on your experience and
-        target job. Get more interviews, guaranteed.
+        Craft an ATS-friendly resume from real details, choose a polished template, generate cover
+        letters, and keep serious applications organized in one workspace.
       </p>
+
+      <div class="hero-actions">
+        <app-landing-cta
+          class="hero-cta"
+          [link]="['/application/dashboard']"
+          icon="auto_awesome"
+          label="Build My Resume"
+          ariaLabel="Build My Resume"
+        ></app-landing-cta>
+      </div>
+
+      <div class="proof-row" aria-label="Product benefits">
+        <span>Free plan available</span>
+        <span>11 resume templates</span>
+        <span>PDF downloads on paid plans</span>
+      </div>
     </div>
 
-    <app-landing-cta
-      [link]="['/application/dashboard']"
-      icon="auto_awesome"
-      label="Create My Resume Now"
-      [helperTexts]="['No Credit Card Required', 'Ready in 5 Minutes']"
-      ariaLabel="Create My Resume Now"
-    ></app-landing-cta>
+    <div class="product-card" aria-label="ResumeCrafts AI product preview">
+      <div class="card-toolbar">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
-    <div class="picture">
-      <img src="assets/photo-1586281380349-632531db7ed4.jpg" alt="resume" />
+      <div class="role-summary">
+        <div>
+          <p>Template preview</p>
+          <strong>Senior Product Designer</strong>
+        </div>
+        <span class="score">ATS</span>
+      </div>
+
+      <div class="insight-grid">
+        <div class="insight">
+          <span class="signal good"></span>
+          <div>
+            <strong>Strong match</strong>
+            <p>Design systems, research, prototyping</p>
+          </div>
+        </div>
+        <div class="insight">
+          <span class="signal warn"></span>
+          <div>
+            <strong>Draft focus</strong>
+            <p>Summary, skills, and measurable bullets</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-lines">
+        <div class="line title-line"></div>
+        <div class="line"></div>
+        <div class="line medium"></div>
+        <div class="line short"></div>
+      </div>
     </div>
   </div>
-
-  <button
-    type="button"
-    class="scroll-down-btn"
-    (click)="scrollTo('features')"
-    aria-label="Scroll down to features section"
-  >
-    <span class="scroll-down-text">Scroll down!</span>
-    <span class="scroll-down-arrow" aria-hidden="true">v</span>
-  </button>
 </section>

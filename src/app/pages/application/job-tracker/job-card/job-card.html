@@ -1,13 +1,12 @@
 <div class="job-item" cdkDrag cdkDragHandle>
-  <h4 class="job-title">
-    {{ job.title }}
-  </h4>
-  <p class="job-company">
-    {{ job.company }}
-  </p>
-  <p class="job-date">
-    {{ job.dateApplied | date: 'yyyy-MM-dd' }}
-  </p>
+  <div class="job-main">
+    <p class="job-company">{{ job.company }}</p>
+    <h4 class="job-title">{{ job.title }}</h4>
+    <p class="job-date">
+      <span class="material-symbols-outlined">calendar_today</span>
+      {{ job.dateApplied | date: 'yyyy-MM-dd' }}
+    </p>
+  </div>
 
   <div class="job-item_actions">
     <div class="menu-trigger" (click)="toggleActions()" aria-label="Toggle job actions">
@@ -28,15 +27,14 @@
 
 <ng-template cdkDragPreview>
   <div class="job-item preview">
-    <h4 class="job-title">
-      {{ job.title }}
-    </h4>
-    <p class="job-company">
-      {{ job.company }}
-    </p>
-    <p class="job-date">
-      {{ job.dateApplied | date: 'yyyy-MM-dd' }}
-    </p>
+    <div class="job-main">
+      <p class="job-company">{{ job.company }}</p>
+      <h4 class="job-title">{{ job.title }}</h4>
+      <p class="job-date">
+        <span class="material-symbols-outlined">calendar_today</span>
+        {{ job.dateApplied | date: 'yyyy-MM-dd' }}
+      </p>
+    </div>
     <div class="job-item_actions">
       <div
         class="menu-trigger"

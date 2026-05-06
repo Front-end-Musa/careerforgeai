@@ -80,7 +80,6 @@ export const tailorResume = createAction(
   '[Resume Tailor] Request',
   props<{
     resumeId: string;
-    resume: Resume;
     companyName: string;
     position: string;
     jobDescription: string;
@@ -89,7 +88,7 @@ export const tailorResume = createAction(
 
 export const tailorResumeSuccess = createAction(
   '[Resume Tailor] Success',
-  props<{ resumeId: string; tailoredResume: Resume }>()
+  props<{ sourceResumeId: string; tailoredResumeId: string }>()
 );
 
 export const tailorResumeFailure = createAction(
@@ -99,7 +98,7 @@ export const tailorResumeFailure = createAction(
 
 export const exportResumeToPdf = createAction(
   '[Resume] Export To PDF',
-  props<{ resumeId?: string | null; formGroup: any }>()
+  props<{ resumeId?: string | null; resume: Partial<Resume> }>()
 );
 
 export const exportResumeToPdfSuccess = createAction(

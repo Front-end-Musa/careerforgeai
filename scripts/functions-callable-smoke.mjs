@@ -29,7 +29,7 @@ if (shouldUseEmulator) {
 const checks = [
   { name: 'syncEntitlements', data: undefined, expectedCodes: ['functions/unauthenticated'] },
   {
-    name: 'createResume',
+    name: 'saveGeneratedResume',
     data: { resume: { templateId: 'basic', personalInfo: { fullName: 'Smoke Test' } } },
     expectedCodes: ['functions/unauthenticated'],
   },

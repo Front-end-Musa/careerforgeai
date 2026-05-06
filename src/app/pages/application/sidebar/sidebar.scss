@@ -1,13 +1,16 @@
 .sidebar {
   width: 80px;
-  background-color: var(--surface-card);
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(33, 41, 54, 0.98)),
+    var(--ink);
   height: 100%;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: width 0.2s ease;
+  box-shadow: 12px 0 34px rgba(17, 24, 39, 0.16);
 
   .sidebar-list {
     width: 100%;
@@ -48,10 +51,14 @@
       justify-content: center;
       gap: 12px;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 4px;
       font-size: 1rem;
+      transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
       * {
-        color: var(--text-muted);
+        color: rgba(255, 255, 255, 0.58);
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -khtml-user-select: none;
@@ -62,9 +69,11 @@
       }
 
       &:hover {
-        background-color: #edf2ff;
+        background-color: rgba(255, 255, 255, 0.08);
+        box-shadow: inset 3px 0 0 var(--accent);
+        transform: translateX(2px);
         * {
-          color: var(--mat-sys-primary) !important;
+          color: #ffffff !important;
         }
       }
     }
@@ -85,10 +94,10 @@
     .signout-btn {
       height: 50px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 4px;
 
       &:hover {
-        background-color: #ffe5e5;
+        background-color: rgba(241, 91, 42, 0.12);
       }
 
       .signout-btn-content {
@@ -97,7 +106,7 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
-        color: #dc2626;
+        color: #ffb199;
         font-size: 1rem;
       }
 
@@ -109,10 +118,11 @@
 }
 
 .active {
-  background-color: #dbeafe;
+  background: rgba(241, 91, 42, 0.16);
+  box-shadow: inset 3px 0 0 var(--accent);
 
   * {
-    color: var(--mat-sys-primary) !important;
+    color: #ffffff !important;
   }
 }
 
@@ -130,7 +140,7 @@ body.sidebar-open {
 
 .sidebar:hover,
 .sidebar.open {
-  width: 300px;
+  width: 286px;
 
   .sidebar-list {
     padding: 0 20px;
@@ -195,7 +205,7 @@ body.sidebar-open {
 
   .sidebar:hover,
   .sidebar.open {
-    width: 240px;
+    width: 236px;
 
     .sidebar-list {
       padding: 0 16px;

@@ -84,7 +84,7 @@ describe('ResumePreview', () => {
 
   it('routes modern templates through the modern renderer', () => {
     component.resume = baseResume;
-    component.templateId = 'pro-modern';
+    component.templateId = 'clean-modern';
 
     fixture.detectChanges();
 
@@ -94,11 +94,11 @@ describe('ResumePreview', () => {
 
   it('routes premium templates through the premium renderer', () => {
     component.resume = baseResume;
-    component.templateId = 'premium-executive';
+    component.templateId = 'executive-simple';
 
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('app-premium-resume-renderer')).not.toBeNull();
-    expect(fixture.nativeElement.textContent).toContain('Executive Resume');
+    expect(fixture.nativeElement.textContent).toContain('Executive Simple');
   });
 });

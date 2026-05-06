@@ -4,12 +4,17 @@ import {
   PlanTier,
   SubscriptionStatus,
 } from './entitlements.interface';
+import { AuthProviderId } from './auth-linking.interface';
 
 export interface AppUser {
   uid?: string;
   name: string;
   email: string;
   password?: string;
+  photoURL?: string | null;
+  providers?: AuthProviderId[];
+  createdAt?: Timestamp | Date;
+  updatedAt?: Timestamp | Date;
   role: string;
   profileViews: number;
   plan: PlanTier;

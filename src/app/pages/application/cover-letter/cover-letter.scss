@@ -1,18 +1,52 @@
 .cover-letter {
   width: 100%;
+  min-height: 100%;
+
+  .cover-letter-layout {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
+    gap: 22px;
+    align-items: start;
+    padding: 28px 0 40px;
+  }
 
   .app-section {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
+    margin: 0;
     padding: 30px;
-    width: 50%;
-    margin: 0 auto;
-    margin-top: 30px;
-    background-color: var(--surface-card);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)),
+      var(--surface-card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    border-radius: 4px;
+    border-color: rgba(17, 24, 39, 0.12);
+    box-shadow: 18px 18px 0 rgba(17, 24, 39, 0.05);
+
+    .panel-heading {
+      display: grid;
+      gap: 4px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
 
     .details-form {
       display: flex;
@@ -24,7 +58,7 @@
           width: 100%;
           min-height: 44px;
           border: 1px solid var(--border);
-          border-radius: 10px;
+          border-radius: 4px;
           background: #fff;
           color: var(--text);
           padding: 0 12px;
@@ -39,7 +73,7 @@
 
       .job-description-field {
         textarea {
-          min-height: 120px;
+          min-height: 140px;
           resize: vertical;
         }
       }
@@ -47,12 +81,11 @@
   }
 
   .output-section {
-    width: 50%;
-    margin: 20px auto 0;
+    min-height: 520px;
 
     .output-head {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
     }
@@ -61,7 +94,7 @@
       border: 1px solid var(--border);
       background: #fff;
       color: var(--text);
-      border-radius: 8px;
+      border-radius: 999px;
       padding: 8px 14px;
       cursor: pointer;
       font-size: 14px;
@@ -70,7 +103,7 @@
 
     .output-content {
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 4px;
       background: #f8fafc;
       padding: 16px;
       white-space: pre-wrap;
@@ -93,37 +126,48 @@
       font-size: 14px;
       margin: 0;
     }
-  }
 
-  @media (max-width: 1400px) {
-    .app-section {
-      width: 90%;
-    }
+    .empty-output {
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      text-align: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 4px;
+      background: #f8fafc;
+      color: #64748b;
 
-    .output-section {
-      width: 90%;
+      span {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 4px;
+        background: #fff0e8;
+        color: var(--accent);
+      }
+
+      p {
+        margin: 0;
+      }
     }
   }
 
   @media (max-width: 1024px) {
-    .app-section {
-      width: 90%;
-      padding: 20px;
+    .cover-letter-layout {
+      grid-template-columns: 1fr;
     }
 
-    .output-section {
-      width: 90%;
-      margin-top: 16px;
+    .app-section {
+      padding: 22px;
     }
   }
 
   @media (max-width: 768px) {
-    .app-section {
+    .cover-letter-layout {
       width: 100%;
-    }
-
-    .output-section {
-      width: 100%;
+      padding: 18px 16px 32px;
     }
   }
 }

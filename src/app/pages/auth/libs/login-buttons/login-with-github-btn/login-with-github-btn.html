@@ -1,0 +1,16 @@
+<button
+  mat-anchor
+  class="social-btn github-btn"
+  type="button"
+  (click)="onLoginWithGithub()"
+  [class.loading]="(githubLoading$ | async) === true"
+  [disabled]="(authBusy$ | async) === true"
+>
+  @if ((githubLoading$ | async) === true) {
+    <span class="btn-spinner" aria-hidden="true"></span>
+    <span>Connecting GitHub...</span>
+  } @else {
+    <span class="material-symbols-outlined">code</span>
+    <span>Github</span>
+  }
+</button>

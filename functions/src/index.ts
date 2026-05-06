@@ -7,7 +7,7 @@ import {getAuth} from "firebase-admin/auth";
 import {getFirestore} from "firebase-admin/firestore";
 import {Polar} from "@polar-sh/sdk";
 import {validateEvent, WebhookVerificationError} from "@polar-sh/sdk/webhooks";
-import {resolvePlanFromPolarProduct} from "./billing-plan";
+import {POLAR_PLAN_IDS, resolvePlanFromPolarProduct} from "./billing-plan";
 
 const openaiSecret = defineSecret("OPENAI_API_KEY");
 
@@ -16,6 +16,7 @@ const polarWebhookSecret = defineSecret("POLAR_WEBHOOK_SECRET");
 initializeApp();
 
 type PlanTier = "free" | "pro" | "premium";
+type PaidPlan = Exclude<PlanTier, "free">;
 type SubscriptionStatus = "none" | "active" | "past_due" | "cancelled";
 
 type PlanEntitlements = {
@@ -157,6 +158,7 @@ type ResumeGenerationResult =
     };
 
 type TailorResumeInput = {
+  userId?: string;
   summary?: string;
   skills?: string[];
   experience?: TailorExperienceEntry[];
@@ -170,9 +172,17 @@ type TailorResumeInput = {
       companyName?: string;
       position?: string;
       tailoredAt?: string;
+      baseResumeId?: string;
     };
   };
   [key: string]: unknown;
+};
+
+type TailorResumeRequest = {
+  resumeId?: string;
+  companyName?: string;
+  position?: string;
+  jobDescription?: string;
 };
 
 type GenerateCoverLetterRequest = {
@@ -183,6 +193,15 @@ type GenerateCoverLetterRequest = {
   tone?: string;
   resumeId?: string;
   resumeLabel?: string;
+};
+
+type CreateCheckoutRequest = {
+  plan?: unknown;
+};
+
+type UpdateResumeRequest = {
+  resumeId?: string;
+  changes?: Record<string, unknown>;
 };
 
 /**
@@ -404,6 +423,34 @@ function isApiErrorWithStatus(error: unknown, statusCode: number): boolean {
     "statusCode" in error &&
     error.statusCode === statusCode
   );
+}
+
+/**
+ * Returns true when the value is a paid plan handled by checkout.
+ * @param {unknown} value Candidate plan value.
+ * @return {boolean} Whether value is a supported paid plan.
+ */
+function isPaidPlan(value: unknown): value is PaidPlan {
+  return value === "pro" || value === "premium";
+}
+
+/**
+ * Extracts useful, serializable details from Polar SDK errors for logs.
+ * @param {unknown} error Unknown error thrown by the Polar SDK.
+ * @return {Record<string, unknown>} Safe log context.
+ */
+function getPolarErrorLogContext(error: unknown): Record<string, unknown> {
+  if (typeof error !== "object" || error === null) {
+    return {error};
+  }
+
+  return {
+    name: "name" in error ? error.name : undefined,
+    message: "message" in error ? error.message : undefined,
+    statusCode: "statusCode" in error ? error.statusCode : undefined,
+    detail: "detail" in error ? error.detail : undefined,
+    data: "data$" in error ? error.data$ : undefined,
+  };
 }
 
 /**
@@ -729,6 +776,26 @@ function assertGeneratedResumeStorageAllowed(user: AppUserDoc) {
 }
 
 /**
+ * Throws when the user cannot tailor resumes.
+ * @param {AppUserDoc} user Current user document.
+ * @return {void}
+ */
+function assertResumeTailoringAllowed(user: AppUserDoc) {
+  const plan = user.plan ?? "free";
+  const entitlements = user.entitlements ?? getPlanEntitlements(plan);
+  if (
+    plan === "free" ||
+    user.subscriptionStatus !== "active" ||
+    !entitlements.canStoreGeneratedResume
+  ) {
+    throw new HttpsError(
+      "permission-denied",
+      "Upgrade to tailor resumes for specific jobs.",
+    );
+  }
+}
+
+/**
  * Throws when the user cannot download resumes.
  * @param {AppUserDoc} user Current user document.
  * @return {void}
@@ -1018,11 +1085,11 @@ export const ensurePolarCustomer = onCall(
 export const createCheckout = onCall({secrets: [polarToken], invoker: "public"}, async (req) => {
   const polar = getPolarClient();
   const uid = req.auth?.uid;
-  const priceId = req.data.priceId;
+  const {plan} = (req.data ?? {}) as CreateCheckoutRequest;
 
   logger.info("createCheckout invoked", {
     hasAuth: Boolean(uid),
-    hasPriceId: Boolean(priceId),
+    plan,
     projectId: process.env.GCLOUD_PROJECT ?? null,
     functionTarget: process.env.FUNCTION_TARGET ?? null,
   });
@@ -1031,26 +1098,32 @@ export const createCheckout = onCall({secrets: [polarToken], invoker: "public"},
     throw new HttpsError("unauthenticated", "User must be logged in");
   }
 
-  if (!priceId) {
-    throw new HttpsError("invalid-argument", "Price ID is required");
+  if (!isPaidPlan(plan)) {
+    throw new HttpsError("invalid-argument", "A valid paid plan is required.");
   }
 
   try {
     await ensurePolarCustomerForUid(uid, polar);
+    const productId = POLAR_PLAN_IDS[plan][0];
     const checkout = await polar.checkouts.create({
-      products: [priceId],
+      products: [productId],
       successUrl: "https://resume-crafts.com/application/settings",
       returnUrl: "https://resume-crafts.com/application/settings",
       externalCustomerId: uid,
+      metadata: {
+        plan,
+        uid,
+      },
     });
 
     logger.info("createCheckout succeeded", {
       uid,
+      plan,
       hasCheckoutUrl: Boolean(checkout.url),
     });
     return checkout.url;
   } catch (error) {
-    logger.error("createCheckout failed", error);
+    logger.error("createCheckout failed", getPolarErrorLogContext(error));
 
     if (error instanceof HttpsError) {
       throw error;
@@ -1713,22 +1786,34 @@ export const generateCoverLetter = onCall(
 export const tailorResumeToJob = onCall(
   {secrets: [openaiSecret], invoker: "public"},
   async (request) => {
-    const {resume, companyName, position, jobDescription} = request.data as {
-      resume?: TailorResumeInput;
-      companyName?: string;
-      position?: string;
-      jobDescription?: string;
-    };
-
-    if (!resume || typeof resume !== "object") {
-      throw new HttpsError("invalid-argument", "A valid resume payload is required.");
+    const uid = request.auth?.uid;
+    if (!uid) {
+      throw new HttpsError("unauthenticated", "Authentication is required.");
     }
 
-    if (!companyName?.trim() || !position?.trim() || !jobDescription?.trim()) {
-      throw new HttpsError(
-        "invalid-argument",
-        "companyName, position, and jobDescription are required.",
-      );
+    const {resumeId, companyName, position, jobDescription} =
+      request.data as TailorResumeRequest;
+    const normalizedResumeId = requireTrimmedString(resumeId, "resumeId");
+    const normalizedCompanyName = requireTrimmedString(companyName, "companyName");
+    const normalizedPosition = requireTrimmedString(position, "position");
+    const normalizedJobDescription = requireTrimmedString(
+      jobDescription,
+      "jobDescription",
+    );
+
+    const db = getFirestore();
+    const user = await syncUsageWindowState(uid);
+    assertResumeTailoringAllowed(user);
+
+    const resumeRef = db.collection("resumes").doc(normalizedResumeId);
+    const resumeSnapshot = await resumeRef.get();
+    if (!resumeSnapshot.exists) {
+      throw new HttpsError("not-found", "Resume not found.");
+    }
+
+    const resume = resumeSnapshot.data() as TailorResumeInput;
+    if (resume.userId !== uid) {
+      throw new HttpsError("permission-denied", "You do not have access to this resume.");
     }
 
     const openaiApiKey = await openaiSecret.value();
@@ -1758,9 +1843,9 @@ export const tailorResumeToJob = onCall(
             {
               task: "Tailor this resume to the job while preserving identity/history fields.",
               targetJob: {
-                companyName,
-                position,
-                jobDescription,
+                companyName: normalizedCompanyName,
+                position: normalizedPosition,
+                jobDescription: normalizedJobDescription,
               },
               resume: {
                 summary: resume.summary ?? "",
@@ -1786,23 +1871,15 @@ export const tailorResumeToJob = onCall(
       ],
     });
 
-    const responseText = completion.choices[0].message?.content;
-    if (!responseText) {
-      throw new HttpsError("internal", "No tailoring response from AI.");
-    }
-
-    let parsed: {
+    const responseText = requireAiResponseText(
+      completion.choices[0].message?.content,
+      "No tailoring response from AI.",
+    );
+    const parsed = parseAiJsonResponse<{
       summary?: unknown;
       skills?: unknown;
       experienceDescriptions?: unknown;
-    };
-
-    try {
-      parsed = JSON.parse(responseText);
-    } catch (error) {
-      logger.error("Failed to parse tailoring response", {responseText, error});
-      throw new HttpsError("internal", "Failed to parse tailoring response.");
-    }
+    }>(responseText, "Failed to parse tailoring response.");
 
     const summary =
       typeof parsed.summary === "string" ? parsed.summary.trim() : (resume.summary ?? "");
@@ -1816,6 +1893,7 @@ export const tailorResumeToJob = onCall(
       parsed.experienceDescriptions :
       [];
 
+    const tailoredAt = new Date().toISOString();
     const tailoredResume: TailorResumeInput = {
       ...resume,
       summary,
@@ -1835,20 +1913,29 @@ export const tailorResumeToJob = onCall(
         };
       }),
       meta: {
-        createdAt: resume.meta?.createdAt ?? new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        source: resume.meta?.source === "ai" ? "ai" : "manual",
+        createdAt: tailoredAt,
+        updatedAt: tailoredAt,
+        source: "ai",
         version: resume.meta?.version ?? 1,
         tailoring: {
           source: "job-description",
-          companyName: companyName.trim(),
-          position: position.trim(),
-          tailoredAt: new Date().toISOString(),
+          companyName: normalizedCompanyName,
+          position: normalizedPosition,
+          tailoredAt,
+          baseResumeId: normalizedResumeId,
         },
       },
     };
 
-    return {resume: tailoredResume};
+    delete tailoredResume.id;
+
+    const createdResume = await db.collection("resumes").add({
+      ...tailoredResume,
+      userId: uid,
+      createdAt: new Date(),
+    });
+
+    return {resumeId: createdResume.id};
   },
 );
 
@@ -1884,6 +1971,89 @@ export const saveGeneratedResume = onCall(
     return {resumeId: createdResume.id};
   },
 );
+
+export const updateResume = onCall({secrets: [], invoker: "public"}, async (request) => {
+  const uid = request.auth?.uid;
+  const {resumeId, changes} = request.data as UpdateResumeRequest;
+
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Authentication is required.");
+  }
+
+  const normalizedResumeId = requireTrimmedString(resumeId, "resumeId");
+  if (!changes || typeof changes !== "object" || Array.isArray(changes)) {
+    throw new HttpsError("invalid-argument", "A valid resume update payload is required.");
+  }
+
+  if ("userId" in changes && changes.userId !== uid) {
+    throw new HttpsError("permission-denied", "Resume ownership cannot be changed.");
+  }
+
+  const db = getFirestore();
+  const user = await syncUsageWindowState(uid);
+  const resumeRef = db.collection("resumes").doc(normalizedResumeId);
+  const resumeSnapshot = await resumeRef.get();
+
+  if (!resumeSnapshot.exists) {
+    throw new HttpsError("not-found", "Resume not found.");
+  }
+
+  const existingResume = resumeSnapshot.data() as {
+    userId?: string;
+    meta?: { source?: string; [key: string]: unknown };
+  };
+
+  if (existingResume.userId !== uid) {
+    throw new HttpsError("permission-denied", "You do not have access to this resume.");
+  }
+
+  const nextMeta =
+    typeof changes.meta === "object" && changes.meta !== null && !Array.isArray(changes.meta) ?
+      {
+        ...(existingResume.meta ?? {}),
+        ...(changes.meta as Record<string, unknown>),
+        updatedAt: new Date().toISOString(),
+      } :
+      {
+        ...(existingResume.meta ?? {}),
+        updatedAt: new Date().toISOString(),
+      };
+
+  if (existingResume.meta?.source === "ai" || nextMeta.source === "ai") {
+    assertGeneratedResumeStorageAllowed(user);
+  }
+
+  const allowedFields = [
+    "personalInfo",
+    "summary",
+    "experience",
+    "education",
+    "skills",
+    "skillGroups",
+    "projects",
+    "certifications",
+    "languages",
+    "awards",
+    "volunteerExperience",
+    "sections",
+    "contact",
+    "templateId",
+    "createdAt",
+  ];
+  const updatePayload: Record<string, unknown> = {};
+
+  for (const field of allowedFields) {
+    if (field in changes) {
+      updatePayload[field] = changes[field];
+    }
+  }
+
+  updatePayload.meta = nextMeta;
+  updatePayload.updatedAt = new Date();
+
+  await resumeRef.update(updatePayload);
+  return {success: true};
+});
 
 export const downloadResume = onCall({secrets: [], invoker: "public"}, async (request) => {
   const uid = request.auth?.uid;

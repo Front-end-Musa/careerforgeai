@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { AuthFacade } from '../../../data/auth.facade';
-import { AuthStatus } from '../../../data/auth.reducer';
 
 @Component({
   selector: 'app-login-with-google-btn',
@@ -11,8 +10,8 @@ import { AuthStatus } from '../../../data/auth.reducer';
 })
 export class LoginWithGoogleBtn {
   private authFacade = inject(AuthFacade);
-  authStatus = AuthStatus;
-  status$ = this.authFacade.status$;
+  googleLoading$ = this.authFacade.googleLoading$;
+  authBusy$ = this.authFacade.authBusy$;
 
   onLoginWithGoogle() {
     this.authFacade.loginWithGoogle();

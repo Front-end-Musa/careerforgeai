@@ -2,19 +2,22 @@ import type { PaidPlan } from './billing.actions';
 
 export interface CheckoutPlanInfo {
   name: string;
-  price: number;
+  price: string;
+  billingPeriod: 'month' | 'year';
   slug: PaidPlan;
 }
 
 const PLAN_CONFIG: Record<PaidPlan, CheckoutPlanInfo> = {
   pro: {
     name: 'Pro',
-    price: 12,
+    price: '7.90',
+    billingPeriod: 'month',
     slug: 'pro',
   },
   premium: {
     name: 'Premium',
-    price: 19,
+    price: '59',
+    billingPeriod: 'year',
     slug: 'premium',
   },
 };

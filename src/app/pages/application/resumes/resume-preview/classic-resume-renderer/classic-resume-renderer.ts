@@ -57,12 +57,42 @@ export class ClassicResumeRenderer {
     return getSkillEntries(this.resume);
   }
 
+  get skillColumns() {
+    const columns: string[][] = [[], [], []];
+    this.skillEntries.forEach((skill, index) => {
+      columns[index % columns.length].push(skill);
+    });
+
+    return columns.filter((column) => column.length);
+  }
+
   getVisibleSidebarSections() {
     return this.visibleSections.filter((section) => ['skills', 'languages', 'certifications'].includes(section.type));
   }
 
   getVisibleMainSections() {
     return this.visibleSections.filter((section) => !['skills', 'languages', 'certifications'].includes(section.type));
+  }
+
+  getSimpleOutlineSections() {
+    const priority = ['summary', 'education', 'experience', 'awards', 'skills'];
+
+    return [...this.visibleSections].sort((first, second) => {
+      const firstIndex = priority.indexOf(first.type);
+      const secondIndex = priority.indexOf(second.type);
+
+      if (firstIndex === -1 && secondIndex === -1) {
+        return 0;
+      }
+      if (firstIndex === -1) {
+        return 1;
+      }
+      if (secondIndex === -1) {
+        return -1;
+      }
+
+      return firstIndex - secondIndex;
+    });
   }
 
   getProjectEntries(section: ResumeSection) {

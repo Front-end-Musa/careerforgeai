@@ -9,6 +9,7 @@ import { ResumeAccessPolicyService } from '../../../../core/services/resume-acce
 import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { AuthFacade } from '../../../auth/data/auth.facade';
 import { ResumesFacade } from '../data/resumes.facade';
+import { getSafeTemplateId } from '../data/resume-template-catalog';
 import { ResumesCreate } from '../resumes-create/resumes-create';
 import { ResumeTemplateModal } from '../resume-template-modal/resume-template-modal';
 
@@ -59,7 +60,7 @@ export class ResumesEdit implements OnInit, AfterViewInit {
         take(1),
       )
       .subscribe((resume) => {
-        this.selectedTemplateId = resume.templateId;
+        this.selectedTemplateId = getSafeTemplateId(resume.templateId);
       });
   }
 
@@ -85,12 +86,6 @@ export class ResumesEdit implements OnInit, AfterViewInit {
   }
 
   private templateRequiresPremium(templateId: ResumeTemplateId) {
-    return [
-      'premium-executive',
-      'executive-edge',
-      'graphical-genius',
-      'elite-senior',
-      'metamorphic-masterpiece',
-    ].includes(templateId);
+    return templateId === 'executive-simple';
   }
 }

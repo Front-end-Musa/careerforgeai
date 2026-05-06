@@ -6,7 +6,6 @@ import {
   getTemplateById,
 } from '../data/resume-template-catalog';
 import { ClassicResumeRenderer } from './classic-resume-renderer/classic-resume-renderer';
-import { LatexResumeRenderer } from './latex-resume-renderer/latex-resume-renderer';
 import { ModernResumeRenderer } from './modern-resume-renderer/modern-resume-renderer';
 import { PremiumResumeRenderer } from './premium-resume-renderer/premium-resume-renderer';
 
@@ -16,7 +15,6 @@ import { PremiumResumeRenderer } from './premium-resume-renderer/premium-resume-
   imports: [
     CommonModule,
     ClassicResumeRenderer,
-    LatexResumeRenderer,
     ModernResumeRenderer,
     PremiumResumeRenderer,
   ],

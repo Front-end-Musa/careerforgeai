@@ -7,15 +7,17 @@
   width: 100%;
   padding: 1.1rem 1.25rem;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)),
+    #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
   box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
   &:hover {
     border-color: #cbd5e1;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
     transform: translateY(-1px);
   }
 }
@@ -34,8 +36,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
   color: #1d4ed8;
 
   .material-symbols-outlined {
@@ -84,7 +86,7 @@
   align-items: center;
   min-height: 2rem;
   padding: 0.35rem 0.7rem;
-  border-radius: 999px;
+  border-radius: 8px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   color: #475569;
@@ -129,18 +131,20 @@
 }
 
 .resume-card__btn--primary {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1d4ed8;
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
 
   &:hover {
-    background: #dbeafe;
-    border-color: #93c5fd;
+    background: #1e3a8a;
+    border-color: #1e3a8a;
   }
 }
 
 .resume-card__btn--secondary {
-  color: #334155;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .resume-card__icon-btn {

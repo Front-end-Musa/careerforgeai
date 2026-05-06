@@ -7,6 +7,9 @@ import { EntitlementsService } from '../../../core/services/entitlements.service
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BillingFacade } from '../../landing/pricing-plans/data/billing.facade';
 import { Router } from '@angular/router';
+import { Auth, updateProfile } from '@angular/fire/auth';
+import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { NotificationsService } from '../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-settings',
@@ -21,6 +24,10 @@ export class Settings {
   private billingFacade = inject(BillingFacade);
   private entitlementsService = inject(EntitlementsService);
   private router = inject(Router);
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
+  private notifications = inject(NotificationsService);
+  savingProfile = signal(false);
   managingSubscription = toSignal(this.billingFacade.portalLoading$, {
     initialValue: false,
   });
@@ -48,7 +55,46 @@ export class Settings {
     initialValue: 'this period',
   });
 
-  onSave() {}
+  async onSave(name: string) {
+    const currentUser = this.auth.currentUser;
+    const normalizedName = name.trim();
+
+    if (this.savingProfile()) {
+      return;
+    }
+
+    if (!currentUser) {
+      this.notifications.showError('Sign in again before saving profile changes.');
+      return;
+    }
+
+    if (!normalizedName) {
+      this.notifications.showError('Enter your full name before saving.');
+      return;
+    }
+
+    this.savingProfile.set(true);
+
+    try {
+      await updateProfile(currentUser, { displayName: normalizedName });
+      await updateDoc(doc(this.firestore, 'users', currentUser.uid), {
+        name: normalizedName,
+        updatedAt: new Date(),
+      });
+
+      const currentAppUser = this.user();
+      if (currentAppUser) {
+        this.user.set({ ...currentAppUser, name: normalizedName, updatedAt: new Date() });
+      }
+
+      this.notifications.showSuccess('Profile updated.');
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      this.notifications.showError('Could not save profile changes. Please try again.');
+    } finally {
+      this.savingProfile.set(false);
+    }
+  }
 
   onManageSubscription() {
     if (this.managingSubscription()) {
@@ -61,7 +107,7 @@ export class Settings {
         queryParams: {
           reason: 'manage_subscription',
           returnTo: '/settings',
-        }
+        },
       });
       return;
     }

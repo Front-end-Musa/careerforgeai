@@ -3,7 +3,8 @@ import { resumesAdapter, ResumesState } from './resumes.reducer';
 
 export const selectResumesFeature = createFeatureSelector<ResumesState>('resumes');
 
-export const { selectIds, selectEntities, selectAll, selectTotal } = resumesAdapter.getSelectors();
+export const { selectIds, selectEntities, selectAll, selectTotal } =
+  resumesAdapter.getSelectors(selectResumesFeature);
 
 export const selectResumesStatus = createSelector(
   selectResumesFeature,
@@ -61,6 +62,11 @@ export const selectIsTailoring = createSelector(
 export const selectTailorError = createSelector(
   selectResumesFeature,
   (state: ResumesState) => state.tailorError,
+);
+
+export const selectTailoredResumeId = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.tailoredResumeId,
 );
 
 export const selectDownloadingResumeId = createSelector(

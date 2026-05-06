@@ -55,6 +55,15 @@ export class PremiumResumeRenderer {
     return getSkillEntries(this.resume);
   }
 
+  get skillColumns() {
+    const columns: string[][] = [[], [], []];
+    this.skillEntries.forEach((skill, index) => {
+      columns[index % columns.length].push(skill);
+    });
+
+    return columns.filter((column) => column.length);
+  }
+
   getSections(sectionTypes: string[]) {
     return this.visibleSections.filter((section) => sectionTypes.includes(section.type));
   }

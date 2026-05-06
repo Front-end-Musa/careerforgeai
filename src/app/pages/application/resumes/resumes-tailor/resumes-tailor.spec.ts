@@ -7,18 +7,19 @@ import { Resume } from '../../../../core/interfaces/resumes.interface';
 import { AuthFacade } from '../../../auth/data/auth.facade';
 import { BillingFacade } from '../../../landing/pricing-plans/data/billing.facade';
 import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
+import { ResumesStatus } from '../data/resumes.reducer';
 
 describe('ResumesTailor', () => {
   let component: ResumesTailor;
   let fixture: ComponentFixture<ResumesTailor>;
   let facadeMock: {
-    saving$: BehaviorSubject<boolean>;
     tailoring$: BehaviorSubject<boolean>;
     tailorError$: BehaviorSubject<string | null>;
-    saveSucceeded$: BehaviorSubject<boolean>;
+    tailoredResumeId$: BehaviorSubject<string | null>;
+    status$: BehaviorSubject<ResumesStatus>;
     resumes$: BehaviorSubject<Resume[]>;
-    loadResumes: jasmine.Spy;
-    getResumeById: jasmine.Spy;
+    ensureLoaded: jasmine.Spy;
+    resumeById$: jasmine.Spy;
     tailorResumeData: jasmine.Spy;
   };
 
@@ -58,13 +59,13 @@ describe('ResumesTailor', () => {
 
   beforeEach(async () => {
     facadeMock = {
-      saving$: new BehaviorSubject(false),
       tailoring$: new BehaviorSubject(false),
       tailorError$: new BehaviorSubject<string | null>(null),
-      saveSucceeded$: new BehaviorSubject(false),
+      tailoredResumeId$: new BehaviorSubject<string | null>(null),
+      status$: new BehaviorSubject<ResumesStatus>(ResumesStatus.Loaded),
       resumes$: new BehaviorSubject<Resume[]>([resume]),
-      loadResumes: jasmine.createSpy('loadResumes'),
-      getResumeById: jasmine.createSpy('getResumeById').and.returnValue(of(resume)),
+      ensureLoaded: jasmine.createSpy('ensureLoaded'),
+      resumeById$: jasmine.createSpy('resumeById$').and.returnValue(of(resume)),
       tailorResumeData: jasmine.createSpy('tailorResumeData'),
     };
 
@@ -122,7 +123,7 @@ describe('ResumesTailor', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(facadeMock.getResumeById).toHaveBeenCalledWith('resume-1');
+    expect(facadeMock.resumeById$).toHaveBeenCalledWith('resume-1');
   });
 
   it('should dispatch tailoring when form is valid', () => {

@@ -1,5 +1,101 @@
 .signup {
-  height: 100%;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 86% 12%, rgba(241, 91, 42, 0.14), transparent 24rem),
+    linear-gradient(180deg, var(--paper), var(--paper-warm));
+
+  .wrapper {
+    width: min(1180px, calc(100% - 32px));
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(340px, 1fr) minmax(360px, 500px);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    padding: 40px 0;
+  }
+}
+
+.auth-preview {
+  display: grid;
+  gap: 22px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--ink), #222b38);
+  color: #ffffff;
+  box-shadow: 22px 22px 0 rgba(241, 91, 42, 0.12);
+
+  .eyebrow {
+    margin: 0;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    max-width: 13ch;
+    margin: 0;
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    font-weight: 500;
+    line-height: 0.98;
+  }
+
+  .preview-card {
+    display: grid;
+    gap: 10px;
+    max-width: 360px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    span,
+    p {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    strong {
+      color: #ffffff;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.content {
+  max-width: 500px;
+}
+
+.login-card {
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  border-radius: 4px !important;
+  box-shadow: 18px 18px 0 rgba(17, 24, 39, 0.06) !important;
+}
+
+.continue-with {
+  text-align: center;
+  margin: 16px 0;
+}
+
+.social-login {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 14px;
 }
 
 .send-btn {
@@ -8,6 +104,25 @@
   justify-content: center;
   gap: 8px;
   min-width: 140px;
+  min-height: 50px;
+  border-radius: 999px !important;
+  background: var(--ink) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+}
+
+.send-btn:hover:not(:disabled) {
+  background: var(--accent) !important;
+}
+
+@media (max-width: 900px) {
+  .signup .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-preview {
+    display: none;
+  }
 }
 
 .send-btn.loading {

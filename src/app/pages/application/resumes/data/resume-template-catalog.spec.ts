@@ -30,7 +30,7 @@ describe('resume-template-catalog', () => {
 
     expect(freeCount).toBe(3);
     expect(proCount).toBe(5);
-    expect(premiumCount).toBe(5);
+    expect(premiumCount).toBe(3);
   });
 
   it('should support cumulative access by plan', () => {
@@ -41,11 +41,24 @@ describe('resume-template-catalog', () => {
   });
 
   it('should lock and unlock templates based on cumulative tier ranking', () => {
-    expect(isTemplateLocked('free', 'pro-modern')).toBeTrue();
-    expect(isTemplateLocked('free', 'premium-executive')).toBeTrue();
-    expect(isTemplateLocked('pro', 'pro-modern')).toBeFalse();
-    expect(isTemplateLocked('pro', 'premium-executive')).toBeTrue();
-    expect(isTemplateLocked('premium', 'premium-executive')).toBeFalse();
+    expect(isTemplateLocked('free', 'clean-modern')).toBeTrue();
+    expect(isTemplateLocked('free', 'developer-classic')).toBeTrue();
+    expect(isTemplateLocked('free', 'academic-clean')).toBeTrue();
+    expect(isTemplateLocked('free', 'simple-outline')).toBeTrue();
+    expect(isTemplateLocked('free', 'modern-sidebar')).toBeTrue();
+    expect(isTemplateLocked('free', 'centered-professional')).toBeTrue();
+    expect(isTemplateLocked('free', 'executive-simple')).toBeTrue();
+    expect(isTemplateLocked('pro', 'clean-modern')).toBeFalse();
+    expect(isTemplateLocked('pro', 'developer-classic')).toBeFalse();
+    expect(isTemplateLocked('pro', 'academic-clean')).toBeFalse();
+    expect(isTemplateLocked('pro', 'simple-outline')).toBeFalse();
+    expect(isTemplateLocked('pro', 'modern-sidebar')).toBeFalse();
+    expect(isTemplateLocked('pro', 'centered-professional')).toBeTrue();
+    expect(isTemplateLocked('pro', 'boardroom-premium')).toBeTrue();
+    expect(isTemplateLocked('pro', 'executive-simple')).toBeTrue();
+    expect(isTemplateLocked('premium', 'executive-simple')).toBeFalse();
+    expect(isTemplateLocked('premium', 'centered-professional')).toBeFalse();
+    expect(isTemplateLocked('premium', 'boardroom-premium')).toBeFalse();
   });
 
   it('should safely fallback to basic when template id is unknown', () => {

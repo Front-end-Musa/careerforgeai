@@ -3,9 +3,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { LandingCta } from '../landing-cta/landing-cta';
 
 interface Mission {
-  icon: string,
-  title: string,
-  description: string,
+  icon: string;
+  title: string;
+  description: string;
 }
 
 @Component({
@@ -17,21 +17,21 @@ interface Mission {
 export class About {
   missions: Mission[] = [
     {
-      icon: 'track_changes',
-      title: 'Mission-Driven',
-      description: 'Help people land their dream jobs using AI technology',
+      icon: 'radar',
+      title: 'AI Writing Help',
+      description: 'Generate resume summaries, experience bullets, education notes, and cover letters.',
     },
     {
-      icon: 'person',
-      title: 'User-Focused',
-      description: 'Every feature designed with job seekers in mind',
+      icon: 'account_tree',
+      title: 'Saved Resume Versions',
+      description: 'Paid plans can save generated resumes and create tailored copies for target roles.',
     },
     {
-      icon: 'lock_outline',
-      title: 'Privacy First',
-      description: 'Your data is secure and never shared',
+      icon: 'shield',
+      title: 'Account Workspace',
+      description: 'Manage resumes, usage, billing, and application records from your account.',
     },
   ];
 
-  ctaHelperTexts: string[] = ['Trusted by job seekers worldwide', 'Launch your first resume in minutes'];
+  ctaHelperTexts: string[] = ['Start with your details', 'Use AI where it helps'];
 }

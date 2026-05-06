@@ -1,38 +1,50 @@
 <div class="settings container">
   <app-dir-name title="Settings"></app-dir-name>
   <div class="app-section">
+    <div class="settings-hero">
+      <div>
+        <p class="eyebrow">Account control</p>
+        <h2>Keep your profile and access aligned with your search.</h2>
+      </div>
+      <span class="plan-badge">{{ user()?.plan || 'Free' }} plan</span>
+    </div>
+
     <div class="profile-info">
       <h3 class="section-title">Profile Information</h3>
       <form class="profile-info_form">
         <div class="form-item">
           <label for="name">Full Name</label>
-          <input type="text" class="name-input input" name="name" value="{{ user()?.name }}" />
+          <input
+            #nameInput
+            type="text"
+            class="name-input input"
+            name="name"
+            [value]="user()?.name || ''"
+          />
         </div>
         <div class="form-item">
           <label for="email">Email</label>
-          <input type="email" class="email-input input" name="email" value="{{ user()?.email }}" />
+          <input
+            type="email"
+            class="email-input input"
+            name="email"
+            [value]="user()?.email || ''"
+            readonly
+          />
         </div>
       </form>
-      <button mat-button class="primary-btn" (click)="onSave()">Save Changes</button>
+      <button
+        mat-button
+        class="primary-btn"
+        [disabled]="savingProfile()"
+        (click)="onSave(nameInput.value)"
+      >
+        {{ savingProfile() ? 'Saving...' : 'Save Changes' }}
+      </button>
     </div>
     <div class="subscription">
-      <h3 class="section-title">Subscription</h3>
-      <div class="plan-info">
-        <div class="plan">
-          <h4 class="plan-name">{{ user()?.plan }} plan</h4>
-          <p>
-            Resume generations:
-            {{ usage().resumeGenerationsRemaining }}/{{ entitlements().resumeGenerationsPerPeriod }}
-            left
-          </p>
-          <p>
-            Cover letters:
-            {{ usage().coverLettersRemaining }}/{{ entitlements().coverLettersPerPeriod }} left
-          </p>
-          <p>Job tracker: {{ entitlements().canUseJobTracker ? 'Included' : 'Premium only' }}</p>
-          <p>Resume downloads: {{ entitlements().canDownloadResume ? 'Included' : 'Upgrade required' }}</p>
-          <p>Usage resets {{ nextResetLabel() }}</p>
-        </div>
+      <div class="subscription-header">
+        <h3 class="section-title">Subscription</h3>
         <button
           mat-button
           class="manage-btn"
@@ -41,6 +53,35 @@
         >
           {{ managingSubscription() ? 'Opening...' : 'Manage Subscription' }}
         </button>
+      </div>
+      <div class="plan-info">
+        <div class="plan">
+          <h4 class="plan-name">{{ user()?.plan || 'Free' }} plan</h4>
+          <p class="usage-row">
+            <span>Resume generations</span>
+            <strong>
+              {{ usage().resumeGenerationsRemaining }}/{{
+                entitlements().resumeGenerationsPerPeriod
+              }}
+              left
+            </strong>
+          </p>
+          <p class="usage-row">
+            <span>Cover letters</span>
+            <strong>
+              {{ usage().coverLettersRemaining }}/{{ entitlements().coverLettersPerPeriod }} left
+            </strong>
+          </p>
+          <p class="usage-row">
+            <span>Job tracker</span>
+            <strong>{{ entitlements().canUseJobTracker ? 'Included' : 'Premium only' }}</strong>
+          </p>
+          <p class="usage-row">
+            <span>Resume downloads</span>
+            <strong>{{ entitlements().canDownloadResume ? 'Included' : 'Upgrade required' }}</strong>
+          </p>
+          <p class="usage-reset">Usage resets {{ nextResetLabel() }}</p>
+        </div>
       </div>
     </div>
     <div class="danger-zone">

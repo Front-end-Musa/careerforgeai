@@ -29,17 +29,10 @@
             }
           </div>
         }
-        @if (isLatexPreviewTemplate) {
-          <button type="button" mat-stroked-button (click)="downloadLatexSource()">Download .tex</button>
-        }
         @if (canDownloadCurrentResume) {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">
-            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
-          </button>
+          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
         } @else {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">
-            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
-          </button>
+          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
         }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -320,31 +313,6 @@
                     <textarea matInput formControlName="skills" rows="4" placeholder="JavaScript, Angular, UX Strategy, Leadership"></textarea>
                   </mat-form-field>
 
-                  @if (isHarshibarTemplate) {
-                    <div class="field-grid field-grid-wide">
-                      <mat-form-field appearance="outline">
-                        <mat-label>Languages</mat-label>
-                        <textarea
-                          matInput
-                          formControlName="skillsLanguages"
-                          rows="3"
-                          placeholder="Angular, TypeScript, JavaScript, NgRx"
-                        ></textarea>
-                        <mat-hint>Controls the Languages line in Harshibar Creator.</mat-hint>
-                      </mat-form-field>
-
-                      <mat-form-field appearance="outline">
-                        <mat-label>Tools</mat-label>
-                        <textarea
-                          matInput
-                          formControlName="skillsTools"
-                          rows="3"
-                          placeholder="RxJs, Nx, Git"
-                        ></textarea>
-                        <mat-hint>Controls the Tools line in Harshibar Creator.</mat-hint>
-                      </mat-form-field>
-                    </div>
-                  }
                 }
 
                 @case ('projects') {
@@ -559,17 +527,10 @@
       </button>
 
       <div class="footer-actions">
-        @if (isLatexPreviewTemplate) {
-          <button type="button" mat-stroked-button (click)="downloadLatexSource()">Download .tex</button>
-        }
         @if (canDownloadCurrentResume) {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">
-            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
-          </button>
+          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
         } @else {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">
-            {{ isLatexPreviewTemplate && isEditMode ? 'Compile & Download PDF' : 'Download PDF' }}
-          </button>
+          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
         }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -597,17 +558,14 @@
     </div>
 
     <div class="preview-content">
-      <app-resume-preview
-        [resume]="previewResume || undefined"
-        [templateId]="previewTemplate"
-      ></app-resume-preview>
-
-      @if (isLatexPreviewTemplate) {
-        <cf-latex-preview
-          [resume]="previewResume || undefined"
-          [templateId]="previewTemplate"
-        ></cf-latex-preview>
-      }
+      <div class="preview-fit-width">
+        <div class="preview-fit-surface">
+          <app-resume-preview
+            [resume]="previewResume || undefined"
+            [templateId]="previewTemplate"
+          ></app-resume-preview>
+        </div>
+      </div>
     </div>
   </aside>
 </div>
@@ -628,9 +586,6 @@
         <p class="generate-helper">{{ getGenerateMessage(mobileMissingFullResumeParts) }}</p>
       }
     </div>
-  }
-  @if (isLatexPreviewTemplate) {
-    <button type="button" mat-stroked-button (click)="downloadLatexSource()">.tex</button>
   }
   @if (canDownloadCurrentResume) {
     <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>

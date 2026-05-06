@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Injectable, inject } from '@angular/core';
 import { catchError, from, map, Observable, throwError } from 'rxjs';
 import { Resume } from '../interfaces/resumes.interface';
 import {
@@ -7,18 +6,38 @@ import {
   ResumeGenerationResult,
 } from '../interfaces/resume-generation.interface';
 import { toCallableError } from './callable-error.util';
+import { CallableService } from './callable.service';
 
 @Injectable({ providedIn: 'root' })
 export class AiAgentService {
-  constructor(private functions: Functions) {}
+  private callableService = inject(CallableService);
+  private generateResumeFn = this.callableService.callable<
+    ResumeGenerationRequest,
+    { result: ResumeGenerationResult }
+  >('generateResume');
+  private saveGeneratedResumeFn = this.callableService.callable<
+    { resume: Partial<Resume> },
+    { resumeId: string }
+  >('saveGeneratedResume');
+  private generateCoverLetterFn = this.callableService.callable<
+    {
+      resumeText: string;
+      jobDescription: string;
+      companyName: string;
+      position: string;
+      tone: string;
+      resumeId: string;
+      resumeLabel: string;
+    },
+    { text: string; coverLetterId: string }
+  >('generateCoverLetter');
+  private tailorResumeToJobFn = this.callableService.callable<
+    { resumeId: string; companyName: string; position: string; jobDescription: string },
+    { resumeId: string }
+  >('tailorResumeToJob');
 
   generateResume(request: ResumeGenerationRequest): Observable<ResumeGenerationResult> {
-    const fn = httpsCallable<ResumeGenerationRequest, { result: ResumeGenerationResult }>(
-      this.functions,
-      'generateResume',
-    );
-
-    return from(fn(request)).pipe(
+    return from(this.generateResumeFn(request)).pipe(
       map((res) => res.data.result),
       catchError((error) =>
         throwError(() => toCallableError(error, 'Failed to generate resume content. Please try again.')),
@@ -27,13 +46,8 @@ export class AiAgentService {
   }
 
   saveGeneratedResume(resume: Partial<Resume>): Observable<string> {
-    const fn = httpsCallable<{ resume: Partial<Resume> }, { resumeId: string }>(
-      this.functions,
-      'saveGeneratedResume',
-    );
-
     return from(
-      fn({
+      this.saveGeneratedResumeFn({
         resume: {
           ...resume,
           meta: { ...(resume.meta ?? {}), source: 'ai' },
@@ -58,23 +72,16 @@ export class AiAgentService {
     resumeId: string,
     resumeLabel: string,
   ): Observable<string> {
-    const fn = httpsCallable<
-      {
-        resumeText: string;
-        jobDescription: string;
-        companyName: string;
-        position: string;
-        tone: string;
-        resumeId: string;
-        resumeLabel: string;
-      },
-      { text: string; coverLetterId: string }
-    >(this.functions, 'generateCoverLetter');
-
     return from(
-      fn({ resumeText, jobDescription, companyName, position, tone, resumeId, resumeLabel }).then(
-        (res) => res.data.text,
-      ),
+      this.generateCoverLetterFn({
+        resumeText,
+        jobDescription,
+        companyName,
+        position,
+        tone,
+        resumeId,
+        resumeLabel,
+      }).then((res) => res.data.text),
     ).pipe(
       catchError((error) =>
         throwError(() => toCallableError(error, 'Failed to generate cover letter. Please try again.')),
@@ -83,14 +90,15 @@ export class AiAgentService {
   }
 
   tailorResumeToJob(
-    resume: Resume,
+    resumeId: string,
     companyName: string,
     position: string,
     jobDescription: string,
-  ): Observable<Resume> {
-    const fn = httpsCallable(this.functions, 'tailorResumeToJob');
+  ): Observable<string> {
     return from(
-      fn({ resume, companyName, position, jobDescription }).then((res: any) => res.data.resume as Resume),
+      this.tailorResumeToJobFn({ resumeId, companyName, position, jobDescription }).then(
+        (res) => res.data.resumeId,
+      ),
     ).pipe(
       catchError((error) =>
         throwError(() => toCallableError(error, 'Failed to tailor resume. Please try again.')),

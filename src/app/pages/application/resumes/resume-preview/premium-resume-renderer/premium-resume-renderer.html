@@ -1,161 +1,332 @@
 <section class="premium-template" [attr.data-template]="template.id" [attr.data-context]="renderContext">
   @switch (template.id) {
-    @case ('premium-executive') {
-      <header class="premium-header centered">
-        <p class="eyebrow">Executive Resume</p>
+    @case ('centered-professional') {
+      <header class="centered-professional-header">
         <h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1>
         <p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p>
-        @if (contactItems.length) { <div class="contact-row">@for (item of contactItems; track item) { <span>{{ item }}</span> }</div> }
+        @if (contactItems.length) {
+          <div class="centered-contact-band">
+            @for (item of contactItems; track item) {
+              <span>{{ item }}</span>
+            }
+          </div>
+        }
       </header>
-      <section class="lead-band">@if (resume?.summary?.trim()) { <div class="section-title">Profile</div><p>{{ resume?.summary }}</p> }</section>
-      <div class="premium-grid">
-        <main>
-          @for (section of getSectionsExcluding(['summary', 'skills', 'languages', 'certifications']); track section.id) {
-            <section class="premium-section" [attr.data-section]="section.type">
-              <div class="section-title">{{ section.title }}</div>
-              @switch (section.type) {
-                @case ('experience') { @for (entry of experienceEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.role }}</div><div class="item-subtitle">{{ entry.company }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('education') { @for (entry of educationEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.degree }}</div><div class="item-subtitle">{{ entry.school }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('projects') { @for (entry of getProjectEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('awards') { @for (entry of getAwardEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('volunteer') { @for (entry of getVolunteerEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.role || entry.organization }}</div><div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('custom') { @for (entry of getCustomEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-              }
-            </section>
-          }
-        </main>
-        <aside class="premium-side">
-          @if (skillEntries.length) { <section class="side-card"><div class="section-title">Core Expertise</div><div class="pill-wrap">@for (skill of skillEntries; track skill) { <span>{{ skill }}</span> }</div></section> }
-          @for (section of getSections(['languages', 'certifications']); track section.id) {
-            <section class="side-card">
-              <div class="section-title">{{ section.title }}</div>
-              @switch (section.type) {
-                @case ('languages') { @for (entry of getLanguageEntries(section); track $index) { <article class="mini-item"><div class="item-title">{{ entry.language }}</div><div class="item-subtitle">{{ entry.proficiency }}</div></article> } }
-                @case ('certifications') { @for (entry of getCertificationEntries(section); track $index) { <article class="mini-item"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate]) }}</div></article> } }
-              }
-            </section>
-          }
-        </aside>
-      </div>
-    }
 
-    @case ('executive-edge') {
-      <header class="framed-header">
-        <div><p class="eyebrow">Executive Edge</p><h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1><p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p></div>
-        <div class="framed-contact">@for (item of contactItems; track item) { <span>{{ item }}</span> }</div>
-      </header>
-      @if (resume?.summary?.trim()) { <section class="summary-frame"><div class="section-title">Strategic Profile</div><p>{{ resume?.summary }}</p></section> }
-      @for (section of getSectionsExcluding(['summary']); track section.id) {
-        <section class="edge-section" [attr.data-section]="section.type">
-          <div class="edge-title">{{ section.title }}</div>
+      @if (resume?.summary?.trim()) {
+        <section class="centered-section">
+          <div class="centered-section-title">Professional Summary</div>
+          <p class="centered-summary">{{ resume?.summary }}</p>
+        </section>
+      }
+
+      @for (section of getSectionsExcluding(['summary', 'skills']); track section.id) {
+        <section class="centered-section" [attr.data-section]="section.type">
+          <div class="centered-section-title">{{ section.title }}</div>
           @switch (section.type) {
-            @case ('experience') { @for (entry of experienceEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.role }}</div><div class="item-subtitle">{{ entry.company }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('education') { @for (entry of educationEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.degree }}</div><div class="item-subtitle">{{ entry.school }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('skills') { <div class="pill-wrap">@for (skill of skillEntries; track skill) { <span>{{ skill }}</span> }</div> }
-            @case ('projects') { <div class="dual-grid">@for (entry of getProjectEntries(section); track $index) { <article class="panel-item"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-            @case ('certifications') { <div class="dual-grid">@for (entry of getCertificationEntries(section); track $index) { <article class="panel-item"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate, entry.credentialLink]) }}</div></article> }</div> }
-            @case ('languages') { <div class="dual-grid">@for (entry of getLanguageEntries(section); track $index) { <article class="panel-item"><div class="item-title">{{ entry.language }}</div><div class="item-subtitle">{{ entry.proficiency }}</div></article> }</div> }
-            @case ('awards') { <div class="dual-grid">@for (entry of getAwardEntries(section); track $index) { <article class="panel-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-            @case ('volunteer') { @for (entry of getVolunteerEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.role || entry.organization }}</div><div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('custom') { @for (entry of getCustomEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
+            @case ('experience') {
+              @for (entry of experienceEntries; track $index) {
+                <article class="centered-item">
+                  <div class="item-heading">
+                    <div>
+                      <div class="item-title">{{ entry.company }}</div>
+                      <div class="item-subtitle">{{ entry.role }}</div>
+                    </div>
+                    <div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div>
+                  </div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('education') {
+              @for (entry of educationEntries; track $index) {
+                <article class="centered-item compact">
+                  <div class="item-heading">
+                    <div>
+                      <div class="item-title">{{ entry.degree }}</div>
+                      <div class="item-subtitle">{{ entry.school }}</div>
+                    </div>
+                    <div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div>
+                  </div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('projects') {
+              @for (entry of getProjectEntries(section); track $index) {
+                <article class="centered-item">
+                  <div class="item-title">{{ entry.name }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('certifications') {
+              @for (entry of getCertificationEntries(section); track $index) {
+                <article class="centered-item compact">
+                  <div class="item-title">{{ entry.name }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate]) }}</div>
+                </article>
+              }
+            }
+            @case ('languages') {
+              <div class="centered-skill-columns">
+                @for (entry of getLanguageEntries(section); track $index) {
+                  <span>{{ joinValues([entry.language, entry.proficiency], ' - ') }}</span>
+                }
+              </div>
+            }
+            @case ('awards') {
+              @for (entry of getAwardEntries(section); track $index) {
+                <article class="centered-item compact">
+                  <div class="item-title">{{ entry.title }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('volunteer') {
+              @for (entry of getVolunteerEntries(section); track $index) {
+                <article class="centered-item">
+                  <div class="item-title">{{ entry.role || entry.organization }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('custom') {
+              @for (entry of getCustomEntries(section); track $index) {
+                <article class="centered-item">
+                  <div class="item-title">{{ entry.title }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
           }
         </section>
       }
-    }
 
-    @case ('graphical-genius') {
-      <div class="graphic-shell">
-        <aside class="graphic-sidebar">
-          <p class="eyebrow">Graphical Genius</p>
-          <h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1>
-          <p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p>
-          @if (contactItems.length) { <div class="graphic-contact">@for (item of contactItems; track item) { <span>{{ item }}</span> }</div> }
-          @if (skillEntries.length) { <div class="section-title">Tools</div><div class="pill-wrap">@for (skill of skillEntries; track skill) { <span>{{ skill }}</span> }</div> }
-        </aside>
-        <main class="graphic-main">
-          @if (resume?.summary?.trim()) { <section class="graphic-hero"><div class="section-title">Creative Snapshot</div><p>{{ resume?.summary }}</p></section> }
-          @for (section of getSectionsExcluding(['summary', 'skills']); track section.id) {
-            <section class="graphic-section" [attr.data-section]="section.type">
-              <div class="section-title">{{ section.title }}</div>
-              @switch (section.type) {
-                @case ('experience') { @for (entry of experienceEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.role }}</div><div class="item-subtitle">{{ entry.company }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('education') { @for (entry of educationEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.degree }}</div><div class="item-subtitle">{{ entry.school }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('projects') { <div class="dual-grid">@for (entry of getProjectEntries(section); track $index) { <article class="panel-item accent"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-                @case ('certifications') { <div class="dual-grid">@for (entry of getCertificationEntries(section); track $index) { <article class="panel-item accent"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate, entry.credentialLink]) }}</div></article> }</div> }
-                @case ('languages') { <div class="dual-grid">@for (entry of getLanguageEntries(section); track $index) { <article class="panel-item accent"><div class="item-title">{{ entry.language }}</div><div class="item-subtitle">{{ entry.proficiency }}</div></article> }</div> }
-                @case ('awards') { <div class="dual-grid">@for (entry of getAwardEntries(section); track $index) { <article class="panel-item accent"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-                @case ('volunteer') { @for (entry of getVolunteerEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.role || entry.organization }}</div><div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                @case ('custom') { @for (entry of getCustomEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-              }
-            </section>
-          }
-        </main>
-      </div>
-    }
-
-    @case ('elite-senior') {
-      <header class="senior-header">
-        <div><p class="eyebrow">Elite Senior</p><h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1><p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p></div>
-        <div class="contact-column">@for (item of contactItems; track item) { <span>{{ item }}</span> }</div>
-      </header>
-      @if (resume?.summary?.trim()) { <section class="lead-band subtle"><div class="section-title">Summary</div><p>{{ resume?.summary }}</p></section> }
-      @for (section of getSectionsExcluding(['summary']); track section.id) {
-        <section class="senior-section" [attr.data-section]="section.type">
-          <div class="section-title">{{ section.title }}</div>
-          @switch (section.type) {
-            @case ('experience') { @for (entry of experienceEntries; track $index) { <article class="resume-item airy"><div class="item-heading"><div><div class="item-title">{{ entry.role }}</div><div class="item-subtitle">{{ entry.company }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('education') { @for (entry of educationEntries; track $index) { <article class="resume-item airy"><div class="item-heading"><div><div class="item-title">{{ entry.degree }}</div><div class="item-subtitle">{{ entry.school }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('skills') { <div class="pill-wrap neutral">@for (skill of skillEntries; track skill) { <span>{{ skill }}</span> }</div> }
-            @case ('projects') { @for (entry of getProjectEntries(section); track $index) { <article class="resume-item airy"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('certifications') { <div class="dual-grid">@for (entry of getCertificationEntries(section); track $index) { <article class="panel-item soft"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate, entry.credentialLink]) }}</div></article> }</div> }
-            @case ('languages') { <div class="dual-grid">@for (entry of getLanguageEntries(section); track $index) { <article class="panel-item soft"><div class="item-title">{{ entry.language }}</div><div class="item-subtitle">{{ entry.proficiency }}</div></article> }</div> }
-            @case ('awards') { <div class="dual-grid">@for (entry of getAwardEntries(section); track $index) { <article class="panel-item soft"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-            @case ('volunteer') { @for (entry of getVolunteerEntries(section); track $index) { <article class="resume-item airy"><div class="item-title">{{ entry.role || entry.organization }}</div><div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-            @case ('custom') { @for (entry of getCustomEntries(section); track $index) { <article class="resume-item airy"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-          }
+      @if (skillEntries.length) {
+        <section class="centered-section">
+          <div class="centered-section-title">Skills</div>
+          <div class="centered-skill-columns">
+            @for (column of skillColumns; track $index) {
+              <div>
+                @for (skill of column; track skill) {
+                  <span>{{ skill }}</span>
+                }
+              </div>
+            }
+          </div>
         </section>
       }
     }
 
     @default {
-      <div class="editorial-shell">
-        <header class="editorial-header">
-          <p class="eyebrow">Metamorphic Masterpiece</p>
-          <h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1>
-          <p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p>
-          @if (contactItems.length) { <div class="contact-row">@for (item of contactItems; track item) { <span>{{ item }}</span> }</div> }
-        </header>
-        <div class="editorial-grid">
-          <aside class="editorial-aside">
-            @if (resume?.summary?.trim()) { <section class="side-card rich"><div class="section-title">Narrative</div><p>{{ resume?.summary }}</p></section> }
-            @if (skillEntries.length) { <section class="side-card rich"><div class="section-title">Signature Skills</div><div class="pill-wrap">@for (skill of skillEntries; track skill) { <span>{{ skill }}</span> }</div></section> }
-            @for (section of getSections(['languages', 'certifications']); track section.id) {
-              <section class="side-card rich">
-                <div class="section-title">{{ section.title }}</div>
-                @switch (section.type) {
-                  @case ('languages') { @for (entry of getLanguageEntries(section); track $index) { <article class="mini-item"><div class="item-title">{{ entry.language }}</div><div class="item-subtitle">{{ entry.proficiency }}</div></article> } }
-                  @case ('certifications') { @for (entry of getCertificationEntries(section); track $index) { <article class="mini-item"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate]) }}</div></article> } }
-                }
-              </section>
-            }
-          </aside>
-          <main class="editorial-main">
-            @for (section of getSectionsExcluding(['summary', 'skills', 'languages', 'certifications']); track section.id) {
-              <section class="editorial-section" [attr.data-section]="section.type">
-                <div class="section-title">{{ section.title }}</div>
-                @switch (section.type) {
-                  @case ('experience') { @for (entry of experienceEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.role }}</div><div class="item-subtitle">{{ entry.company }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                  @case ('education') { @for (entry of educationEntries; track $index) { <article class="resume-item"><div class="item-heading"><div><div class="item-title">{{ entry.degree }}</div><div class="item-subtitle">{{ entry.school }}</div></div><div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div></div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                  @case ('projects') { <div class="dual-grid">@for (entry of getProjectEntries(section); track $index) { <article class="panel-item warm"><div class="item-title">{{ entry.name }}</div><div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-                  @case ('awards') { <div class="dual-grid">@for (entry of getAwardEntries(section); track $index) { <article class="panel-item warm"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> }</div> }
-                  @case ('volunteer') { @for (entry of getVolunteerEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.role || entry.organization }}</div><div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                  @case ('custom') { @for (entry of getCustomEntries(section); track $index) { <article class="resume-item"><div class="item-title">{{ entry.title }}</div><div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>@if (hasDescription(entry.description)) { <ul>@for (point of entry.description; track $index) { <li>{{ point }}</li> }</ul> }</article> } }
-                }
-              </section>
-            }
-          </main>
-        </div>
+  <header class="premium-header centered">
+    <p class="eyebrow">{{ template.name }}</p>
+    <h1>{{ resume?.personalInfo?.fullName || 'Your Name' }}</h1>
+    <p class="headline">{{ resume?.personalInfo?.jobTitle || 'Professional Title' }}</p>
+    @if (contactItems.length) {
+      <div class="contact-row">
+        @for (item of contactItems; track item) {
+          <span>{{ item }}</span>
+        }
       </div>
+    }
+  </header>
+
+  <section class="lead-band">
+    @if (resume?.summary?.trim()) {
+      <div class="section-title">Profile</div>
+      <p>{{ resume?.summary }}</p>
+    }
+  </section>
+
+  <div class="premium-grid">
+    <main>
+      @for (section of getSectionsExcluding(['summary', 'skills', 'languages', 'certifications']); track section.id) {
+        <section class="premium-section" [attr.data-section]="section.type">
+          <div class="section-title">{{ section.title }}</div>
+          @switch (section.type) {
+            @case ('experience') {
+              @for (entry of experienceEntries; track $index) {
+                <article class="resume-item">
+                  <div class="item-heading">
+                    <div>
+                      <div class="item-title">{{ entry.role }}</div>
+                      <div class="item-subtitle">{{ entry.company }}</div>
+                    </div>
+                    <div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div>
+                  </div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('education') {
+              @for (entry of educationEntries; track $index) {
+                <article class="resume-item">
+                  <div class="item-heading">
+                    <div>
+                      <div class="item-title">{{ entry.degree }}</div>
+                      <div class="item-subtitle">{{ entry.school }}</div>
+                    </div>
+                    <div class="item-date">{{ formatDateRange(entry.startDate, entry.endDate) }}</div>
+                  </div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('projects') {
+              @for (entry of getProjectEntries(section); track $index) {
+                <article class="resume-item">
+                  <div class="item-title">{{ entry.name }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.role, entry.link]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('awards') {
+              @for (entry of getAwardEntries(section); track $index) {
+                <article class="resume-item">
+                  <div class="item-title">{{ entry.title }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.issuer, entry.date]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('volunteer') {
+              @for (entry of getVolunteerEntries(section); track $index) {
+                <article class="resume-item">
+                  <div class="item-title">{{ entry.role || entry.organization }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.organization, formatDateRange(entry.startDate, entry.endDate)]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+            @case ('custom') {
+              @for (entry of getCustomEntries(section); track $index) {
+                <article class="resume-item">
+                  <div class="item-title">{{ entry.title }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.subtitle, entry.date, entry.link]) }}</div>
+                  @if (hasDescription(entry.description)) {
+                    <ul>
+                      @for (point of entry.description; track $index) {
+                        <li>{{ point }}</li>
+                      }
+                    </ul>
+                  }
+                </article>
+              }
+            }
+          }
+        </section>
+      }
+    </main>
+
+    <aside class="premium-side">
+      @if (skillEntries.length) {
+        <section class="side-card">
+          <div class="section-title">Core Expertise</div>
+          <div class="pill-wrap">
+            @for (skill of skillEntries; track skill) {
+              <span>{{ skill }}</span>
+            }
+          </div>
+        </section>
+      }
+      @for (section of getSections(['languages', 'certifications']); track section.id) {
+        <section class="side-card">
+          <div class="section-title">{{ section.title }}</div>
+          @switch (section.type) {
+            @case ('languages') {
+              @for (entry of getLanguageEntries(section); track $index) {
+                <article class="mini-item">
+                  <div class="item-title">{{ entry.language }}</div>
+                  <div class="item-subtitle">{{ entry.proficiency }}</div>
+                </article>
+              }
+            }
+            @case ('certifications') {
+              @for (entry of getCertificationEntries(section); track $index) {
+                <article class="mini-item">
+                  <div class="item-title">{{ entry.name }}</div>
+                  <div class="item-subtitle">{{ joinValues([entry.issuer, entry.issueDate]) }}</div>
+                </article>
+              }
+            }
+          }
+        </section>
+      }
+    </aside>
+  </div>
     }
   }
 </section>

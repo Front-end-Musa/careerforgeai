@@ -29,7 +29,8 @@ describe('PricingCard', () => {
     component = fixture.componentInstance;
     component.plan = {
       name: 'Free',
-      price: 0,
+      price: '0',
+      billingPeriod: 'month',
       features: [],
       button: 'Start Free',
     };

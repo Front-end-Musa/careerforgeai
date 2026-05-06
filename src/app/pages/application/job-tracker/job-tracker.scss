@@ -1,38 +1,86 @@
 .app-section {
   width: 100%;
   height: calc(100% - 80px);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 5vh 2vw;
-  align-items: start;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(260px, 1fr));
+  gap: 18px;
+  padding: 28px 2vw 36px;
+  align-items: stretch;
+  overflow-x: auto;
 
   .jobs-list {
-    max-width: 100%;
+    min-width: 260px;
+    max-width: none;
     height: 100%;
-    display: inline-block;
-    vertical-align: top;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    width: 23%;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: none;
 
     .list {
       height: 100%;
+      min-height: 420px;
       border-radius: 4px;
-      overflow: hidden;
-      font-family: sans-serif;
+      overflow: auto;
+      font-family: inherit;
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1vh;
+      gap: 12px;
     }
 
-    h2 {
+    .column-head {
       width: 100%;
-      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      h2 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      span {
+        min-width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff0e8;
+        color: var(--accent);
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
     }
+
+    .empty-column {
+      min-height: 120px;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      padding: 18px;
+      text-align: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 4px;
+      color: #64748b;
+      background: #f8fafc;
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  .app-section {
+    grid-template-columns: repeat(4, minmax(240px, 1fr));
+    padding: 18px 16px 32px;
   }
 }

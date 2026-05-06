@@ -104,30 +104,11 @@ export const APPLICATION_ROUTES: Routes = [
       },
       {
         path: 'interview-coach',
-        loadComponent: () =>
-          import('./interview-coach/interview-coach').then((c) => c.InterviewCoach),
-        data: {
-          seo: {
-            title: 'Interview Coach | ResumeCrafts AI',
-            description: 'Practice interview questions and get AI feedback to improve.',
-            robots: 'noindex, nofollow',
-            canonicalPath: '/application/interview-coach',
-            ogType: 'website',
-          },
-        },
+        redirectTo: 'dashboard',
       },
       {
         path: 'linkedin-optimizer',
-        loadComponent: () => import('./linkedin/linkedin').then((c) => c.Linkedin),
-        data: {
-          seo: {
-            title: 'LinkedIn Optimizer | ResumeCrafts AI',
-            description: 'Optimize your LinkedIn profile with AI-driven recommendations.',
-            robots: 'noindex, nofollow',
-            canonicalPath: '/application/linkedin-optimizer',
-            ogType: 'website',
-          },
-        },
+        redirectTo: 'dashboard',
       },
       {
         path: '',

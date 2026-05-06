@@ -1,6 +1,6 @@
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
@@ -41,9 +41,33 @@ export const appConfig: ApplicationConfig = {
 
     // Firebase (MUST be before anything that injects Firestore/Auth)
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideFunctions(() => getFunctions(undefined, 'us-central1')),
+    provideAuth(() => {
+      const auth = getAuth();
+
+      if (!environment.production) {
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+      }
+
+      return auth;
+    }),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+
+      if (!environment.production) {
+        connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
+      }
+
+      return firestore;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(undefined, 'us-central1');
+
+      if (!environment.production) {
+        connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+      }
+
+      return functions;
+    }),
 
     // HTTP
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

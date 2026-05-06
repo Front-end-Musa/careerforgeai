@@ -7,7 +7,8 @@ export interface PlanFeature {
 
 export interface PricingPlanViewModel {
   name: string;
-  price: number;
+  price: string;
+  billingPeriod: 'month' | 'year';
   features: PlanFeature[];
   button: string;
   popular: boolean;
@@ -20,9 +21,12 @@ type FeatureKey =
   | 'threeTemplates'
   | 'allTemplates'
   | 'jobTracker'
+  | 'aiResumeCredit1'
   | 'aiCredits3'
-  | 'aiCredits30'
-  | 'aiCredits80'
+  | 'aiCredits5'
+  | 'aiCredits10'
+  | 'coverLetters20'
+  | 'coverLetters35'
   | 'aiSummary'
   | 'aiExperience'
   | 'aiEducation'
@@ -36,21 +40,24 @@ type FeatureKey =
 const FEATURE_LABELS: Record<FeatureKey, string> = {
   resumeBuilder: 'Resume builder and editor',
   oneResumeDraft: '1 saved resume draft',
-  threeTemplates: '3 free resume templates',
+  threeTemplates: '5 free resume templates',
   allTemplates: 'All resume templates',
   proTemplates: 'Pro templates',
   jobTracker: 'Job application tracker',
-  aiCredits3: '3 AI generations per month',
-  aiCredits30: '30 AI generations per month',
-  aiCredits80: '80 AI generations per month',
+  aiResumeCredit1: '1 AI resume generation per month',
+  aiCredits3: '3 cover letters per month',
+  aiCredits5: '5 AI resume generations per month',
+  aiCredits10: '10 AI resume generations per month',
+  coverLetters20: '20 cover letters per month',
+  coverLetters35: '35 cover letters per month',
   aiSummary: 'AI summary generation',
   aiExperience: 'AI experience bullets',
   aiEducation: 'AI education bullets',
   aiCoverLetter: 'AI cover letter generator',
-  unlimitedResumes: 'Unlimited resumes',
+  unlimitedResumes: 'Unlimited saved resumes',
   pdfExport: 'PDF export',
   prioritySupport: 'Priority email support',
-  resumeTailoringSoon: 'Resume tailoring (coming soon)',
+  resumeTailoringSoon: 'Resume tailoring',
 };
 
 const FEATURE_ORDER: FeatureKey[] = [
@@ -60,14 +67,16 @@ const FEATURE_ORDER: FeatureKey[] = [
   'allTemplates',
   'proTemplates',
   'jobTracker',
+  'aiResumeCredit1',
   'aiCredits3',
-  'aiCredits30',
-  'aiCredits80',
+  'aiCredits5',
+  'aiCredits10',
+  'coverLetters20',
+  'coverLetters35',
   'aiSummary',
   'aiExperience',
   'aiEducation',
   'aiCoverLetter',
-  'unlimitedResumes',
   'pdfExport',
   'prioritySupport',
   'resumeTailoringSoon',
@@ -87,12 +96,13 @@ function buildFeatures(included: FeatureKey[], excluded: FeatureKey[] = []): Pla
 export const PRICING_PLANS: PricingPlanViewModel[] = [
   {
     name: 'Free',
-    price: 0,
+    price: '0',
+    billingPeriod: 'month',
     features: buildFeatures([
       'resumeBuilder',
       'oneResumeDraft',
       'threeTemplates',
-      'jobTracker',
+      'aiResumeCredit1',
       'aiCredits3',
     ]),
     button: 'Start Free',
@@ -101,17 +111,19 @@ export const PRICING_PLANS: PricingPlanViewModel[] = [
   },
   {
     name: 'Pro',
-    price: 12,
+    price: '7.90',
+    billingPeriod: 'month',
     features: buildFeatures([
       'resumeBuilder',
       'proTemplates',
-      'aiCredits30',
+      'aiCredits5',
+      'coverLetters20',
       'aiSummary',
       'aiExperience',
       'aiEducation',
       'aiCoverLetter',
-      'unlimitedResumes',
       'pdfExport',
+      'resumeTailoringSoon',
     ]),
     button: 'Start Pro',
     popular: true,
@@ -119,16 +131,17 @@ export const PRICING_PLANS: PricingPlanViewModel[] = [
   },
   {
     name: 'Premium',
-    price: 19,
+    price: '59',
+    billingPeriod: 'year',
     features: buildFeatures([
       'resumeBuilder',
       'allTemplates',
-      'aiCredits80',
+      'aiCredits10',
+      'coverLetters35',
       'aiSummary',
       'aiExperience',
       'aiEducation',
       'aiCoverLetter',
-      'unlimitedResumes',
       'pdfExport',
       'jobTracker',
       'resumeTailoringSoon',

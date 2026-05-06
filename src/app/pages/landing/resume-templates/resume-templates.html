@@ -1,0 +1,51 @@
+<section class="templates-section" id="templates">
+  <div class="wrapper">
+    <header class="head">
+      <p class="section-kicker">Templates</p>
+      <h2 class="title">Hand-picked layouts for real applications</h2>
+      <p class="sub-title">
+        Choose from 11 templates already available in the app, from ATS-friendly basics to
+        premium executive formats.
+      </p>
+    </header>
+
+    <div class="template-filters" aria-label="Filter resume templates">
+      @for (filter of filters; track filter) {
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="activeFilter === filter"
+          (click)="setFilter(filter)"
+        >
+          {{ filter }}
+        </button>
+      }
+    </div>
+
+    <div class="template-grid">
+      @for (template of visibleTemplates; track template.id) {
+        <article class="template-card">
+          <div
+            class="template-preview"
+            [class]="template.family"
+            [ngStyle]="getPreviewStyle(template)"
+          >
+            <app-resume-preview
+              [resume]="demoResume"
+              [templateId]="template.id"
+              renderContext="picker"
+            ></app-resume-preview>
+          </div>
+
+          <div class="template-meta">
+            <div>
+              <h3>{{ template.name }}</h3>
+              <p>{{ template.description }}</p>
+            </div>
+            <span class="tier">{{ template.tierLabel }}</span>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

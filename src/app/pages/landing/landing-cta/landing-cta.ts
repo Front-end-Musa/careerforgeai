@@ -11,7 +11,7 @@ import { AuthFacade } from '../../auth/data/auth.facade';
 export class LandingCta {
   @Input() label: string = 'Create My Resume Now';
   @Input() icon: string = 'auto_awesome';
-  @Input() helperTexts: string[] = ['No Credit Card Required', 'Ready in 5 Minutes'];
+  @Input() helperTexts: string[] = ['Free plan available', 'AI tools included'];
   @Input() link: string[] = ['/application/dashboard'];
   @Input() ariaLabel: string = 'Create My Resume Now';
   private authFacade = inject(AuthFacade);

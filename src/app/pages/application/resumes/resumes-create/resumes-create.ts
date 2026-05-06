@@ -54,9 +54,7 @@ import { EntitlementsService } from '../../../../core/services/entitlements.serv
 import { ResumeAccessPolicyService } from '../../../../core/services/resume-access-policy.service';
 import { ResumeUpgradeService } from '../../../../core/services/resume-upgrade.service';
 import { DateField } from '../../../../lib/date-field/date-field';
-import { LatexPreview } from '../../../../lib/latex-preview/latex-preview';
-import { getTemplateById, getTemplateLabel, isLatexTemplate } from '../data/resume-template-catalog';
-import { buildLatexPreviewSource } from '../data/resume-latex-preview';
+import { getSafeTemplateId, getTemplateById, getTemplateLabel } from '../data/resume-template-catalog';
 import { ResumesStatus } from '../data/resumes.reducer';
 
 type SectionControl = FormGroup<{
@@ -87,7 +85,6 @@ type CustomSectionControl = FormGroup<{
     GenerateBtn,
     ResumePreview,
     DateField,
-    LatexPreview,
   ],
   templateUrl: './resumes-create.html',
   styleUrl: './resumes-create.scss',
@@ -196,8 +193,8 @@ export class ResumesCreate implements OnInit, OnChanges {
   ngOnInit() {
     this.resumesFacade.ensureLoaded('ResumesCreate.ngOnInit');
     if (this.templateId) {
-      this.previewTemplate = this.templateId;
-      this.resumeGroup.controls.templateId.setValue(this.templateId);
+      this.previewTemplate = getSafeTemplateId(this.templateId);
+      this.resumeGroup.controls.templateId.setValue(this.previewTemplate);
     }
 
     this.resumesFacade.saveSucceeded$
@@ -223,8 +220,8 @@ export class ResumesCreate implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['templateId']?.currentValue) {
-      this.previewTemplate = changes['templateId'].currentValue;
-      this.resumeGroup.controls.templateId.setValue(changes['templateId'].currentValue);
+      this.previewTemplate = getSafeTemplateId(changes['templateId'].currentValue);
+      this.resumeGroup.controls.templateId.setValue(this.previewTemplate);
     }
   }
 
@@ -244,22 +241,12 @@ export class ResumesCreate implements OnInit, OnChanges {
     return this.entitlements().canDownloadResume;
   }
 
-  get isLatexPreviewTemplate() {
-    return isLatexTemplate(this.previewTemplate);
-  }
-
-  get isHarshibarTemplate() {
-    return this.previewTemplate === 'overleaf-compact';
-  }
-
   get previewHeading() {
-    return this.isLatexPreviewTemplate ? 'Live LaTeX Preview' : 'Live Preview';
+    return 'Live Preview';
   }
 
   get previewDescription() {
-    return this.isLatexPreviewTemplate ?
-        'Your .tex source and the template output update as you type.' :
-        'Section order and content update here as you edit.';
+    return 'Section order and content update here as you edit.';
   }
 
   get selectedTemplateName() {
@@ -784,58 +771,14 @@ export class ResumesCreate implements OnInit, OnChanges {
       return;
     }
 
-    await this.resumesFacade.exportResumeToPdf(this.resumeGroup, this.resumeId);
-  }
-
-  downloadLatexSource() {
-    if (typeof window === 'undefined' || !this.isLatexPreviewTemplate) {
-      return;
-    }
-
-    if (!this.canDownloadCurrentResume) {
-      this.redirectToUpgrade('download');
-      return;
-    }
-
-    const source = buildLatexPreviewSource(this.previewTemplate, this.buildResumePayload(this.resumeGroup.getRawValue()));
-    const blob = new Blob([source], {
-      type: 'application/x-tex;charset=utf-8',
-    });
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-
-    anchor.href = downloadUrl;
-    anchor.download = this.buildLatexFileName();
-    anchor.click();
-
-    window.URL.revokeObjectURL(downloadUrl);
+    await this.resumesFacade.exportResumeToPdf(
+      this.buildResumePayload(this.resumeGroup.getRawValue()),
+      this.resumeId,
+    );
   }
 
   private requiredPlan(templateId: ResumeTemplateId) {
-    const proTemplates: ResumeTemplateId[] = [
-      'overleaf-academic',
-      'pro-modern',
-      'cascade',
-      'cubic-pro',
-      'tech-savvy',
-      'modern-executive',
-    ];
-    const premiumTemplates: ResumeTemplateId[] = [
-      'overleaf-executive',
-      'premium-executive',
-      'executive-edge',
-      'graphical-genius',
-      'elite-senior',
-      'metamorphic-masterpiece',
-    ];
-
-    if (premiumTemplates.includes(templateId)) {
-      return 'premium';
-    }
-    if (proTemplates.includes(templateId)) {
-      return 'pro';
-    }
-    return 'free';
+    return getTemplateById(templateId).requiredPlan;
   }
 
   private planRank(plan: 'free' | 'pro' | 'premium') {
@@ -848,17 +791,6 @@ export class ResumesCreate implements OnInit, OnChanges {
     return 1;
   }
 
-  private buildLatexFileName() {
-    const fullName = this.resumeGroup.get('personalInfo.fullName')?.value?.trim() || 'resume';
-    const templateSlug = this.previewTemplate.replace(/[^a-z0-9-]+/gi, '-').toLowerCase();
-    const nameSlug = fullName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-
-    return `${nameSlug || 'resume'}-${templateSlug}.tex`;
-  }
-
   private redirectToUpgrade(reason: 'save' | 'download' | 'second_resume' | 'template_lock' | 'tailor') {
     const returnTo =
       this.isEditMode && this.resumeId ? `/application/resumes/${this.resumeId}/edit` : '/application/resumes';
@@ -866,7 +798,7 @@ export class ResumesCreate implements OnInit, OnChanges {
     this.resumeUpgrade.startUpgrade({
       reason,
       returnTo,
-      recommendedPlan: this.previewTemplate === 'overleaf-executive' ? 'premium' : 'pro',
+      recommendedPlan: this.previewTemplate === 'executive-simple' ? 'premium' : 'pro',
       message: this.resumeAccessPolicy.upgradeMessage(reason, this.previewTemplate),
     });
   }
@@ -1509,7 +1441,7 @@ export class ResumesCreate implements OnInit, OnChanges {
           },
         });
 
-        this.previewTemplate = resume.templateId ?? this.previewTemplate;
+        this.previewTemplate = getSafeTemplateId(resume.templateId);
         this.resumeGroup.controls.templateId.setValue(this.previewTemplate);
         this.loadedMeta = resume.meta ?? null;
         this.resetSectionOrder(sections);

@@ -2,19 +2,21 @@
   <div class="card-content">
     <div class="card-price">
       @if (popular) {
-        <div class="badge">Most Popular</div>
+        <div class="badge">Most chosen</div>
       }
 
       <h3 class="plan-name">{{ plan.name }}</h3>
 
-      <p class="price">
-        ${{ plan.price }}@if (plan.name != 'Premium') {
-        <span>/month</span>
-      }
-      @if (plan.name == 'Premium') {
-        <span>/month</span>
-      }
-    </p>
+      <p class="price">${{ plan.price }}<span>/{{ plan.billingPeriod }}</span></p>
+      <p class="plan-note">
+        @if (plan.name === 'Free') {
+          Everything needed to start a focused resume.
+        } @else if (plan.name === 'Pro') {
+          For active job seekers who need more drafts and exports.
+        } @else {
+          For users who want the full workspace and job tracker.
+        }
+      </p>
   </div>
 
   <ul class="features">

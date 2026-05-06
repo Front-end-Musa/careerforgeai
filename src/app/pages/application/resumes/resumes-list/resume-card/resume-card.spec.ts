@@ -28,7 +28,7 @@ describe('ResumeCard', () => {
     education: [],
     skills: ['Angular'],
     contact: {},
-    templateId: 'pro-modern',
+    templateId: 'clean-modern',
     meta: {
       createdAt: '2026-04-10T00:00:00.000Z',
       updatedAt: '2026-04-12T00:00:00.000Z',
