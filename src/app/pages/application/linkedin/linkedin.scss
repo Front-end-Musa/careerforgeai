@@ -67,5 +67,29 @@
   .preview-page {
     grid-template-columns: 1fr;
     padding: 32px 16px;
+    align-items: start;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  .preview-copy h1 {
+    max-width: none;
+    font-size: 2.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .preview-panel {
+    min-width: 0;
+    box-shadow: none;
+  }
+
+  .panel-row {
+    flex-direction: column;
+    gap: 6px;
+
+    strong {
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
   }
 }

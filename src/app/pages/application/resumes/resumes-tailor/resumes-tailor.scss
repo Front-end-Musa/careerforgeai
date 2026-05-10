@@ -95,11 +95,22 @@
 
 @media (max-width: 768px) {
   .resumes-tailor-wrapper {
-    padding: 14px;
+    padding: 14px 12px 28px;
+    overflow-x: hidden;
   }
 
   .tailor-card {
+    min-width: 0;
     padding: 16px;
+  }
+
+  .tailor-header {
+    flex-direction: column;
+
+    h1 {
+      font-size: 22px;
+      overflow-wrap: anywhere;
+    }
   }
 
   .resume-context {

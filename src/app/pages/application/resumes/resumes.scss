@@ -1,5 +1,6 @@
 .resumes {
   min-height: 100%;
+  overflow-x: hidden;
 
   > .app-section {
     padding-top: 28px;
@@ -9,4 +10,13 @@
 
 button {
   border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .resumes {
+    > .app-section {
+      width: 100%;
+      padding: 16px 12px 32px;
+    }
+  }
 }

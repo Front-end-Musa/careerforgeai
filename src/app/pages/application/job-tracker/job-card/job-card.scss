@@ -144,3 +144,30 @@
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+@media (max-width: 768px) {
+  .job-item {
+    padding: 16px;
+    touch-action: pan-y;
+
+    .job-main {
+      min-width: 0;
+      padding-right: 24px;
+    }
+
+    .job-title,
+    .job-company,
+    .job-date {
+      overflow-wrap: anywhere;
+    }
+
+    .job-item_actions {
+      top: 14px;
+      right: 8px;
+
+      .menu {
+        max-width: min(220px, 72vw);
+      }
+    }
+  }
+}

@@ -190,7 +190,51 @@ button {
 }
 
 @media (max-width: 720px) {
+  .settings.container {
+    min-height: auto;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+
+  .app-section {
+    width: 100%;
+    padding: 18px 16px 48px;
+    gap: 1rem;
+  }
+
   .settings-hero {
     flex-direction: column;
+    padding: 22px;
+    box-shadow: none;
+
+    h2 {
+      font-size: 1.7rem;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .profile-info,
+  .subscription,
+  .danger-zone {
+    padding: 1.1rem;
+  }
+
+  .subscription-header,
+  .subscription .plan-info .plan .usage-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .subscription .plan-info .plan .usage-row {
+    gap: 4px;
+
+    strong {
+      text-align: left;
+    }
+  }
+
+  .primary-btn,
+  .manage-btn,
+  .danger-btns .delete-account-btn {
+    width: 100%;
   }
 }

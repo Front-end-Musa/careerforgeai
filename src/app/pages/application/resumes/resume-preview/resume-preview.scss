@@ -50,3 +50,9 @@
     box-shadow: none;
   }
 }
+
+@media screen and (max-width: 768px) {
+  :host {
+    max-width: 100%;
+  }
+}

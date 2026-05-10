@@ -48,8 +48,30 @@
   }
 }
 
-@media (max-width: 576px) {
-  .layout .main-content {
-    margin-left: 60px;
+@media (max-width: 768px) {
+  .layout {
+    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
+
+    .main-content {
+      margin-left: 0;
+      padding-bottom: calc(112px + env(safe-area-inset-bottom));
+      overflow-x: hidden;
+    }
+
+    .content-dim {
+      display: none;
+    }
+
+    .sidebar:hover ~ .content-dim,
+    .sidebar.open ~ .content-dim {
+      opacity: 0;
+    }
+
+    .sidebar:hover + .main-content,
+    .sidebar.open + .main-content {
+      filter: none;
+    }
   }
 }

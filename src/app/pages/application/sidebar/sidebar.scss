@@ -134,6 +134,10 @@
   display: none;
 }
 
+.mobile-tabs {
+  display: none;
+}
+
 body.sidebar-open {
   overflow: hidden;
 }
@@ -183,41 +187,88 @@ body.sidebar-open {
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .sidebar {
-    width: 60px;
+    display: none;
+  }
 
-    .navigation {
-      gap: 2px;
+  .mobile-tabs {
+    position: fixed;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 10px;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    border-radius: 18px;
+    background:
+      linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(33, 41, 54, 0.98)),
+      var(--ink);
+    box-shadow: 0 18px 40px rgba(17, 24, 39, 0.2);
+  }
+
+  .mobile-tab {
+    min-width: 0;
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 4px;
+    border-radius: 12px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.68);
+    text-align: center;
+    font: inherit;
+
+    &:hover,
+    &.active {
+      background: rgba(241, 91, 42, 0.16);
+      color: #ffffff;
     }
 
-    li {
-      padding: 12px;
-      font-size: 14px;
-      gap: 10px;
-      height: 52px;
-
-      span.material-symbols-outlined {
-        font-size: 18px;
-      }
+    .material-symbols-outlined {
+      font-size: 20px;
+      line-height: 1;
     }
   }
 
-  .sidebar:hover,
-  .sidebar.open {
-    width: 236px;
+  .mobile-tab-button {
+    border: 0;
+  }
 
-    .sidebar-list {
-      padding: 0 16px;
-    }
+  .mobile-tab-label {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 
-    .sidebar-signout {
-      padding: 10px 16px;
-    }
+@media (max-width: 420px) {
+  .mobile-tabs {
+    right: 8px;
+    left: 8px;
+    gap: 2px;
+    padding: 7px;
+  }
 
-    li {
-      padding: 14px 16px;
-      height: 56px;
+  .mobile-tab {
+    min-height: 50px;
+
+    .material-symbols-outlined {
+      font-size: 19px;
     }
+  }
+
+  .mobile-tab-label {
+    font-size: 9px;
   }
 }

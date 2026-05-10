@@ -368,14 +368,18 @@ mat-form-field {
 
 @media (max-width: 768px) {
   .resumes-create-shell {
-    padding: 16px 16px 96px;
+    width: 100%;
+    min-width: 0;
+    padding: 16px 0 104px;
     gap: 16px;
+    overflow-x: hidden;
   }
 
   .builder-panel,
   .preview-panel {
-    padding: 18px;
-    border-radius: 22px;
+    min-width: 0;
+    padding: 16px;
+    border-radius: 18px;
   }
 
   .builder-header,
@@ -403,12 +407,58 @@ mat-form-field {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .builder-actions > *,
+  .footer-actions > *,
+  .section-toolbar > *,
+  .entry-actions > * {
+    min-width: 0;
+  }
+
+  .builder-intro h1 {
+    font-size: 26px;
+    overflow-wrap: anywhere;
+  }
+
+  .builder-status .status-pill {
+    text-align: center;
+  }
+
+  .add-section-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .add-section-menu {
+    right: 0;
+    min-width: 0;
+  }
+
+  .section-card-header {
+    gap: 12px;
+  }
+
+  .entry-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .entry-actions .generate-action {
+    margin-right: 0;
+  }
+
+  .preview-content {
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
   .mobile-action-bar {
     position: fixed;
     right: 16px;
-    bottom: 16px;
+    bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
     left: 16px;
-    z-index: 20;
+    z-index: 45;
     display: flex;
     gap: 12px;
     padding: 12px;
@@ -425,5 +475,19 @@ mat-form-field {
 
   .mobile-action-bar .generate-helper {
     max-width: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .section-toolbar,
+  .builder-actions,
+  .footer-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-action-bar {
+    right: 12px;
+    left: 12px;
+    flex-direction: column;
   }
 }

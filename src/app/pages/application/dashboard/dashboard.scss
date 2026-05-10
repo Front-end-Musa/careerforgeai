@@ -229,13 +229,44 @@
 
 @media (max-width: 768px) {
   .dashboard {
+    overflow-x: hidden;
+
+    .app-section {
+      width: 100%;
+      gap: 18px;
+      padding: 18px 16px 32px;
+    }
+
     .app-section .dashboard-hero {
       grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 22px;
+      box-shadow: none;
+
+      .hero-brief {
+        min-width: 0;
+      }
     }
 
     .quick-actions-container {
+      padding: 22px;
+      box-shadow: none;
+
       .quick-actions {
         grid-template-columns: 1fr;
+
+        .action {
+          min-width: 0;
+          padding: 18px;
+        }
+      }
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+
+      .stat {
+        min-width: 0;
       }
     }
 
@@ -251,7 +282,8 @@
   .dashboard {
     .dashboard-hero {
       .title {
-        font-size: 1.9rem;
+        font-size: 1.8rem;
+        overflow-wrap: anywhere;
       }
 
       .sub-title {
@@ -261,8 +293,17 @@
 
     .stats {
       .stat {
-        padding: 20px;
+        padding: 18px;
         gap: 1vh;
+      }
+    }
+
+    .quick-actions-container .quick-actions .action {
+      flex-direction: column;
+
+      span {
+        width: 44px;
+        height: 44px;
       }
     }
   }

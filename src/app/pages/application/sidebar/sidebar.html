@@ -29,3 +29,22 @@
     </button>
   </div>
 </div>
+
+<nav class="mobile-tabs" aria-label="Application navigation">
+  @for (link of visibleLinks(); track link.route) {
+    <a
+      class="mobile-tab"
+      [routerLink]="link.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="liActive(link.id)"
+    >
+      <span class="material-symbols-outlined">{{ link.icon }}</span>
+      <span class="mobile-tab-label">{{ link.label }}</span>
+    </a>
+  }
+  <button class="mobile-tab mobile-tab-button" type="button" aria-label="Sign out" (click)="logout()">
+    <span class="material-symbols-outlined">logout</span>
+    <span class="mobile-tab-label">Sign Out</span>
+  </button>
+</nav>

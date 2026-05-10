@@ -84,3 +84,37 @@
     padding: 18px 16px 32px;
   }
 }
+
+@media (max-width: 768px) {
+  .app-section {
+    width: 100%;
+    height: auto;
+    min-height: calc(100dvh - 210px);
+    grid-template-columns: repeat(4, minmax(250px, 78vw));
+    gap: 12px;
+    padding: 16px 12px 28px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x proximity;
+
+    .jobs-list {
+      min-width: 250px;
+      padding: 12px;
+      scroll-snap-align: start;
+
+      .list {
+        min-height: 380px;
+        height: auto;
+        max-height: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .app-section {
+    grid-template-columns: repeat(4, minmax(236px, 82vw));
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}

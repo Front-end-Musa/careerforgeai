@@ -163,6 +163,12 @@
 }
 
 @media (max-width: 640px) {
+  .modal-shell {
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: 18px;
+  }
+
   .modal-header,
   .modal-body,
   .modal-footer {
@@ -174,6 +180,11 @@
   .modal-footer {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .modal-header h2 {
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
   }
 
   .modal-footer {
