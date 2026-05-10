@@ -118,6 +118,10 @@ export class Settings {
     this.authFacade.deleteAccount();
   }
 
+  onSignOut() {
+    this.authFacade.logout();
+  }
+
   ngOnInit() {
     this.authFacade.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
       this.user.set(user);

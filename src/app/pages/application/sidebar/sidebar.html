@@ -1,50 +1,75 @@
 <div class="sidebar" [class.open]="isSidebarOpen">
   <div class="sidebar-list">
     <div class="logo-container">
-      <app-logo class="app-logo"></app-logo>
-      <app-logo-short class="app-logo-short"></app-logo-short>
+      <img
+        class="app-logo"
+        src="/assets/brand/logo-with-name-sidebar.png"
+        width="600"
+        height="150"
+        alt="ResumeCrafts AI"
+      />
+      <img
+        class="app-logo-short"
+        src="/assets/brand/logo-icon-sidebar.png"
+        width="512"
+        height="512"
+        alt="ResumeCrafts AI"
+      />
     </div>
     <ul class="navigation">
-      @for (link of visibleLinks(); track link.route) {
+      @for (link of links; track link.route) {
         <li
           class="navigation-item"
-          [routerLink]="link.route"
+          [class.locked]="!isLinkAvailable(link)"
+          [routerLink]="isLinkAvailable(link) ? link.route : null"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
-          (click)="liActive(link.id); isSidebarOpen = false"
+          (click)="onNavClick($event, link)"
           [attr.id]="link.id"
+          [attr.aria-disabled]="!isLinkAvailable(link)"
+          [attr.title]="!isLinkAvailable(link) ? 'Upgrade to Premium to use Job Tracker' : null"
         >
           <span class="material-symbols-outlined">{{ link.icon }}</span>
           <a class="navigation-link">{{ link.label }}</a>
+          @if (!isLinkAvailable(link)) {
+            <span class="material-symbols-outlined lock-icon" aria-hidden="true">lock</span>
+          }
         </li>
       }
     </ul>
   </div>
-  <div class="sidebar-signout">
-    <button mat-button class="signout-btn" (click)="logout()">
-      <div class="signout-btn-content">
-        <span class="material-symbols-outlined logout"> logout </span>
-        <span class="logout-text">Sign Out</span>
-      </div>
-    </button>
+  <div class="sidebar-account">
+    <a
+      class="navigation-item account-link"
+      [routerLink]="settingsLink.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="liActive(settingsLink.id); isSidebarOpen = false"
+      [attr.id]="settingsLink.id"
+    >
+      <span class="material-symbols-outlined">{{ settingsLink.icon }}</span>
+      <span class="navigation-link">{{ settingsLink.label }}</span>
+    </a>
   </div>
 </div>
 
 <nav class="mobile-tabs" aria-label="Application navigation">
-  @for (link of visibleLinks(); track link.route) {
+  @for (link of mobileLinks(); track link.route) {
     <a
       class="mobile-tab"
-      [routerLink]="link.route"
+      [class.locked]="!isLinkAvailable(link)"
+      [routerLink]="isLinkAvailable(link) ? link.route : null"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      (click)="liActive(link.id)"
+      (click)="onNavClick($event, link)"
+      [attr.aria-disabled]="!isLinkAvailable(link)"
+      [attr.title]="!isLinkAvailable(link) ? 'Upgrade to Premium to use Job Tracker' : null"
     >
       <span class="material-symbols-outlined">{{ link.icon }}</span>
       <span class="mobile-tab-label">{{ link.label }}</span>
+      @if (!isLinkAvailable(link)) {
+        <span class="material-symbols-outlined lock-icon" aria-hidden="true">lock</span>
+      }
     </a>
   }
-  <button class="mobile-tab mobile-tab-button" type="button" aria-label="Sign out" (click)="logout()">
-    <span class="material-symbols-outlined">logout</span>
-    <span class="mobile-tab-label">Sign Out</span>
-  </button>
 </nav>

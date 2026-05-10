@@ -1,16 +1,18 @@
-@use '@angular/material' as mat;
-
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  line-height: 0;
+}
 
-  .brand-name {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-  }
+.brand-logo {
+  display: block;
+  width: clamp(156px, 16vw, 220px);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 * {

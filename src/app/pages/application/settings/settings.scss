@@ -166,6 +166,36 @@
 }
 
 .danger-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .signout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(17, 24, 39, 0.18);
+    background: #ffffff;
+    color: var(--ink);
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
+
+    &:hover {
+      border-color: var(--accent);
+      background-color: rgba(241, 91, 42, 0.08);
+    }
+
+    .material-symbols-outlined {
+      font-size: 20px;
+    }
+  }
+
   .delete-account-btn {
     background-color: #dc2626;
     color: white;
@@ -179,9 +209,6 @@
     &:hover {
       opacity: 0.9;
     }
-  }
-  .signout-btn {
-    border: 1px solid #dc2626;
   }
 }
 
@@ -234,6 +261,7 @@ button {
 
   .primary-btn,
   .manage-btn,
+  .danger-btns .signout-btn,
   .danger-btns .delete-account-btn {
     width: 100%;
   }
