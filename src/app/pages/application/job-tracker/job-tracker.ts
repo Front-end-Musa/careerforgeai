@@ -1,14 +1,11 @@
 import {
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit,
-  signal,
   Signal,
   ViewChild,
   ViewEncapsulation,
-  WritableSignal,
 } from '@angular/core';
 import { DirName } from '../dir-name/dir-name';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
@@ -40,16 +37,14 @@ export class JobTracker implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   jobs = toSignal(this.jobsFacade.jobs$, { initialValue: [] as Job[] });
-  appliedJobs: Signal<Job[]> = computed(() =>
-    this.jobs().filter((job) => job.status === 'applied'),
-  );
-  interviewingJobs: Signal<Job[]> = computed(() =>
-    this.jobs().filter((job) => job.status === 'interviewing'),
-  );
-  offerJobs: Signal<Job[]> = computed(() => this.jobs().filter((job) => job.status === 'offered'));
-  rejectedJobs: Signal<Job[]> = computed(() =>
-    this.jobs().filter((job) => job.status === 'rejected'),
-  );
+  appliedJobs: Signal<Job[]> = toSignal(this.jobsFacade.appliedJobs$, { initialValue: [] as Job[] });
+  interviewingJobs: Signal<Job[]> = toSignal(this.jobsFacade.interviewingJobs$, {
+    initialValue: [] as Job[],
+  });
+  offerJobs: Signal<Job[]> = toSignal(this.jobsFacade.offeredJobs$, { initialValue: [] as Job[] });
+  rejectedJobs: Signal<Job[]> = toSignal(this.jobsFacade.rejectedJobs$, {
+    initialValue: [] as Job[],
+  });
 
   constructor(private sanitizer: DomSanitizer) {
     this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(

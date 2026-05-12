@@ -32,7 +32,7 @@
           </div>
         </section>
       }
-      @for (section of getSidebarSections(['languages', 'certifications']); track section.id) {
+      @for (section of sidebarSections; track section.id) {
         <section class="mini-section">
           <div class="mini-title">{{ section.title }}</div>
           @switch (section.type) {
@@ -58,7 +58,7 @@
     </aside>
 
     <main class="landing-modern-content">
-      @for (section of getMainSections(['personal', 'summary', 'skills', 'languages', 'certifications']); track section.id) {
+      @for (section of mainSections; track section.id) {
         <section class="section-card modern-card" [attr.data-section]="section.type">
           <div class="section-title">{{ section.title }}</div>
           @switch (section.type) {

@@ -30,6 +30,14 @@ import { NotificationsEffects } from './core/state/notifications/notifications.e
 import { jobsReducer } from './pages/application/job-tracker/data/jobs.reducer';
 import { JobsEffects } from './pages/application/job-tracker/data/jobs.effects';
 
+const storeDevtoolsProviders = environment.production ?
+  [] :
+  [
+    provideStoreDevtools({
+      maxAge: 25,
+    }),
+  ];
+
 export const appConfig: ApplicationConfig = {
   providers: [
     // Angular core
@@ -89,9 +97,6 @@ export const appConfig: ApplicationConfig = {
       NotificationsEffects,
       JobsEffects,
     ]),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
+    ...storeDevtoolsProviders,
   ],
 };

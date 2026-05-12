@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { filter, map, skip, startWith, take } from 'rxjs';
+import { auditTime, filter, map, merge, of, skip, take } from 'rxjs';
 import {
   AwardSectionEntry,
   CertificationSectionEntry,
@@ -1108,8 +1108,10 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   private resumeGroupValueChanges() {
-    return this.resumeGroup.valueChanges.pipe(
-      startWith(this.resumeGroup.getRawValue()),
+    return merge(
+      of(this.resumeGroup.getRawValue()),
+      this.resumeGroup.valueChanges.pipe(auditTime(50)),
+    ).pipe(
       map((raw) => this.buildResumePayload(raw)),
     );
   }

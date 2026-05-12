@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Resume, ResumeSection } from '../../../../../core/interfaces/resumes.interface';
 import { ResumeRenderContext, ResumeTemplateOption } from '../../data/resume-template-catalog';
 import {
@@ -26,7 +26,7 @@ import {
   templateUrl: './modern-resume-renderer.html',
   styleUrl: './modern-resume-renderer.scss',
 })
-export class ModernResumeRenderer {
+export class ModernResumeRenderer implements OnChanges {
   @Input({ required: true }) resume?: Partial<Resume>;
   @Input({ required: true }) template!: ResumeTemplateOption;
   @Input() renderContext: ResumeRenderContext = 'editor';
@@ -35,39 +35,31 @@ export class ModernResumeRenderer {
   readonly joinValues = joinValues;
   readonly formatDateRange = formatDateRange;
 
-  get visibleSections() {
-    return getVisibleSections(this.resume);
-  }
+  visibleSections: ResumeSection[] = [];
+  contactItems: string[] = [];
+  experienceEntries = getExperienceEntries();
+  educationEntries = getEducationEntries();
+  skillEntries = getSkillEntries();
+  normalizedSummary = '';
+  mainSections: ResumeSection[] = [];
+  sidebarSections: ResumeSection[] = [];
 
-  get contactItems() {
-    return getContactItems(this.resume);
-  }
-
-  get experienceEntries() {
-    return getExperienceEntries(this.resume);
-  }
-
-  get educationEntries() {
-    return getEducationEntries(this.resume);
-  }
-
-  get skillEntries() {
-    return getSkillEntries(this.resume);
-  }
-
-  get normalizedSummary() {
-    return (this.resume?.summary ?? '')
+  ngOnChanges() {
+    this.visibleSections = getVisibleSections(this.resume);
+    this.contactItems = getContactItems(this.resume);
+    this.experienceEntries = getExperienceEntries(this.resume);
+    this.educationEntries = getEducationEntries(this.resume);
+    this.skillEntries = getSkillEntries(this.resume);
+    this.normalizedSummary = (this.resume?.summary ?? '')
       .replace(/\r\n/g, '\n')
       .replace(/\n{3,}/g, '\n\n')
       .trim();
-  }
-
-  getMainSections(excludedTypes: string[] = []) {
-    return this.visibleSections.filter((section) => !excludedTypes.includes(section.type));
-  }
-
-  getSidebarSections(sectionTypes: string[]) {
-    return this.visibleSections.filter((section) => sectionTypes.includes(section.type));
+    this.mainSections = this.visibleSections.filter(
+      (section) => !['personal', 'summary', 'skills', 'languages', 'certifications'].includes(section.type),
+    );
+    this.sidebarSections = this.visibleSections.filter((section) =>
+      ['languages', 'certifications'].includes(section.type),
+    );
   }
 
   getProjectEntries(section: ResumeSection) {

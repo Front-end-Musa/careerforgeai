@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Resume, ResumeSection } from '../../../../../core/interfaces/resumes.interface';
 import { ResumeTemplateOption, ResumeRenderContext } from '../../data/resume-template-catalog';
 import {
@@ -27,7 +27,7 @@ import {
   templateUrl: './classic-resume-renderer.html',
   styleUrl: './classic-resume-renderer.scss',
 })
-export class ClassicResumeRenderer {
+export class ClassicResumeRenderer implements OnChanges {
   @Input({ required: true }) resume?: Partial<Resume>;
   @Input({ required: true }) template!: ResumeTemplateOption;
   @Input() renderContext: ResumeRenderContext = 'editor';
@@ -37,27 +37,25 @@ export class ClassicResumeRenderer {
   readonly getItemSubtitle = getItemSubtitle;
   readonly formatDateRange = formatDateRange;
 
-  get visibleSections() {
-    return getVisibleSections(this.resume);
+  visibleSections: ResumeSection[] = [];
+  contactItems: string[] = [];
+  experienceEntries = getExperienceEntries();
+  educationEntries = getEducationEntries();
+  skillEntries = getSkillEntries();
+  skillColumns: string[][] = [];
+  simpleOutlineSections: ResumeSection[] = [];
+
+  ngOnChanges() {
+    this.visibleSections = getVisibleSections(this.resume);
+    this.contactItems = getContactItems(this.resume);
+    this.experienceEntries = getExperienceEntries(this.resume);
+    this.educationEntries = getEducationEntries(this.resume);
+    this.skillEntries = getSkillEntries(this.resume);
+    this.skillColumns = this.buildSkillColumns();
+    this.simpleOutlineSections = this.buildSimpleOutlineSections();
   }
 
-  get contactItems() {
-    return getContactItems(this.resume);
-  }
-
-  get experienceEntries() {
-    return getExperienceEntries(this.resume);
-  }
-
-  get educationEntries() {
-    return getEducationEntries(this.resume);
-  }
-
-  get skillEntries() {
-    return getSkillEntries(this.resume);
-  }
-
-  get skillColumns() {
+  private buildSkillColumns() {
     const columns: string[][] = [[], [], []];
     this.skillEntries.forEach((skill, index) => {
       columns[index % columns.length].push(skill);
@@ -74,7 +72,7 @@ export class ClassicResumeRenderer {
     return this.visibleSections.filter((section) => !['skills', 'languages', 'certifications'].includes(section.type));
   }
 
-  getSimpleOutlineSections() {
+  private buildSimpleOutlineSections() {
     const priority = ['summary', 'education', 'experience', 'awards', 'skills'];
 
     return [...this.visibleSections].sort((first, second) => {

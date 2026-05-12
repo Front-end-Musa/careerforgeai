@@ -15,6 +15,8 @@ const polarToken = defineSecret("POLAR_ACCESS_TOKEN");
 const polarWebhookSecret = defineSecret("POLAR_WEBHOOK_SECRET");
 initializeApp();
 
+let polarClient: Polar | null = null;
+
 type PlanTier = "free" | "pro" | "premium";
 type PaidPlan = Exclude<PlanTier, "free">;
 type SubscriptionStatus = "none" | "active" | "past_due" | "cancelled";
@@ -404,10 +406,16 @@ function validateResumeGenerationRequest(data: unknown): {
  * @return {Polar} Polar SDK client.
  */
 function getPolarClient(): Polar {
-  return new Polar({
+  if (polarClient) {
+    return polarClient;
+  }
+
+  polarClient = new Polar({
     accessToken: polarToken.value(),
     server: "production",
   });
+
+  return polarClient;
 }
 
 /**
@@ -1082,7 +1090,12 @@ export const ensurePolarCustomer = onCall(
   },
 );
 
-export const createCheckout = onCall({secrets: [polarToken], invoker: "public"}, async (req) => {
+export const createCheckout = onCall({
+  secrets: [polarToken],
+  invoker: "public",
+  minInstances: 1,
+  region: "us-central1",
+}, async (req) => {
   const polar = getPolarClient();
   const uid = req.auth?.uid;
   const {plan} = (req.data ?? {}) as CreateCheckoutRequest;
@@ -1103,7 +1116,6 @@ export const createCheckout = onCall({secrets: [polarToken], invoker: "public"},
   }
 
   try {
-    await ensurePolarCustomerForUid(uid, polar);
     const productId = POLAR_PLAN_IDS[plan][0];
     const checkout = await polar.checkouts.create({
       products: [productId],

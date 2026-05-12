@@ -38,6 +38,40 @@
   --section-bg: transparent;
 }
 
+.landing .defer-placeholder {
+  display: block;
+  background: var(--section-bg, transparent);
+}
+
+.landing .defer-placeholder-templates {
+  --section-bg: #f7f2ea;
+  min-height: 420px;
+}
+
+.landing .defer-placeholder-steps {
+  --section-bg: #111827;
+  min-height: 360px;
+}
+
+.landing .defer-placeholder-about {
+  --section-bg: #fffdf8;
+  min-height: 420px;
+}
+
+.landing .defer-placeholder-pricing,
+.landing .defer-placeholder-faq {
+  --section-bg: #ffffff;
+  min-height: 360px;
+}
+
+.landing .defer-placeholder-contact {
+  min-height: 320px;
+}
+
+.landing .defer-placeholder-footer {
+  min-height: 180px;
+}
+
 .landing .reveal-item {
   opacity: 0;
   transform: translate3d(0, 36px, 0) scale(0.98);

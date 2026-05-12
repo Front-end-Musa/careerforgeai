@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Resume, ResumeSection } from '../../../../../core/interfaces/resumes.interface';
 import { ResumeRenderContext, ResumeTemplateOption } from '../../data/resume-template-catalog';
 import {
@@ -26,7 +26,7 @@ import {
   templateUrl: './premium-resume-renderer.html',
   styleUrl: './premium-resume-renderer.scss',
 })
-export class PremiumResumeRenderer {
+export class PremiumResumeRenderer implements OnChanges {
   @Input({ required: true }) resume?: Partial<Resume>;
   @Input({ required: true }) template!: ResumeTemplateOption;
   @Input() renderContext: ResumeRenderContext = 'editor';
@@ -35,41 +35,41 @@ export class PremiumResumeRenderer {
   readonly joinValues = joinValues;
   readonly formatDateRange = formatDateRange;
 
-  get visibleSections() {
-    return getVisibleSections(this.resume);
+  visibleSections: ResumeSection[] = [];
+  contactItems: string[] = [];
+  experienceEntries = getExperienceEntries();
+  educationEntries = getEducationEntries();
+  skillEntries = getSkillEntries();
+  skillColumns: string[][] = [];
+  centeredSections: ResumeSection[] = [];
+  premiumMainSections: ResumeSection[] = [];
+  premiumSideSections: ResumeSection[] = [];
+
+  ngOnChanges() {
+    this.visibleSections = getVisibleSections(this.resume);
+    this.contactItems = getContactItems(this.resume);
+    this.experienceEntries = getExperienceEntries(this.resume);
+    this.educationEntries = getEducationEntries(this.resume);
+    this.skillEntries = getSkillEntries(this.resume);
+    this.skillColumns = this.buildSkillColumns();
+    this.centeredSections = this.visibleSections.filter(
+      (section) => !['summary', 'skills'].includes(section.type),
+    );
+    this.premiumMainSections = this.visibleSections.filter(
+      (section) => !['summary', 'skills', 'languages', 'certifications'].includes(section.type),
+    );
+    this.premiumSideSections = this.visibleSections.filter((section) =>
+      ['languages', 'certifications'].includes(section.type),
+    );
   }
 
-  get contactItems() {
-    return getContactItems(this.resume);
-  }
-
-  get experienceEntries() {
-    return getExperienceEntries(this.resume);
-  }
-
-  get educationEntries() {
-    return getEducationEntries(this.resume);
-  }
-
-  get skillEntries() {
-    return getSkillEntries(this.resume);
-  }
-
-  get skillColumns() {
+  private buildSkillColumns() {
     const columns: string[][] = [[], [], []];
     this.skillEntries.forEach((skill, index) => {
       columns[index % columns.length].push(skill);
     });
 
     return columns.filter((column) => column.length);
-  }
-
-  getSections(sectionTypes: string[]) {
-    return this.visibleSections.filter((section) => sectionTypes.includes(section.type));
-  }
-
-  getSectionsExcluding(sectionTypes: string[]) {
-    return this.visibleSections.filter((section) => !sectionTypes.includes(section.type));
   }
 
   getProjectEntries(section: ResumeSection) {

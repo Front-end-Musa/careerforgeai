@@ -20,7 +20,7 @@
         </section>
       }
 
-      @for (section of getSectionsExcluding(['summary', 'skills']); track section.id) {
+      @for (section of centeredSections; track section.id) {
         <section class="centered-section" [attr.data-section]="section.type">
           <div class="centered-section-title">{{ section.title }}</div>
           @switch (section.type) {
@@ -182,7 +182,7 @@
 
   <div class="premium-grid">
     <main>
-      @for (section of getSectionsExcluding(['summary', 'skills', 'languages', 'certifications']); track section.id) {
+      @for (section of premiumMainSections; track section.id) {
         <section class="premium-section" [attr.data-section]="section.type">
           <div class="section-title">{{ section.title }}</div>
           @switch (section.type) {
@@ -302,7 +302,7 @@
           </div>
         </section>
       }
-      @for (section of getSections(['languages', 'certifications']); track section.id) {
+      @for (section of premiumSideSections; track section.id) {
         <section class="side-card">
           <div class="section-title">{{ section.title }}</div>
           @switch (section.type) {
