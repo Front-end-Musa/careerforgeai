@@ -30,6 +30,8 @@ export interface ResumesState extends EntityState<Resume> {
   downloadError: string | null;
   exporting: boolean;
   exportError: string | null;
+  exportingResumeId: string | null;
+  exportResumePayload: Partial<Resume> | null;
 }
 
 export const resumesAdapter: EntityAdapter<Resume> = createEntityAdapter<Resume>({
@@ -58,6 +60,8 @@ export const initialState: ResumesState = resumesAdapter.getInitialState({
   downloadError: null,
   exporting: false,
   exportError: null,
+  exportingResumeId: null,
+  exportResumePayload: null,
 });
 
 
@@ -194,21 +198,27 @@ export const resumesReducer = createReducer(
     downloadError: error,
   })),
 
-  on(ResumesActions.exportResumeToPdf, (state) => ({
+  on(ResumesActions.exportResumeToPdf, (state, { resumeId, resume }) => ({
     ...state,
     exporting: true,
     exportError: null,
+    exportingResumeId: resumeId ?? null,
+    exportResumePayload: resume,
   })),
 
   on(ResumesActions.exportResumeToPdfSuccess, (state) => ({
     ...state,
     exporting: false,
     exportError: null,
+    exportingResumeId: null,
+    exportResumePayload: null,
   })),
 
   on(ResumesActions.exportResumeToPdfFailure, (state, { error }) => ({
     ...state,
     exporting: false,
     exportError: error,
+    exportingResumeId: null,
+    exportResumePayload: null,
   })),
 );

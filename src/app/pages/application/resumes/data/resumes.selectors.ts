@@ -88,3 +88,13 @@ export const selectExportError = createSelector(
   selectResumesFeature,
   (state: ResumesState) => state.exportError,
 );
+
+export const selectExportingResumeId = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.exportingResumeId,
+);
+
+export const selectExportResumePayload = createSelector(
+  selectResumesFeature,
+  (state: ResumesState) => state.exportResumePayload,
+);

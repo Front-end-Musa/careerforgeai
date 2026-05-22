@@ -44,8 +44,8 @@ describe('ResumeCard', () => {
   };
 
   beforeEach(async () => {
-    resumesFacade = jasmine.createSpyObj<ResumesFacade>('ResumesFacade', ['deleteResume', 'downloadResume'], {
-      downloadingResumeId$: of(null),
+    resumesFacade = jasmine.createSpyObj<ResumesFacade>('ResumesFacade', ['deleteResume', 'exportResumeToPdf'], {
+      exportingResumeId$: of(null),
     });
     resumeAccessPolicy = jasmine.createSpyObj<ResumeAccessPolicyService>('ResumeAccessPolicyService', [
       'canExportResume',
@@ -101,10 +101,10 @@ describe('ResumeCard', () => {
     expect(buttons[1].getAttribute('ng-reflect-router-link')).toContain('/application/resumes,resume-1,tailor');
   });
 
-  it('downloads the resume when the user has access', () => {
+  it('exports the resume as PDF when the user has access', () => {
     component.downloadResume();
 
-    expect(resumesFacade.downloadResume).toHaveBeenCalledWith('resume-1');
+    expect(resumesFacade.exportResumeToPdf).toHaveBeenCalledWith(resume, 'resume-1');
   });
 
   it('routes to upgrade when download access is locked', () => {
@@ -113,7 +113,7 @@ describe('ResumeCard', () => {
     component.downloadResume();
 
     expect(resumeUpgrade.startUpgrade).toHaveBeenCalled();
-    expect(resumesFacade.downloadResume).not.toHaveBeenCalled();
+    expect(resumesFacade.exportResumeToPdf).not.toHaveBeenCalled();
   });
 
   it('calls the facade when deleting a resume', () => {

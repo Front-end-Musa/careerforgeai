@@ -93,15 +93,10 @@ export class ResumeService {
 
   async exportToPdf(resumeId: string | null | undefined, resume: Partial<Resume>): Promise<void> {
     if (typeof window === 'undefined') {
-      return;
+      throw new Error('PDF export is only supported in a browser environment.');
     }
 
-    const previewElement = document.querySelector(
-      '.resume-export-surface .resume-preview',
-    ) as HTMLElement | null;
-    if (!previewElement) {
-      return;
-    }
+    const previewElement = await this.waitForExportPreview();
 
     const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
       import('html2canvas'),
@@ -185,20 +180,27 @@ export class ResumeService {
     return new Error(`Unable to ${action} your resume.`);
   }
 
-  private saveBase64File(base64: string, fileName: string, contentType: string) {
-    const binary = window.atob(base64);
-    const bytes = new Uint8Array(binary.length);
+  private waitForExportPreview(maxAttempts = 30): Promise<HTMLElement> {
+    return new Promise((resolve, reject) => {
+      const attempt = (tries: number) => {
+        const previewElement = document.querySelector(
+          '.resume-export-surface .resume-preview',
+        ) as HTMLElement | null;
 
-    for (let index = 0; index < binary.length; index += 1) {
-      bytes[index] = binary.charCodeAt(index);
-    }
+        if (previewElement) {
+          resolve(previewElement);
+          return;
+        }
 
-    const blob = new Blob([bytes], { type: contentType });
-    const url = window.URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = fileName;
-    anchor.click();
-    window.URL.revokeObjectURL(url);
+        if (tries >= maxAttempts) {
+          reject(new Error('Resume preview is not ready for export.'));
+          return;
+        }
+
+        requestAnimationFrame(() => attempt(tries + 1));
+      };
+
+      requestAnimationFrame(() => attempt(0));
+    });
   }
 }

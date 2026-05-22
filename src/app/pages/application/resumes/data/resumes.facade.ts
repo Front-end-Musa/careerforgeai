@@ -18,6 +18,8 @@ import {
   selectDownloadError,
   selectDownloadingResumeId,
   selectExportError,
+  selectExportResumePayload,
+  selectExportingResumeId,
   selectIsExporting,
   selectGeneratedResumeText,
   selectResumesGenerating,
@@ -61,6 +63,8 @@ export class ResumesFacade {
   downloadError$ = this.store.select(selectDownloadError);
   exporting$ = this.store.select(selectIsExporting);
   exportError$ = this.store.select(selectExportError);
+  exportingResumeId$ = this.store.select(selectExportingResumeId);
+  exportResumePayload$ = this.store.select(selectExportResumePayload);
 
   ensureLoaded(source = 'ResumesFacade.ensureLoaded', force = false) {
     const status = this.status();

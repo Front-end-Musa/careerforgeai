@@ -22,7 +22,7 @@ export class ResumeCard {
   private resumeAccessPolicy = inject(ResumeAccessPolicyService);
   private resumeUpgrade = inject(ResumeUpgradeService);
   private user = toSignal(this.entitlementsService.user$, { initialValue: null });
-  private downloadingResumeId = toSignal(this.resumesFacade.downloadingResumeId$, { initialValue: null });
+  private exportingResumeId = toSignal(this.resumesFacade.exportingResumeId$, { initialValue: null });
 
   get displayName() {
     return this.resume.personalInfo.fullName || 'Untitled resume';
@@ -44,12 +44,12 @@ export class ResumeCard {
     return this.resumeAccessPolicy.canExportResume(this.user());
   }
 
-  get isDownloading() {
-    return this.downloadingResumeId() === this.resume.id;
+  get isExporting() {
+    return this.exportingResumeId() === this.resume.id;
   }
 
   downloadResume() {
-    if (!this.resume.id || this.isDownloading) {
+    if (!this.resume.id || this.isExporting) {
       return;
     }
 
@@ -63,7 +63,7 @@ export class ResumeCard {
       return;
     }
 
-    this.resumesFacade.downloadResume(this.resume.id);
+    this.resumesFacade.exportResumeToPdf(this.resume, this.resume.id);
   }
 
   deleteResume() {

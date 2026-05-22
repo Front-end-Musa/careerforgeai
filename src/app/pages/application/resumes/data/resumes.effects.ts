@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, exhaustMap, from, map, of, switchMap, take, tap } from 'rxjs';
+import { catchError, delay, exhaustMap, from, map, of, switchMap, take, tap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
@@ -275,6 +275,7 @@ export class ResumeEffects {
     this.actions$.pipe(
       ofType(resumesActions.exportResumeToPdf),
       tap((action) => this.trace.traceEffect(action, 'ResumeEffects.exportResumeToPdfEffect')),
+      delay(0),
       exhaustMap(({ resumeId, resume }) =>
         from(this.apiService.exportToPdf(resumeId, resume)).pipe(
           map(() => {

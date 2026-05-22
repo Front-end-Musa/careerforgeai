@@ -30,9 +30,23 @@
           </div>
         }
         @if (canDownloadCurrentResume) {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
+          <button
+            type="button"
+            mat-stroked-button
+            [disabled]="(isExporting$ | async) ?? false"
+            (click)="exportToPdf()"
+          >
+            {{ (isExporting$ | async) ? 'Preparing PDF...' : 'Download PDF' }}
+          </button>
         } @else {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
+          <button
+            type="button"
+            mat-stroked-button
+            [disabled]="(isExporting$ | async) ?? false"
+            (click)="exportToPdf()"
+          >
+            {{ (isExporting$ | async) ? 'Preparing PDF...' : 'Download PDF' }}
+          </button>
         }
         @if (canStoreCurrentResume) {
           <button
@@ -542,9 +556,23 @@
 
       <div class="footer-actions">
         @if (canDownloadCurrentResume) {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
+          <button
+            type="button"
+            mat-stroked-button
+            [disabled]="(isExporting$ | async) ?? false"
+            (click)="exportToPdf()"
+          >
+            {{ (isExporting$ | async) ? 'Preparing PDF...' : 'Download PDF' }}
+          </button>
         } @else {
-          <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
+          <button
+            type="button"
+            mat-stroked-button
+            [disabled]="(isExporting$ | async) ?? false"
+            (click)="exportToPdf()"
+          >
+            {{ (isExporting$ | async) ? 'Preparing PDF...' : 'Download PDF' }}
+          </button>
         }
         @if (canStoreCurrentResume) {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -584,6 +612,17 @@
   </aside>
 </div>
 
+@let exportPreviewResume = (preview$ | async);
+@if (exportPreviewResume) {
+  <div class="resume-export-surface" aria-hidden="true">
+    <app-resume-preview
+      [resume]="exportPreviewResume"
+      [templateId]="previewTemplate"
+      [renderContext]="'export'"
+    ></app-resume-preview>
+  </div>
+}
+
 <div class="mobile-action-bar">
   @if (!isEditMode) {
     @let mobileMissingFullResumeParts = getMissingFullResumeParts();
@@ -602,9 +641,23 @@
     </div>
   }
   @if (canDownloadCurrentResume) {
-    <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>
+    <button
+      type="button"
+      mat-stroked-button
+      [disabled]="(isExporting$ | async) ?? false"
+      (click)="exportToPdf()"
+    >
+      {{ (isExporting$ | async) ? 'Preparing...' : 'PDF' }}
+    </button>
   } @else {
-    <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>
+    <button
+      type="button"
+      mat-stroked-button
+      [disabled]="(isExporting$ | async) ?? false"
+      (click)="exportToPdf()"
+    >
+      {{ (isExporting$ | async) ? 'Preparing...' : 'PDF' }}
+    </button>
   }
   @if (canStoreCurrentResume) {
     <button

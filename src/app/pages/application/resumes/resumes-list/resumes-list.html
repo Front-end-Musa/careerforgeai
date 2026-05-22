@@ -29,3 +29,13 @@
     <p class="resumes-error">Error loading resumes.</p>
   }
 }
+
+@if (exportResume(); as resume) {
+  <div class="resume-export-surface" aria-hidden="true">
+    <app-resume-preview
+      [resume]="resume"
+      [templateId]="exportTemplateId()"
+      [renderContext]="'export'"
+    ></app-resume-preview>
+  </div>
+}

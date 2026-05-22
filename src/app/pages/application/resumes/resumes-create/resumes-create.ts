@@ -110,6 +110,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   isGenerating$ = this.resumesFacade.generating$;
   generationError$ = this.resumesFacade.error$;
   isSaving$ = this.resumesFacade.saving$;
+  isExporting$ = this.resumesFacade.exporting$;
   entitlements = toSignal(this.entitlementsService.entitlements$, {
     initialValue: {
       resumeGenerationsPerPeriod: 1,

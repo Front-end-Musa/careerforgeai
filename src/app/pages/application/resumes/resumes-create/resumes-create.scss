@@ -1,3 +1,5 @@
+@use '../resume-export-surface' as *;
+
 .resumes-create-shell {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
@@ -326,16 +328,6 @@
 
 .mobile-action-bar {
   display: none;
-}
-
-.resume-export-surface {
-  position: fixed;
-  top: 0;
-  left: -9999px;
-  width: 210mm;
-  pointer-events: none;
-  opacity: 0;
-  z-index: -1;
 }
 
 mat-form-field {
