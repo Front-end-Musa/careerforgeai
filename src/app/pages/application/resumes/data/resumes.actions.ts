@@ -68,8 +68,10 @@ export const saveResume = createAction(
 
 export const saveResumeSuccess = createAction(
   '[Resume] Save Success',
-  props<{ resumeId?: string }>()
+  props<{ resumeId?: string; isUpdate?: boolean }>()
 );
+
+export const resetResumeSaveStatus = createAction('[Resume] Reset Save Status');
 
 export const saveResumeFailure = createAction(
   '[Resume] Save Failure',

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ResumeService } from '../../../../core/services/resume.service';
 import * as resumesActions from './resumes.actions';
-import { catchError, exhaustMap, from, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, from, map, of, switchMap, take, tap } from 'rxjs';
 import { AiAgentService } from '../../../../core/services/ai-agent.service';
 import { ActionTraceService } from '../../../../core/state/debug/action-trace.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
@@ -42,8 +42,9 @@ export class ResumeEffects {
     this.actions$.pipe(
       ofType(resumesActions.loadResumes),
       tap((action) => this.trace.traceEffect(action, 'ResumeEffects.loadResumes')),
-      exhaustMap(() =>
+      switchMap(() =>
         this.apiService.getResumesForUser().pipe(
+          take(1),
           map((resumes) => {
             const nextAction = resumesActions.loadResumesSuccess({ resumes });
             this.trace.traceEffect(nextAction, 'ResumeEffects.loadResumes.success');
@@ -67,7 +68,7 @@ export class ResumeEffects {
         if (resumeId) {
           return this.apiService.updateResume(resumeId, resume).pipe(
             map(() => {
-              const nextAction = resumesActions.saveResumeSuccess({ resumeId });
+              const nextAction = resumesActions.saveResumeSuccess({ resumeId, isUpdate: true });
               this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
               return nextAction;
             }),
@@ -86,7 +87,10 @@ export class ResumeEffects {
         if (resume.meta?.source === 'ai') {
           return this.aiService.saveGeneratedResume(resume).pipe(
             map((createdResumeId) => {
-              const nextAction = resumesActions.saveResumeSuccess({ resumeId: createdResumeId });
+              const nextAction = resumesActions.saveResumeSuccess({
+                resumeId: createdResumeId,
+                isUpdate: false,
+              });
               this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
               return nextAction;
             }),
@@ -104,7 +108,10 @@ export class ResumeEffects {
 
         return this.apiService.createResume(resume).pipe(
           map((createdResumeId) => {
-            const nextAction = resumesActions.saveResumeSuccess({ resumeId: createdResumeId });
+            const nextAction = resumesActions.saveResumeSuccess({
+              resumeId: createdResumeId,
+              isUpdate: false,
+            });
             this.trace.traceEffect(nextAction, 'ResumeEffects.saveResumeEffect.success');
             return nextAction;
           }),
@@ -180,6 +187,30 @@ export class ResumeEffects {
       ofType(resumesActions.saveResumeSuccess, resumesActions.deleteResumeSuccess),
       map(() => resumesActions.loadResumes()),
     ),
+  );
+
+  saveResumeSuccessEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(resumesActions.saveResumeSuccess),
+        tap(({ isUpdate }) => {
+          this.notifications.showSuccess(
+            isUpdate ? 'Resume updated successfully.' : 'Resume saved successfully.',
+          );
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  saveResumeFailureEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(resumesActions.saveResumeFailure),
+        tap(({ error }) => {
+          this.notifications.showError(error || 'Unable to save your resume right now.');
+        }),
+      ),
+    { dispatch: false },
   );
 
   downloadResumeEffect = createEffect(() =>

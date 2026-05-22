@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { auditTime, filter, map, merge, of, skip, take } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, map, merge, of, take } from 'rxjs';
 import {
   AwardSectionEntry,
   CertificationSectionEntry,
@@ -191,6 +191,7 @@ export class ResumesCreate implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.resumesFacade.resetSaveStatus();
     this.resumesFacade.ensureLoaded('ResumesCreate.ngOnInit');
     if (this.templateId) {
       this.previewTemplate = getSafeTemplateId(this.templateId);
@@ -198,7 +199,11 @@ export class ResumesCreate implements OnInit, OnChanges {
     }
 
     this.resumesFacade.saveSucceeded$
-      .pipe(skip(1), filter((saved) => saved), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        filter((saved): saved is true => saved),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(() => {
         this.saveCompleted.emit();
       });

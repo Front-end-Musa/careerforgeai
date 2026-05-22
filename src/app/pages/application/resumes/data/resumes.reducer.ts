@@ -148,6 +148,12 @@ export const resumesReducer = createReducer(
     error,
   })),
 
+  on(ResumesActions.resetResumeSaveStatus, (state) => ({
+    ...state,
+    saveSucceeded: false,
+    saving: false,
+  })),
+
   on(ResumesActions.tailorResume, (state) => ({
     ...state,
     tailoring: true,

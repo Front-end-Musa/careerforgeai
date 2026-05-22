@@ -151,6 +151,8 @@ export class Resumes implements AfterViewInit {
   }
 
   handleResumeSaved() {
+    this.resumesFacade.resetSaveStatus();
+    this.resumesFacade.ensureLoaded('Resumes.handleResumeSaved', true);
     this.selectedTemplateId = undefined;
     this.viewMode = 'list';
   }

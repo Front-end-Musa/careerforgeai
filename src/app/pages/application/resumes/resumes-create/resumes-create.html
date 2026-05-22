@@ -35,8 +35,20 @@
           <button type="button" mat-stroked-button (click)="exportToPdf()">Download PDF</button>
         }
         @if (canStoreCurrentResume) {
-          <button type="button" mat-flat-button color="primary" (click)="saveResume()">
-            {{ isEditMode ? 'Save Changes' : 'Save Resume' }}
+          <button
+            type="button"
+            mat-flat-button
+            color="primary"
+            [disabled]="(isSaving$ | async) ?? false"
+            (click)="saveResume()"
+          >
+            {{
+              (isSaving$ | async)
+                ? 'Saving...'
+                : isEditMode
+                  ? 'Save Changes'
+                  : 'Save Resume'
+            }}
           </button>
         } @else {
           <button type="button" mat-flat-button color="primary" (click)="saveResume()">
@@ -55,7 +67,9 @@
     </div>
 
     @if (generationError$ | async; as generationError) {
-      <div class="generation-error">{{ generationError }}</div>
+      @if (!(isGenerating$ | async)) {
+        <div class="generation-error">{{ generationError }}</div>
+      }
     }
 
     @if (hasAiGeneratedDraft && !canStoreCurrentResume) {
@@ -593,8 +607,16 @@
     <button type="button" mat-stroked-button (click)="exportToPdf()">PDF</button>
   }
   @if (canStoreCurrentResume) {
-    <button type="button" mat-flat-button color="primary" (click)="saveResume()">
-      {{ isEditMode ? 'Save' : 'Save Resume' }}
+    <button
+      type="button"
+      mat-flat-button
+      color="primary"
+      [disabled]="(isSaving$ | async) ?? false"
+      (click)="saveResume()"
+    >
+      {{
+        (isSaving$ | async) ? 'Saving...' : isEditMode ? 'Save' : 'Save Resume'
+      }}
     </button>
   } @else {
     <button type="button" mat-flat-button color="primary" (click)="saveResume()">

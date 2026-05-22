@@ -82,6 +82,8 @@ export class ResumesEdit implements OnInit, AfterViewInit {
   }
 
   handleResumeSaved() {
+    this.resumesFacade.resetSaveStatus();
+    this.resumesFacade.ensureLoaded('ResumesEdit.handleResumeSaved', true);
     this.router.navigate(['/application/resumes']);
   }
 

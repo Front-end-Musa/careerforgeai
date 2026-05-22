@@ -7,6 +7,7 @@ import {
   exportResumeToPdf,
   generateResume,
   loadResumes,
+  resetResumeSaveStatus,
   saveResume,
   tailorResume,
 } from './resumes.actions';
@@ -92,6 +93,10 @@ export class ResumesFacade {
     const action = saveResume({ resume, resumeId });
     this.trace.traceDispatch(action, 'ResumesFacade.saveResumeData');
     this.store.dispatch(action);
+  }
+
+  resetSaveStatus() {
+    this.store.dispatch(resetResumeSaveStatus());
   }
 
   tailorResumeData(

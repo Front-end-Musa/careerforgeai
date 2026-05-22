@@ -27,6 +27,7 @@ describe('ResumesCreate', () => {
     saveResumeData: jasmine.createSpy('saveResumeData'),
     exportResumeToPdf: jasmine.createSpy('exportResumeToPdf'),
     ensureLoaded: jasmine.createSpy('ensureLoaded'),
+    resetSaveStatus: jasmine.createSpy('resetSaveStatus'),
     resumeById$: jasmine.createSpy('resumeById$').and.returnValue(of(null)),
   };
 
@@ -70,6 +71,7 @@ describe('ResumesCreate', () => {
     resumesFacadeMock.saveResumeData.calls.reset();
     resumesFacadeMock.exportResumeToPdf.calls.reset();
     resumesFacadeMock.ensureLoaded.calls.reset();
+    resumesFacadeMock.resetSaveStatus.calls.reset();
     resumesFacadeMock.resumeById$.calls.reset();
     resumesFacadeMock.resumeById$.and.returnValue(of(null));
     resumeAccessPolicyMock.upgradeMessage.calls.reset();
