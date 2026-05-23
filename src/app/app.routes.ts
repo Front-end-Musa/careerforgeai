@@ -10,6 +10,38 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'ai-resume-builder',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/ai-resume-builder'],
+      seoPage: 'ai-resume-builder',
+    },
+  },
+  {
+    path: 'ats-resume-templates',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/ats-resume-templates'],
+      seoPage: 'ats-resume-templates',
+    },
+  },
+  {
+    path: 'cover-letter-generator',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/cover-letter-generator'],
+      seoPage: 'cover-letter-generator',
+    },
+  },
+  {
+    path: 'job-application-tracker',
+    loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
+    data: {
+      seo: SEO_METADATA['/job-application-tracker'],
+      seoPage: 'job-application-tracker',
+    },
+  },
+  {
     path: 'pricing',
     loadComponent: () => import('./pages/seo-landing/seo-landing').then((c) => c.SeoLanding),
     data: {

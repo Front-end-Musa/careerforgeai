@@ -12,54 +12,6 @@
     "schema": "home"
   },
   {
-    "path": "/ai-resume-builder",
-    "title": "AI Resume Builder for ATS-Friendly Applications | ResumeCrafts AI",
-    "description": "Create an ATS-friendly resume with AI, polished templates, editable sections, and paid PDF export tools built for serious job applications.",
-    "keywords": "AI resume builder, ATS-friendly resume builder, resume generator, AI resume generator",
-    "robots": "index, follow",
-    "ogType": "website",
-    "sitemap": true,
-    "changefreq": "weekly",
-    "priority": 0.9,
-    "schema": "software"
-  },
-  {
-    "path": "/ats-resume-templates",
-    "title": "ATS Resume Templates for Modern Job Applications | ResumeCrafts AI",
-    "description": "Choose from 11 resume templates, including ATS-friendly free layouts and polished Pro and Premium formats for job seekers.",
-    "keywords": "ATS resume templates, resume templates, professional resume templates, AI resume templates",
-    "robots": "index, follow",
-    "ogType": "website",
-    "sitemap": true,
-    "changefreq": "weekly",
-    "priority": 0.85,
-    "schema": "software"
-  },
-  {
-    "path": "/cover-letter-generator",
-    "title": "AI Cover Letter Generator for Targeted Applications | ResumeCrafts AI",
-    "description": "Generate tailored cover letters from your resume, job description, company, role, and preferred tone with ResumeCrafts AI.",
-    "keywords": "AI cover letter generator, cover letter generator, tailored cover letter, job application letter",
-    "robots": "index, follow",
-    "ogType": "website",
-    "sitemap": true,
-    "changefreq": "weekly",
-    "priority": 0.85,
-    "schema": "software"
-  },
-  {
-    "path": "/job-application-tracker",
-    "title": "Job Application Tracker for Organized Search Pipelines | ResumeCrafts AI",
-    "description": "Track companies and application stages in a focused job-search workspace alongside your resumes and cover letters.",
-    "keywords": "job application tracker, job search tracker, application pipeline, resume tracker",
-    "robots": "index, follow",
-    "ogType": "website",
-    "sitemap": true,
-    "changefreq": "weekly",
-    "priority": 0.8,
-    "schema": "software"
-  },
-  {
     "path": "/pricing",
     "title": "ResumeCrafts AI Pricing | Free, Pro, and Premium Plans",
     "description": "Compare ResumeCrafts AI plans for resume building, AI resume generations, cover letters, PDF export, templates, and job tracking.",
