@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
+Allow: /ai-resume-builder
+Allow: /ats-resume-templates
+Allow: /cover-letter-generator
+Allow: /job-application-tracker
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /pricing
 Disallow: /auth
 Disallow: /auth/login
 Disallow: /auth/signup
