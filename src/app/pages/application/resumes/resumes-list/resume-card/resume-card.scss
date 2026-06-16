@@ -183,11 +183,6 @@
 }
 
 @media (max-width: 960px) {
-  .resume-card {
-    grid-template-columns: 1fr;
-    align-items: flex-start;
-  }
-
   .resume-card__actions {
     width: 100%;
     justify-content: flex-start;
