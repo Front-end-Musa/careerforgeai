@@ -5,7 +5,7 @@
       <h2 class="title">Fair pricing. No surprises.</h2>
       <p class="sub-title">Start free. Upgrade only when you need more.</p>
     </header>
-    <div class="pricing-cards">
+    <div class="pricing-cards pricing-cards--guided">
       @for (plan of plans; track plan.name) {
       <app-pricing-card
         [plan]="plan"

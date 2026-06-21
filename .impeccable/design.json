@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-18T21:29:11.4051793+05:00",
+  "title": "Design System: ResumeCrafts AI",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Portfolio Ink",
+        "canonical": "#111827",
+        "tonalRamp": ["#020617", "#0f172a", "#111827", "#1f2937", "#334155", "#64748b", "#cbd5e1", "#f8fafc"]
+      },
+      "brand-500": {
+        "role": "primary",
+        "displayName": "Credential Blue",
+        "canonical": "#2563eb",
+        "tonalRamp": ["#172554", "#1e3a8a", "#1d4ed8", "#2563eb", "#3b82f6", "#93c5fd", "#dbeafe", "#eff6ff"]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Action Orange",
+        "canonical": "#f15b2a",
+        "tonalRamp": ["#431407", "#7c2d12", "#c2410c", "#f15b2a", "#fb923c", "#fed7aa", "#ffedd5", "#fff7ed"]
+      },
+      "forest": {
+        "role": "secondary",
+        "displayName": "Progress Teal",
+        "canonical": "#0f766e",
+        "tonalRamp": ["#042f2e", "#134e4a", "#0f766e", "#0f9a8f", "#2dd4bf", "#99f6e4", "#ccfbf1", "#f0fdfa"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Clean Paper",
+        "canonical": "#fffdf8",
+        "tonalRamp": ["#292524", "#57534e", "#a8a29e", "#d6d3d1", "#f5f5f4", "#fafaf9", "#fffdf8", "#ffffff"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Workspace Surface",
+        "canonical": "#f5f7fb",
+        "tonalRamp": ["#0f172a", "#334155", "#64748b", "#cbd5e1", "#e2e8f0", "#eef2f7", "#f5f7fb", "#ffffff"]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Quiet Border",
+        "canonical": "#dfe5ee",
+        "tonalRamp": ["#1f2937", "#475569", "#94a3b8", "#cbd5e1", "#dfe5ee", "#e2e8f0", "#f1f5f9", "#f8fafc"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Dashboard and landing hero headlines where a clear promise is needed."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles and marketing headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Cards, action groups, resume titles, and product panels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanatory copy, form help, and product descriptions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels, chips, metadata, and rare uppercase eyebrows."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel-lift",
+        "value": "0 10px 24px rgba(15, 23, 42, 0.06)",
+        "purpose": "Low ambient lift for generic panels and auth cards."
+      },
+      {
+        "name": "hover-lift",
+        "value": "0 16px 32px rgba(15, 23, 42, 0.08)",
+        "purpose": "Card hover feedback when the element is clickable."
+      },
+      {
+        "name": "menu-lift",
+        "value": "0 18px 34px rgba(15, 23, 42, 0.14)",
+        "purpose": "Floating menus and overlays."
+      },
+      {
+        "name": "sidebar-depth",
+        "value": "12px 0 34px rgba(17, 24, 39, 0.16)",
+        "purpose": "Persistent navigation depth against the workspace."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "0.2s ease",
+        "purpose": "Default hover, focus, border, and color transitions."
+      },
+      {
+        "name": "drag-standard",
+        "value": "250ms cubic-bezier(0, 0, 0.2, 1)",
+        "purpose": "Kanban drag and drop movement."
+      },
+      {
+        "name": "menu-reveal",
+        "value": "0.34s cubic-bezier(0.22, 0.61, 0.36, 1)",
+        "purpose": "Mobile navigation panel reveal."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "768px"
+      },
+      {
+        "name": "small",
+        "value": "640px"
+      },
+      {
+        "name": "app-shell",
+        "value": "915px"
+      },
+      {
+        "name": "builder-stack",
+        "value": "1180px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action button for landing CTAs and product actions.",
+      "html": "<button class=\"ds-btn-primary\">Build My Resume</button>",
+      "css": ".ds-btn-primary { min-height: 52px; padding: 0 1.35rem; border: none; border-radius: 999px; background: var(--ink, #111827); color: #ffffff; font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; font-size: 0.98rem; font-weight: 800; cursor: pointer; transition: background 0.2s ease, transform 0.2s ease; } .ds-btn-primary:hover { background: var(--accent, #f15b2a); transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(241, 91, 42, 0.28); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Bordered utility action for cards and resume workflows.",
+      "html": "<button class=\"ds-btn-secondary\">Edit Resume</button>",
+      "css": ".ds-btn-secondary { min-height: 2.5rem; padding: 0.7rem 1rem; border: 1px solid #dbe1ea; border-radius: 10px; background: #ffffff; color: #0f172a; font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; } .ds-btn-secondary:hover { border-color: #94a3b8; background: #f8fafc; } .ds-btn-secondary:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.18); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "White, bordered field with clear focus ring.",
+      "html": "<label class=\"ds-field\"><span>Job title</span><input placeholder=\"Product designer\" /></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; color: #111827; } .ds-field span { font-size: 14px; font-weight: 600; color: #5b6474; } .ds-field input { width: 100%; box-sizing: border-box; padding: 14px 16px; border: 1px solid var(--border, #dfe5ee); border-radius: 10px; background: #ffffff; color: #111827; font: inherit; transition: border-color 0.2s ease, box-shadow 0.2s ease; } .ds-field input:focus { border-color: var(--accent, #f15b2a); outline: none; box-shadow: 0 0 0 3px rgba(241, 91, 42, 0.14); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip-default",
+      "description": "Compact metadata chip for resume and product surfaces.",
+      "html": "<span class=\"ds-chip\">ATS friendly</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; min-height: 2rem; padding: 0.35rem 0.7rem; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; color: #475569; font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }"
+    },
+    {
+      "name": "Compact Card",
+      "kind": "card",
+      "refersTo": "card-compact",
+      "description": "Border-led product container for dashboard actions and job cards.",
+      "html": "<article class=\"ds-card\"><h3>Tailor a resume</h3><p>Turn one saved resume into a focused version for a specific role.</p></article>",
+      "css": ".ds-card { padding: 22px; border: 1px solid rgba(17, 24, 39, 0.12); border-radius: 4px; background: #ffffff; color: #111827; font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; } .ds-card:hover { border-color: var(--accent, #f15b2a); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12); transform: translateY(-2px); } .ds-card h3 { margin: 0 0 5px; font-size: 1rem; font-weight: 800; color: #111827; } .ds-card p { margin: 0; color: #64748b; font-size: 0.92rem; line-height: 1.4; }"
+    },
+    {
+      "name": "Resume Card",
+      "kind": "custom",
+      "refersTo": "card-compact",
+      "description": "Signature saved-resume row with metadata chips and review actions.",
+      "html": "<article class=\"ds-resume-card\"><div class=\"ds-resume-icon\">R</div><div><h3>Software Engineer Intern</h3><p>Updated today</p></div><span class=\"ds-chip\">Modern</span><button class=\"ds-btn-secondary\">Open</button></article>",
+      "css": ".ds-resume-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; min-height: 136px; padding: 1.1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 12px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)), #ffffff; box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05); font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; } .ds-resume-card:hover { border-color: #cbd5e1; box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08); transform: translateY(-1px); } .ds-resume-icon { width: 2.9rem; height: 2.9rem; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; font-weight: 800; } .ds-resume-card h3 { margin: 0 0 0.25rem; color: #0f172a; font-size: 1rem; line-height: 1.35; font-weight: 700; } .ds-resume-card p { margin: 0; color: #64748b; font-size: 0.875rem; }"
+    },
+    {
+      "name": "App Navigation Item",
+      "kind": "nav",
+      "refersTo": "button-secondary",
+      "description": "Deep-ink sidebar navigation state vocabulary.",
+      "html": "<a class=\"ds-nav-item\"><span>□</span><span>Dashboard</span></a>",
+      "css": ".ds-nav-item { display: inline-grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: 16px; min-height: 60px; padding: 20px 22px; border-radius: 4px; background: #111827; color: rgba(255, 255, 255, 0.58); font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif; font-size: 1rem; text-decoration: none; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, color 0.2s ease; } .ds-nav-item:hover { background: rgba(255, 255, 255, 0.08); box-shadow: inset 3px 0 0 var(--accent, #f15b2a); color: #ffffff; transform: translateX(2px); } .ds-nav-item:focus-visible { outline: 3px solid rgba(241, 91, 42, 0.3); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Prepared Portfolio",
+    "overview": "ResumeCrafts AI should feel like a polished set of application materials being assembled on a focused desk: practical, organized, and quietly supportive. The visual system uses a deep ink foundation, white document-like panels, clear blue utility states, and a restrained orange accent to guide action without turning the product into a flashy AI toy.\n\nThe system is warm and encouraging in voice, but compact and direct in structure. Early-career users need momentum and confidence, so screens should prioritize visible progress, strong labels, clear hierarchy, and reviewable AI output over decorative flourishes.\n\nThis design explicitly rejects the generic SaaS template, flashy AI toy, corporate HR portal, resume-mill spam, and overcomplicated dashboard named in PRODUCT.md. The interface should look credible enough for job-search stakes and approachable enough for users who are still learning the process.",
+    "keyCharacteristics": [
+      "Deep ink anchors with white or soft paper surfaces.",
+      "Orange accent used sparingly for guidance, focus, and decisive hover states.",
+      "Single-family Source Sans 3 typography with sturdy weights and compact rhythm.",
+      "Layered restraint: borders first, shadows only when depth or state earns them.",
+      "Rounded pills for primary actions, tighter 4px to 12px corners for work surfaces."
+    ],
+    "rules": [
+      {
+        "name": "The Accent Has a Job Rule",
+        "body": "Orange is for action, active state, focus, or emphasis that changes what the user does next. Never use it as scattered decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The White Panel Rule",
+        "body": "Forms, resume cards, job cards, dialogs, and preview surfaces start from white panels with visible borders. Avoid tinted panels when the user needs to read, edit, or compare content.",
+        "section": "colors"
+      },
+      {
+        "name": "The Single Voice Rule",
+        "body": "Use Source Sans 3 across product UI. Do not introduce display fonts, script faces, or decorative type for product screens.",
+        "section": "typography"
+      },
+      {
+        "name": "The Helpful Weight Rule",
+        "body": "Use weight to clarify importance, not to shout. Product labels and actions can be bold; long body copy must stay readable and calm.",
+        "section": "typography"
+      },
+      {
+        "name": "The Border First Rule",
+        "body": "A resting product card should be understandable with a 1px border before any shadow is added.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Shadow Must Explain Rule",
+        "body": "If a shadow does not communicate hover, floating state, sticky layering, or signature hierarchy, remove it.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use Portfolio Ink for the strongest actions and page anchors.",
+      "Do use Action Orange only for active intent: hover, focus, selected navigation, or a single decisive emphasis.",
+      "Do keep product screens border-led and readable, with white panels over surface or paper backgrounds.",
+      "Do write supportive, practical labels that help early-career users understand the job-search task.",
+      "Do preserve WCAG AA contrast, visible focus, keyboard access, and reduced-motion alternatives."
+    ],
+    "donts": [
+      "Don't make this look like a generic SaaS template with interchangeable card grids and decorative metrics.",
+      "Don't make it feel like a flashy AI toy with glowing gradients, magic-language CTAs, or ornamental automation effects.",
+      "Don't make it feel like a corporate HR portal; avoid cold bureaucracy, dense compliance styling, and impersonal copy.",
+      "Don't make it feel like resume-mill spam; avoid exaggerated promises, urgency tricks, and fake credibility badges.",
+      "Don't turn product screens into an overcomplicated dashboard. If the user cannot tell what to do next, the screen is too busy.",
+      "Don't use orange as random decoration, oversized rounded cards, gradient text, side-stripe borders, or nested card structures."
+    ]
+  }
+}

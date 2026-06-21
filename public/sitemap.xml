@@ -8,16 +8,21 @@
   <url>
     <loc>https://resume-crafts.com/pricing</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://resume-crafts.com/privacy-policy</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.35</priority>
+    <priority>0.40</priority>
   </url>
   <url>
     <loc>https://resume-crafts.com/terms-of-service</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.35</priority>
+    <priority>0.40</priority>
+  </url>
+  <url>
+    <loc>https://resume-crafts.com/application/resume-generator</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.70</priority>
   </url>
 </urlset>
